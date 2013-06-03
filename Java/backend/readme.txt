@@ -12,7 +12,7 @@ Databases are connected to (or created) using the constructors.  In addition to 
 
 To use an instance of DerbyDB to perform a search, the object will need to be passed into the object that deals with user input.  The user input object will then need to parse search fields into an SQL string for DerbyDB.  I left the query method open-ended, accepting just an SQL command as a String so that there wouldn't be any limitations on searches in DerbyDB.
 
-This class will not work unless the 
+This class will not work unless Apache's derby.jar is included in the CLASSPATH!
 
 TODO: 
 - Proper exception handling
