@@ -169,7 +169,6 @@ public class DerbyDB {
     	ArrayList<String[]> results = new ArrayList<String[]>();
     	Statement s;
     	ResultSet rs;
-    	String[][] output;
 		try {
 			s = derbyconn.createStatement();
 			rs = s.executeQuery(sql);
@@ -188,14 +187,6 @@ public class DerbyDB {
 			e.printStackTrace();
 		}
 		
-		// A quicker way to do this?  Typecasting threw some errors.
-		// tried return (String[][])results.toArray(); but failed in runtime
-		output = new String[results.size()][];
-		
-		for (int i=0;i<results.size();i++){
-			output[i] = results.get(i);
-		}
-
-    	return output;
+    	return results.toArray(new String[results.size()][4]);
     }
 }
