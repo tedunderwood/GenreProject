@@ -5,7 +5,6 @@ package datamodel;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Arrays;
-import java.util.ArrayList;
 
 /**
  * @author tunderwood
@@ -49,7 +48,24 @@ public class Vocabulary {
 			// The format of an input line, as you'll recall, is
 			// String docid, int pagenumber, int formFlag, String word, int countOfWord
 			// Here we're only interested in word and countOfWord
+			
 			String word = tokens[3];
+			
+			// There are two special page-features that will be included in the "word" field in
+			// the main database but are not treated as words:
+			//
+			// #textlines is associated with the number of lines on a page
+			// #caplines is associated with the number of capitalized lines on a page
+			//
+			// These features need to be included in the vocabulary Set, so that they are
+			// recognized as valid and passed to the volume. But they should not be included
+			// in the vocabulary Map or List, because they are not words and will not have
+			// their own position in the feature vectors for any DataPoint. Instead they will
+			// be used, indirectly, to produce ratios that count as features and get added
+			// on to the *end* of a feature vector. So we don't count them:
+			
+			if (word.startsWith("#")) continue;
+			
 			Integer newCountOfWord = Integer.parseInt(tokens[4]);
 			
 			if (sumOfWords.containsKey(word)) {
@@ -79,8 +95,6 @@ public class Vocabulary {
 		vocabularyMap = new HashMap<String, Integer>();
 		
 		for (int i = 0; i < vocabularySize; ++i) {
-			System.out.println(i);
-			System.out.println(allTheKeys[i]);
 			vocabularyList[i] = allTheKeys[i];
 			vocabularySet.add(allTheKeys[i]);
 			vocabularyMap.put(allTheKeys[i], i);
@@ -89,6 +103,12 @@ public class Vocabulary {
 		// The vocabulary is stored in several different ways to maximize
 		// efficiency. It's not going to be that large; memory is less an
 		// issue than speed here.
+		
+		// We now add entries for #textlines and #caplines to the Set only.
+		// See above for explanation.
+		
+		vocabularySet.add("#textlines");
+		vocabularySet.add("#caplines");
 	}
 	
 	static public boolean includes(String aWord) {
@@ -99,29 +119,34 @@ public class Vocabulary {
 			return false;
 		}
 	}
+
+// METHOD IS DEPRECATED.
+//	static public DataPoint[] makeDataPoints(GroupedSequence linegroups) {
+//		int memberCount = linegroups.memberCount;
+//		DataPoint[] points = new DataPoint[memberCount];
+//		ArrayList<String> labelList = linegroups.memberList;
+//		int idx = 0;
+//		for (String label : labelList) {
+//			ArrayList<String> thisMember = linegroups.getMember(label);
+//			double[] vector = new double[vocabularySize];
+//			Arrays.fill(vector, 0);
+//			for (String line : thisMember) {
+//				String[] tokens = line.split(",");
+//				String word = tokens[3];
+//				double count = Double.parseDouble(tokens[4]);
+//				if (vocabularySet.contains(word)) {
+//					int featureIdx = vocabularyMap.get(word);
+//					vector[featureIdx] = count;	
+//				}
+//			}
+//			points[idx] = new DataPoint(label, vector);
+//			idx += 1;
+//		}
+//	return points;
+//	}
 	
-	static public DataPoint[] makeDataPoints(GroupedSequence linegroups) {
-		int memberCount = linegroups.memberCount;
-		DataPoint[] points = new DataPoint[memberCount];
-		ArrayList<String> labelList = linegroups.memberList;
-		int idx = 0;
-		for (String label : labelList) {
-			ArrayList<String> thisMember = linegroups.getMember(label);
-			double[] vector = new double[vocabularySize];
-			Arrays.fill(vector, 0);
-			for (String line : thisMember) {
-				String[] tokens = line.split(",");
-				String word = tokens[3];
-				double count = Double.parseDouble(tokens[4]);
-				if (vocabularySet.contains(word)) {
-					int featureIdx = vocabularyMap.get(word);
-					vector[featureIdx] = count;	
-				}
-			}
-			points[idx] = new DataPoint(label, vector);
-			idx += 1;
-		}
-	return points;
+	static public HashMap<String, Integer> getMap() {
+		return vocabularyMap;
 	}
 
 }

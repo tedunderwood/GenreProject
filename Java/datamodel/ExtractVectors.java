@@ -3,6 +3,8 @@
  */
 package datamodel;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author tunderwood
@@ -28,52 +30,74 @@ import java.util.Arrays;
 public class ExtractVectors {
 
 	/**
-	 * @param args	A string containing path to a text file as data source.
+	 * @param args
+	 * @param argument1: 	a string containing a path to a data source
+	 * @param argument2:	an integer value defining vocabulary size
+	 * @param argument3:	either p (cluster by page) or v (by volume, default)	
 	 */
 	
 	public static void main(String[] args) {
+		// Haven't yet implemented parsing of command-line arguments.
 		// String dataSource = args[0];
+		// int vocabSize = Integer.parseInt(args[1])
+		// String pageCode = args[2]
+		
 		String dataSource = "/Users/tunderwood/Dropbox/PythonScripts/mine/testdata/testdata.csv";
+		boolean pageFlag = true;
 		
 		// The name of a data source is passed in as an argument from the command line.
 		// We use that to set static fields in Vocabulary, which can be shared
 		// across all nodes without explicitly passing an instance of Vocabulary.
+		// pageFlag defines whether we're clustering by page or by volume (default).
 		
 		Vocabulary.inputFile = dataSource;
 		Vocabulary.vocabularySize = 100;
 		Vocabulary.countWords();
-			
+				
 		// The Vocabulary counts all words in the data and identifies
 		// a subset of most-common words. It can now tell us whether 
 		// a given word is in that subset. In Hadoop this would
 		// probably require a map-reduce step.
 		
-		BlockReader thisBlock = new BlockReader(dataSource);
+		HashMap<String, Integer> vocabularyMap = Vocabulary.getMap();
 		
-		// I've implemented the reader
-		// in a way that would allow multiple readers to read from
-		// different dataSources.
+		BlockReader mapper = new BlockReader(dataSource);
 		
-		GroupedSequence mappedLines = thisBlock.readPages();
+		// The mapper takes a text file and breaks it into
+		// key, value pairs where the key is a docid,
+		// and the value is the other 4 fields on the same line.
 		
-		// Now we have a sequence of lines separated out by document ID.
-		// If we wanted them separated by page, we could say readPages().
+		ArrayList<Volume> volumes = mapper.mapVolumes();
 		
-		// The next stage is to transform groups of lines into vectors.
-		// I've implemented this "reducing stage" as a static method
-		// of the Vocabulary, because the information to align words
-		// with particular index positions of the vector is
-		// contained in the Vocabulary.
+		// The Volume objects will reduce all the lines associated with a
+		// single docid. When they do this they produce DataPoints that can
+		// either represent volumes or individual pages. I've implemented
+		// these alternatives as two different methods of the Volume class.
 		
-		DataPoint[] points = Vocabulary.makeDataPoints(mappedLines);
+		ArrayList<DataPoint> datapoints = new ArrayList<DataPoint>();
+		
+		if (pageFlag) {
+			// We're producing page points.
+			for (Volume thisVol : volumes) {
+				ArrayList<DataPoint> newPoints = thisVol.makePagePoints(vocabularyMap);
+				datapoints.addAll(newPoints);
+			}
+		}
+		else {
+			// We're producing volume points.
+			for (Volume thisVol : volumes) {
+				DataPoint newPoint = thisVol.makeVolumePoint(vocabularyMap);
+				datapoints.add(newPoint);
+			}
+		}
 		
 		// What follows is insignificant code that I'm using merely to test
 		// that the conversion has worked, by writing the DataPoints
 		// to disk in a readable way.
 		
-		String[] output = new String[points.length];
-		for (int i = 0; i < points.length; ++i) {
-			DataPoint aPoint = points[i];
+		String[] output = new String[datapoints.size()];
+		for (int i = 0; i < datapoints.size(); ++i) {
+			DataPoint aPoint = datapoints.get(i);
 			double[] vector = aPoint.vector;
 			output[i] = aPoint.label + ": " + Arrays.toString(vector);
 		}

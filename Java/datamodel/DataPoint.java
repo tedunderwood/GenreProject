@@ -19,7 +19,6 @@ public class DataPoint {
 	public DataPoint(String label, double[] vector){
 		this.label = label;
 		this.vector = vector;
-		System.out.println(vector[0]);
 		dimensionality = vector.length;
 		double length = 0;
 		for (int i = 0; i < dimensionality; ++ i) {

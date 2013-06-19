@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  * @author tunderwood
- * 
+ * THIS CLASS NOW DEPRECATED.
  * In large part this class does the job of a Hadoop mapper:
  * sorting input lines into separate ArrayLists depending on
  * their keys. In reality, the Hadoop mapper would also have to
