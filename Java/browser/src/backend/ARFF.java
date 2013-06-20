@@ -20,12 +20,21 @@ public class ARFF {
 	private String relation;
 	private ArrayList<String> attributes;
 	private ArrayList<String []> data;
+	final String[] DEFAULT_HEADER = {"% 1. Description","% Description","%","% 2. Sources: % (List)"};
+	final String DEFAULT_RELATION = "blank";
+	final String[] DEFAULT_ATTRIBUTES = {"htid string","startpg numeric","endpg numeric","startpgpart numeric","endpgpart numeric","probability numeric"};
 	
 	public ARFF (String[] file) {
 		read(file);
 	}
 	
 	public ARFF() {
+		header = DEFAULT_HEADER;
+		relation = DEFAULT_RELATION;
+		attributes = new ArrayList<String>();
+		for (int i=0;i<DEFAULT_ATTRIBUTES.length;i++){
+			attributes.add(DEFAULT_ATTRIBUTES[i]);
+		}
 	}
 	
 	public void read(String[] file) {
@@ -61,25 +70,40 @@ public class ARFF {
 		
 	}
 	
-	public void add(String htid) {
+	public void setHeader (String[] input) {
+		header = input.clone();
+	}
+	
+	public void setRelation (String input) {
+		relation = input;
+	}
+	
+	public void add(String htid,String value) {
 		/**
 		 * Temporary add method.  Will need to change as more are used.
 		 */
 		// If the predictions generated here are 100%, then only page values would need to be set...
 		// For now just use this one for "whole" volumes and clone with additional values passed in for page-level predictions.
-		String[] temp = new String[data.get(0).length];
+		String[] temp = new String[attributes.size()];
 		for (int i=0;i<temp.length;i++) {
 			if (i==0) {
 				temp[i] = htid;
 			}
 			else if (i==temp.length-1) {
-				temp[i] = "1.0";
+				temp[i] = value;
 			}
 			else {
 				temp[i] = "0";
 			}
 		}
 		data.add(temp);
+	}
+	
+	public void clearItems() {
+		/**
+		 * Temporary solution to building predictions
+		 */
+		data = new ArrayList<String[]>();
 	}
 	
 	public String[] getString() {
@@ -96,11 +120,11 @@ public class ARFF {
 		}
 		
 		bigi++;
-		output[bigi] = "@relation " + relation;
+		output[bigi] = "@RELATION " + relation;
 		
 		for(int i=0;i<attributes.size();i++) {
 			bigi++;
-			output[bigi] = "@attribute " + attributes.get(i);
+			output[bigi] = "@ATTRIBUTE " + attributes.get(i);
 		}
 		
 		for(int i=0;i<data.size();i++) {

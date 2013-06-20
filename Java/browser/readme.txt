@@ -1,3 +1,8 @@
+6/20/13 - mikeb
+NEW: Initial browser commit
+MOVED: Backend code has been updated and moved into the browser structure
+Sparse comments for the time being.  Will write more documentation as code is revised.
+
 6/5/13 - mikeb
 NEW: Added a very basic ARFF class
 DerbyDB: Fixed exception handling so errors will be thrown to GUI.

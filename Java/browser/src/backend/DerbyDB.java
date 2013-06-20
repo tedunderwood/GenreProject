@@ -174,6 +174,9 @@ public class DerbyDB {
     }
     
     public String[] GetRecord (String htid) throws SQLException {
+    	/**
+    	 * Right now this only works for entries with normal dates.
+    	 */
     	String[] record = new String[9];
     	Statement s;
     	ResultSet rs;
@@ -189,6 +192,38 @@ public class DerbyDB {
     	record[6] = Integer.toString(rs.getInt("DATE"));
     	record[7] = rs.getString("COPY");
     	record[8] = rs.getString("SUBJECT");
+    	s.close();
+    	rs.close();
     	return record;
+    }
+    
+    public void CreateSubtable (String[] htids, String name) throws SQLException {
+    	/**
+    	 * Generates a subtable of entries with matching htids from all three tables using join
+    	 */
+    	Statement s = derbyconn.createStatement();
+    	s.execute("CREATE TABLE " + name.toUpperCase() + "(HTID VARCHAR(16))");
+    	PreparedStatement ps = derbyconn.prepareStatement("INSERT INTO " + name.toUpperCase() + " VALUES(?)");
+    	for(int i=0;i<htids.length;i++){ 
+    		ps.setString(1,htids[i]);
+    		ps.executeUpdate();
+    	}
+    	ps.close();
+    	System.out.println("Prediction stored in derby.");
+    	
+    	s.execute("CREATE TABLE PREDICTION (HTID VARCHAR(16) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(50), AUTHOR VARCHAR(100), TITLE VARCHAR(500), PUBLISH VARCHAR(300), DATE INT, COPY VARCHAR(50), SUBJECT VARCHAR(500))");
+    	s.execute("INSERT INTO PREDICTION SELECT COMPLETE.* FROM COMPLETE JOIN " + name.toUpperCase() + " ON COMPLETE.HTID=" + name.toUpperCase() + ".HTID");
+
+    	s.close();
+    }
+    
+    public void Command (String sql) throws SQLException{
+    	/**
+    	 * Use this method to pass commands to Derby which don't require output parsing.
+    	 */
+    	Statement s;
+    	s = derbyconn.createStatement();
+    	s.execute(sql);
+    	s.close();
     }
 }
