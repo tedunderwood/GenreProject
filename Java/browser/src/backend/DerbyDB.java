@@ -44,6 +44,7 @@ public class DerbyDB {
     	}
     	loadDriver();
     	// Create database at location from source
+    	System.out.println("Creating new database at " + location + ".");
     	
 		// In production versions, include something to check to see if database exists and create it if not.
 		derbyconn = DriverManager.getConnection(protocol + database + ";create=true");
@@ -52,9 +53,9 @@ public class DerbyDB {
 		// Create tables for the various date scenarios
 		System.out.println("Populating database using " + source);
 		Statement s = derbyconn.createStatement();
-		s.execute("CREATE TABLE COMPLETE (HTID VARCHAR(16) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(50), AUTHOR VARCHAR(100), TITLE VARCHAR(500), PUBLISH VARCHAR(300), DATE INT, COPY VARCHAR(50), SUBJECT VARCHAR(500))");
-		s.execute("CREATE TABLE RANGE (HTID VARCHAR(16) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(50), AUTHOR VARCHAR(100), TITLE VARCHAR(500), PUBLISH VARCHAR(300), DATE VARCHAR(9), COPY VARCHAR(50), SUBJECT VARCHAR(500))");
-		s.execute("CREATE TABLE FUZZY (HTID VARCHAR(16) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(50), AUTHOR VARCHAR(100), TITLE VARCHAR(500), PUBLISH VARCHAR(300), DATE VARCHAR(50), COPY VARCHAR(50), SUBJECT VARCHAR(500))");
+		s.execute("CREATE TABLE COMPLETE (HTID VARCHAR(30) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(150), AUTHOR VARCHAR(100), TITLE VARCHAR(1500), PUBLISH VARCHAR(1000), DATE INT, COPY VARCHAR(100), SUBJECT VARCHAR(1500))");
+		s.execute("CREATE TABLE RANGE (HTID VARCHAR(30) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(150), AUTHOR VARCHAR(100), TITLE VARCHAR(1500), PUBLISH VARCHAR(1000), DATE VARCHAR(9), COPY VARCHAR(100), SUBJECT VARCHAR(1500))");
+		s.execute("CREATE TABLE FUZZY (HTID VARCHAR(30) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(150), AUTHOR VARCHAR(100), TITLE VARCHAR(1500), PUBLISH VARCHAR(1000), DATE VARCHAR(200), COPY VARCHAR(100), SUBJECT VARCHAR(1500))");
 		
 		// Index author/title columns since they are frequently searched
 		s.execute("CREATE INDEX COMPLETEIDX ON COMPLETE (AUTHOR, TITLE)");
@@ -131,7 +132,7 @@ public class DerbyDB {
 		 */
 		try {
 			Class.forName(driver).newInstance();
-			System.out.println("Loaded the appropriate driver");
+			System.out.println("Loaded the appropriate JDBC Derby driver.");
 		} catch (ClassNotFoundException cnfe) {
 			System.err.println("\nUnable to load the JDBC driver " + driver);
 			System.err.println("Please check your CLASSPATH.");
@@ -147,7 +148,7 @@ public class DerbyDB {
 		}
 	}
  
-    public String[][] Query (String sql) throws SQLException {
+    public String[][] query (String sql) throws SQLException {
     	/**
     	 * Accepts a SQL query as a String and returns the results as a matrix of Strings.
     	 * 
@@ -173,7 +174,7 @@ public class DerbyDB {
     	return results.toArray(new String[results.size()][4]);
     }
     
-    public String[] GetRecord (String htid) throws SQLException {
+    public String[] getRecord (String htid) throws SQLException {
     	/**
     	 * Right now this only works for entries with normal dates.
     	 */
@@ -197,12 +198,12 @@ public class DerbyDB {
     	return record;
     }
     
-    public void CreateSubtable (String[] htids, String name) throws SQLException {
+    public void createSubtable (String[] htids, String name) throws SQLException {
     	/**
     	 * Generates a subtable of entries with matching htids from all three tables using join
     	 */
     	Statement s = derbyconn.createStatement();
-    	s.execute("CREATE TABLE " + name.toUpperCase() + "(HTID VARCHAR(16))");
+    	s.execute("CREATE TABLE " + name.toUpperCase() + "(HTID VARCHAR(30))");
     	PreparedStatement ps = derbyconn.prepareStatement("INSERT INTO " + name.toUpperCase() + " VALUES(?)");
     	for(int i=0;i<htids.length;i++){ 
     		ps.setString(1,htids[i]);
@@ -211,13 +212,13 @@ public class DerbyDB {
     	ps.close();
     	System.out.println("Prediction stored in derby.");
     	
-    	s.execute("CREATE TABLE PREDICTION (HTID VARCHAR(16) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(50), AUTHOR VARCHAR(100), TITLE VARCHAR(500), PUBLISH VARCHAR(300), DATE INT, COPY VARCHAR(50), SUBJECT VARCHAR(500))");
+    	s.execute("CREATE TABLE PREDICTION (HTID VARCHAR(30) NOT NULL PRIMARY KEY, VOLNUM VARCHAR(16), CALLNUM VARCHAR(150), AUTHOR VARCHAR(100), TITLE VARCHAR(1500), PUBLISH VARCHAR(1000), DATE INT, COPY VARCHAR(100), SUBJECT VARCHAR(1500))");
     	s.execute("INSERT INTO PREDICTION SELECT COMPLETE.* FROM COMPLETE JOIN " + name.toUpperCase() + " ON COMPLETE.HTID=" + name.toUpperCase() + ".HTID");
 
     	s.close();
     }
     
-    public void Command (String sql) throws SQLException{
+    public void command (String sql) throws SQLException{
     	/**
     	 * Use this method to pass commands to Derby which don't require output parsing.
     	 */
@@ -225,5 +226,31 @@ public class DerbyDB {
     	s = derbyconn.createStatement();
     	s.execute(sql);
     	s.close();
+    }
+    
+    public void dropTables() throws SQLException {
+    	String[] tables = getTables();
+    	for(int i=0;i<tables.length;i++){
+    		System.out.println("Dropping table " + tables[i] + ".");
+    		command("DROP TABLE " + tables[i]);
+    	}
+    	
+    }
+    
+    private String[] getTables() throws SQLException {
+    	ArrayList<String> results = new ArrayList<String>();
+    	Statement s;
+    	ResultSet rs;
+    	s = derbyconn.createStatement();
+    	rs = s.executeQuery("SELECT TABLENAME FROM SYS.SYSTABLES WHERE TABLETYPE='T'");
+    	while(rs.next()) {
+    		String tablename = rs.getString("TABLENAME").trim();
+    		if(!tablename.equals("COMPLETE") && !tablename.equals("RANGE") && !tablename.equals("FUZZY")) {
+    			results.add(tablename);
+    		}
+    	}
+    	rs.close();
+    	s.close();
+    	return results.toArray(new String[results.size()]);	
     }
 }

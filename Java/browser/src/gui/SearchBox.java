@@ -1,4 +1,4 @@
-package browser;
+package gui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import backend.DerbyDB;
+import backend.ResultsTableModel;
 
 public class SearchBox extends JPanel {
 	/**
@@ -17,16 +18,15 @@ public class SearchBox extends JPanel {
 	 * TODO: Also require a list model? (To load results into for display in other class)
 	 */
 	
-	private GridBagConstraints label,field,full;
 	private JLabel authorL, titleL,htidL,beforeL,afterL;
 	private JTextField authorF, titleF, htidF,beforeF,afterF;
 	private JPanel commands;
 	private JButton submit, clear;
 	private JCheckBox subset;
-	DefaultTableModel resModel;
+	ResultsTableModel rmodel;
 	
 	// References to external structures
-	private DerbyDB connection;
+	private DerbyDB derby;
 	
 	// Search interface constants
 	final private String[] COL_NAMES = {"HTID","Author","Title","Date"};
@@ -35,14 +35,10 @@ public class SearchBox extends JPanel {
 	public SearchBox (DerbyDB conn) {
 		
 		// Override default settings in table model to forbid users from editing cells because Java doesn't provide this option natively for some reason
-		resModel = new DefaultTableModel(COL_NAMES,0) {
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
+		rmodel = new ResultsTableModel();
 		
 		// Store reference to DerbyDB internally for all future search actions
-		connection = conn;
+		derby = conn;
 		
 		//Setup UI objects
 		drawGUI();
@@ -51,7 +47,9 @@ public class SearchBox extends JPanel {
 	}
 	
 	private void drawGUI () {
+		GridBagConstraints labels,fields,full;
 		setBorder(new EmptyBorder(10, 10, 5, 5));
+		Dimension textbox = new Dimension(175,30);
 		
 		// Set universal layout properties
 		setLayout(new GridBagLayout());
@@ -59,47 +57,52 @@ public class SearchBox extends JPanel {
 		full.gridwidth = 4;
 		
 		// Set universal label & form properties
-		label = new GridBagConstraints();
-		label.gridwidth = 1;
-		label.gridx = 0;
-		field = new GridBagConstraints();
-		field.gridwidth = 3;
-		field.gridx = 1;
-		field.ipadx = 175;
+		labels = new GridBagConstraints();
+		labels.gridwidth = 1;
+		labels.gridx = 0;
+		fields = new GridBagConstraints();
+		fields.gridwidth = 3;
+		fields.gridx = 1;
+		//fields.insets = new Insets(3,3,3,3);
 		
 		// Set remaining properties for each label and add to layout
 		authorL = new JLabel("Author:");
-		label.gridy = 0;
-		add(authorL,label);
+		labels.gridy = 0;
+		add(authorL,labels);
 		titleL = new JLabel("Title:");
-		label.gridy = 1;
-		add(titleL,label);
+		labels.gridy = 1;
+		add(titleL,labels);
 		htidL = new JLabel("HTID:");
-		label.gridy = 2;
-		add(htidL,label);
+		labels.gridy = 2;
+		add(htidL,labels);
 		beforeL = new JLabel("Before:");
-		label.gridy = 3;
-		add(beforeL,label);
+		labels.gridy = 3;
+		add(beforeL,labels);
 		afterL = new JLabel("After:");
-		label.gridy = 4;
-		add(afterL,label);
+		labels.gridy = 4;
+		add(afterL,labels);
 		
 		// Set remaining properties for each form and add to layout
 		authorF = new JTextField(null);
-		field.gridy = 0;
-		add(authorF,field);
+		authorF.setPreferredSize(textbox);
+		fields.gridy = 0;
+		add(authorF,fields);
 		titleF = new JTextField(null);
-		field.gridy = 1;
-		add(titleF,field);
+		titleF.setPreferredSize(textbox);
+		fields.gridy = 1;
+		add(titleF,fields);
 		htidF = new JTextField(null);
-		field.gridy = 2;
-		add(htidF,field);
+		htidF.setPreferredSize(textbox);
+		fields.gridy = 2;
+		add(htidF,fields);
 		beforeF = new JTextField(null);
-		field.gridy = 3;
-		add(beforeF,field);
+		beforeF.setPreferredSize(textbox);
+		fields.gridy = 3;
+		add(beforeF,fields);
 		afterF = new JTextField(null);
-		field.gridy = 4;
-		add(afterF,field);
+		afterF.setPreferredSize(textbox);
+		fields.gridy = 4;
+		add(afterF,fields);
 		
 		// Create buttons in universal "full row" constraints but use nested grid for evenly split button sections
 		full.gridx = 0;
@@ -119,55 +122,52 @@ public class SearchBox extends JPanel {
 	private void defineButtons() {
 		
 		// Submit query (check to see if search fields are used correctly, then generate SQL and pass to Derby)
-		submit.addActionListener(
-			new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-					// TODO: Write a search check function that returns true/false to replace lengthy conditional  
-					if (allowSearch()) {	
-						String sql = parseSearchSQL(authorF.getText(),titleF.getText(),htidF.getText(),beforeF.getText(),afterF.getText(),subset.isSelected());
-						String[][] results;
-						try {
-							results = connection.Query(sql);
-							resModel.setDataVector(results, COL_NAMES);
-						} catch (SQLException badQuery) {
-							// TODO More specific error message?
-							JOptionPane.showMessageDialog(null, "Database query cannot be processed.\n\nConsult derby.log for details.","Search Error",JOptionPane.WARNING_MESSAGE);
+		submit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				// TODO: Write a search check function that returns true/false to replace lengthy conditional  
+				if (allowSearch()) {	
+					String sql = parseSearchSQL(authorF.getText(),titleF.getText(),htidF.getText(),beforeF.getText(),afterF.getText(),subset.isSelected());
+					String[][] results;
+					try {
+						results = derby.query(sql);
+						for(int i=0;i<results.length;i++){
+							addRecord(results[i]);
 						}
-					} else {
-						JOptionPane.showMessageDialog(null, "Cannot perform search. Fields are empty or dates are not in expected format","Search Error",JOptionPane.PLAIN_MESSAGE);
+					} catch (SQLException badQuery) {
+						// TODO More specific error message?
+						JOptionPane.showMessageDialog(null, "Database query cannot be processed.\n\nConsult derby.log for details.","Search Error",JOptionPane.WARNING_MESSAGE);
 					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Cannot perform search. Fields are empty or dates are not in expected format","Search Error",JOptionPane.PLAIN_MESSAGE);
 				}
 			}
-		);
+		});
 		
 		// Clear search fields & reset prediction subset flag to inactive
-		clear.addActionListener(
-			new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					titleF.setText(null);
-					authorF.setText(null);
-					htidF.setText(null);
-					afterF.setText(null);
-					beforeF.setText(null);
-					subset.setSelected(false);
-				}
-			}			
-		);
+		clear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				titleF.setText(null);
+				authorF.setText(null);
+				htidF.setText(null);
+				afterF.setText(null);
+				beforeF.setText(null);
+				subset.setSelected(false);
+				rmodel.setRowCount(0);
+			}
+		});
 	}
 	
 	private String parseSearchSQL (String author, String title, String htid, String before, String after, boolean limit) {
 		ArrayList<String> clauses = new ArrayList<String>();
 		String query = "";
 		String database;
-
 		// Table selection
 		if (limit) {
 			database = "PREDICTION";
 		} else {
 			database = "COMPLETE";
-		}
-		
+		}	
 		// Clause builder
 		if (author.length() >= MIN_SEARCH) {
 			clauses.add(" LOWER(AUTHOR) LIKE LOWER('%" + author + "%')");
@@ -191,13 +191,11 @@ public class SearchBox extends JPanel {
 				query += " AND";
 			}
 			query += builder[i];
-		}
-		
+		}		
 		return "SELECT HTID, TITLE, AUTHOR, DATE FROM " + database + " WHERE" + query + " ORDER BY DATE ASC";
 	}
 	
-	private boolean allowSearch () {
-		
+	private boolean allowSearch () {		
 		// First check date fields
 		if ((beforeF.getText().length() != 4 && beforeF.getText().length() != 0) || (afterF.getText().length() != 4 && afterF.getText().length() != 0)) {
 			return false;
@@ -207,8 +205,11 @@ public class SearchBox extends JPanel {
 		}
 		else {
 			return true;
-		}
-		
+		}		
+	}
+	
+	private void addRecord(String[] record) {
+		rmodel.addResult(record[ResultsTableModel.HTID_COL], record[ResultsTableModel.AUTHOR_COL], record[ResultsTableModel.TITLE_COL], record[ResultsTableModel.DATE_COL]);
 	}
 
 }

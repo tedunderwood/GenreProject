@@ -20,9 +20,9 @@ public class ARFF {
 	private String relation;
 	private ArrayList<String> attributes;
 	private ArrayList<String []> data;
-	final String[] DEFAULT_HEADER = {"% 1. Description","% Description","%","% 2. Sources: % (List)"};
-	final String DEFAULT_RELATION = "blank";
-	final String[] DEFAULT_ATTRIBUTES = {"htid string","startpg numeric","endpg numeric","startpgpart numeric","endpgpart numeric","probability numeric"};
+	public static String[] DEFAULT_HEADER = {"% 1. Description","% (Description)","%","% 2. Sources:", "% (List)"};
+	public static String DEFAULT_RELATION = "blank";
+	public static String[] DEFAULT_ATTRIBUTES = {"htid string","startpg numeric","endpg numeric","startpgpart numeric","endpgpart numeric","probability numeric"};
 	
 	public ARFF (String[] file) {
 		read(file);
@@ -74,8 +74,16 @@ public class ARFF {
 		header = input.clone();
 	}
 	
+	public String[] getHeader() {
+		return header.clone();
+	}
+	
 	public void setRelation (String input) {
 		relation = input;
+	}
+	
+	public String getRelation() {
+		return relation;
 	}
 	
 	public void add(String htid,String value) {
@@ -101,15 +109,17 @@ public class ARFF {
 	
 	public void clearItems() {
 		/**
-		 * Temporary solution to building predictions
+		 * Removes all items from the internal data model. This prepares the prediction model to receive updated data from exterior sources.
 		 */
 		data = new ArrayList<String[]>();
 	}
 	
 	public String[] getString() {
+
 		/**
 		 * Returns an array of Strings where each value is a line of text.  Does not include new line characters
 		 */
+
 		String[] output = new String[header.length + 1 + attributes.size() + data.size()];
 		int bigi = 0;
 		String dataline;
@@ -142,7 +152,7 @@ public class ARFF {
 		return output;
 	}
 	
-	public String [] getItems () {
+	public String[] getItems () {
 		/**
 		 * Returns a list of item identifiers (first value, should be HTid).  Useful for calling up complete metadata listings from DerbyDB.
 		 */
