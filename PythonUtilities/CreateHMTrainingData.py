@@ -19,6 +19,22 @@ metadata = loadmetadata()
 
 print("Metadata loaded.")
 
+from LoadMetadata import loadgenredata
+print("Loading genre data.")
+
+genredata = loadgenredata()
+
+print("Genre data loaded.")
+
+isfiction = set()
+for key, value in genredata.items():
+    date, bio, dra, fic, non, poe, author, title = value
+    fiction = float(fic)
+    if fiction > 0.5:
+        isfiction.add(key)
+
+del genredata   
+
 outpath = "/Users/tunderwood/Dropbox/PythonScripts/mine/pagepartdata/"
 
 alreadymapped = set()
@@ -219,7 +235,7 @@ def mapvolume(pagedict, maxpages):
 
     # Now check to see if all pages have a genrecode.
     previousgenre = ""
-    for akey in range(1, maxpages):
+    for akey in range(0, maxpages):
         if akey in volmap:
             previousgenre = volmap[akey]
             print("Page", akey, ":", previousgenre)
@@ -250,7 +266,7 @@ def mapvolume(pagedict, maxpages):
 ##
 ## I should enclose this in if __name__ == "main" but I'm lazy.
 
-with bz2.BZ2File("/Users/tunderwood/Hathi/pre1900nonserials0.txt.bz2", mode = 'r', buffering = 1000000) as file:
+with bz2.BZ2File("/Users/tunderwood/Hathi/pre1900nonserials2.txt.bz2", mode = 'r', buffering = 1000000) as file:
     
     while volcount < volumelimit:
         line = file.readline()
@@ -260,6 +276,8 @@ with bz2.BZ2File("/Users/tunderwood/Hathi/pre1900nonserials0.txt.bz2", mode = 'r
         if doc == currentDocID:
             continue
         if doc in alreadymapped:
+            continue
+        if doc not in isfiction:
             continue
         else:
             filepath, postfix = LocalFileCabinet.pairtreepath(doc, localdatapath)
@@ -288,20 +306,27 @@ with bz2.BZ2File("/Users/tunderwood/Hathi/pre1900nonserials0.txt.bz2", mode = 'r
                 pagecounter = 0
                 page = list()
                 
-                for line in filelines:
-                    if line == '<pb>\n':
+                for textline in filelines:
+                    if textline == '<pb>\n':
                         pagedict[pagecounter] = page
                         pagecounter += 1
                         page = list()
                     else:
-                        page.append(line)
+                        page.append(textline)
+                        
+                # Add the last page, which by definition is not followed by a "<pb>\n" to
+                # push it onto pagedict.
+                
+                # I used to have this framed by an if statement, conditioned on the length of
+                # "page," which led to missing
+                # the blank last pages of some books.
+                pagedict[pagecounter] = page
 
-                if len(page) > 0:
-                    pagedict[pagecounter] = page
+                maxtextpages = pagecounter
 
-                print('The volume has', pagecounter, 'pages.')
+                print('The volume has', maxtextpages, 'pages.')
 
-                pagemap = mapvolume(pagedict, pagecounter - 1)
+                pagemap = mapvolume(pagedict, pagecounter)
                 if len(pagemap) < 1:
                     continue
                 else:
@@ -311,18 +336,28 @@ with bz2.BZ2File("/Users/tunderwood/Hathi/pre1900nonserials0.txt.bz2", mode = 'r
                             outline = doc + '\t' + str(key) + '\t' + value + '\n'
                             mapfile.write(outline)
                     thisdoc = doc
-                    outfile = outpath + "pagecounts.tsv"
+                    outfile = outpath + "pagecounts.csv"
+                    maxcountpages = 0
                     with open(outfile, mode='a', encoding = 'utf-8') as countfile:
                         countfile.write(line)
                         while doc == thisdoc:
+                            fileposition = file.tell()
                             line = file.readline()
                             line = str(line, encoding = 'utf-8')
                             fields = line.split(',')
                             doc = fields[0]
+                            pagenum = int(fields[1])
+                            if pagenum > maxcountpages:
+                                maxcountpages = pagenum
                             if doc == thisdoc:
                                 countfile.write(line)
                             else:
+                                file.seek(fileposition)
                                 break
+                    if maxtextpages != maxcountpages:
+                        print("Discrepancy between page counts in file.")
+                        print("The pages from the text file:", maxtextpages)
+                        print("The pages from the wordcount file:", maxcountpages)
 
             elif user == "stop":
                 break
