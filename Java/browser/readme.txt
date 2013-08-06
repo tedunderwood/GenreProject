@@ -1,3 +1,21 @@
+Change log:
+
+8/6/13 - mikeb
+NEW: VolumeReader class will loads processed volumes into memory, acts as interface
+NEW: PageMapper class lets users assign genre codes to pages
+TODO: PageMapper is not currently integrated into the browser GUI
+TODO: Integrate VolumeReader & PageMapper into preferences to locate volume data and allowable genre codes file
+
+7/12/13 - mikeb
+MOVED: Migrated browser classes to "gui" package
+NEW: RecordViewer class lets users see the complete metadata entry for a search result
+NEW: Preferences class handles basic loading/saving of past sessions
+NEW: PredictionTableModel class for handling display of prediction records
+NEW: ResultsTableModel class for handling display of search results
+NEW: "Load Source Records" button will add all predictions from source ARFF to target ARFF
+NEW: New Derby database can be generated at start if none is found (or no previous session)
+NEW: All tables created from predictions are dropped at program close
+
 6/20/13 - mikeb
 NEW: Initial browser commit
 MOVED: Backend code has been updated and moved into the browser structure
