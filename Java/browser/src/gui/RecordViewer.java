@@ -10,149 +10,154 @@ public class RecordViewer extends JDialog {
 	 * TODO: Documentation
 	 */
 	
-	JLabel htidL, volnumL, callnumL, authorL, titleL, publishL, dateL, copyL, subjectL;
-	JTextField htidF, volnumF, callnumF, authorF, dateF, copyF;
-	JTextArea titleF, publishF, subjectF;
-	JScrollPane titleSP, publishSP, subjectSP;
+	JLabel htidLabel, volnumLabel, callnumLabel, authorLabel, titleLabel, publishLabel, dateLabel, copyLabel, subjectLabel;
+	JTextField htidField, volnumField, callnumField, authorField, dateField, copyField;
+	JTextArea titleArea, publishArea, subjectArea;
+	JScrollPane titleScroll, publishScroll, subjectScroll;
 	JButton close;
-	JPanel labelP, fieldP;
+	JPanel labelsPane, fieldsPane;
 	
 	public RecordViewer (String[] record) {
+		// Set pop-up properties
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setLocationRelativeTo(getParent());
+		setLocationRelativeTo(null);
 		setResizable(false);
-		// Pass record data to relevant fields & add to ArrayList for management
-		htidF = new JTextField(record[0]);
-		volnumF = new JTextField(record[1]);
-		callnumF = new JTextField(record[2]);
-		authorF = new JTextField(record[3]);
-		titleF = new JTextArea(record[4]);
-		publishF = new JTextArea(record[5]);
-		dateF = new JTextField(record[6]);
-		copyF = new JTextField(record[7]);
-		subjectF = new JTextArea(record[8]);
-		DrawGUI();
-		DefineButtons();
+		setAlwaysOnTop(true);
+		
+		//Pass record data to relevant fields & add to ArrayList for management
+		htidField = new JTextField(record[0]);
+		volnumField = new JTextField(record[1]);
+		callnumField = new JTextField(record[2]);
+		authorField = new JTextField(record[3]);
+		titleArea = new JTextArea(record[4]);
+		publishArea = new JTextArea(record[5]);
+		dateField = new JTextField(record[6]);
+		copyField = new JTextField(record[7]);
+		subjectArea = new JTextArea(record[8]);
+		
+		//Draw dialog window objects and configure interactivity
+		drawGUI();
+		defineListeners();
 	}
 	
-	private void DrawGUI() {
-		// UI layout objects
-		GridBagConstraints labels = new GridBagConstraints();
-		GridBagConstraints fields = new GridBagConstraints();
-		GridBagConstraints full = new GridBagConstraints();
-		Dimension area_size = new Dimension(269,75);
-		Dimension field_size = new Dimension(275,25);
-		Dimension label_size_small = new Dimension(100,25);
-		Dimension label_size_big = new Dimension(100,75);
-		
-		// Set layout managers & column+cell properties
-		setLayout(new GridBagLayout());
+	private void drawGUI() {
+		// Initialize UI size objects and set window size property
+		Dimension areaSize = new Dimension(269,75);
+		Dimension fieldSize = new Dimension(275,25);
+		Dimension labelSizeSmall = new Dimension(100,25);
+		Dimension labelSizeBig = new Dimension(100,75);
 		setSize(440,500);
-		labels.gridwidth = 1;
-		labels.gridx = 0;
-		fields.gridwidth = 3;
-		fields.gridx = 1;
-		fields.insets = new Insets(3,3,3,3);
-		full.gridwidth = 4;
-		full.gridx = 0;
+		
+		// Initialize layout manager & column+cell property objects
+		setLayout(new GridBagLayout());
+		GridBagConstraints labelProperties= new GridBagConstraints();
+		GridBagConstraints fieldProperties = new GridBagConstraints();
+		GridBagConstraints fullRowProperties = new GridBagConstraints();
+		labelProperties.gridwidth = 1;
+		labelProperties.gridx = 0;
+		fieldProperties.gridwidth = 3;
+		fieldProperties.gridx = 1;
+		fieldProperties.insets = new Insets(3,3,3,3);
+		fullRowProperties.gridwidth = 4;
+		fullRowProperties.gridx = 0;
 		
 		//Initialize & configure static components
-		htidL = new JLabel("HTID:");
-		htidL.setPreferredSize(label_size_small);
-		volnumL = new JLabel("Volume ID:");
-		volnumL.setPreferredSize(label_size_small);
-		callnumL = new JLabel("Call Number:");
-		callnumL.setPreferredSize(label_size_small);
-		authorL = new JLabel("Author:");
-		authorL.setPreferredSize(label_size_small);
-		titleL = new JLabel("Title:");
-		titleL.setPreferredSize(label_size_big);
-		publishL = new JLabel("Publisher:");
-		publishL.setPreferredSize(label_size_big);
-		dateL = new JLabel("Date:");
-		dateL.setPreferredSize(label_size_small);
-		copyL = new JLabel("Copy:");
-		copyL.setPreferredSize(label_size_small);
-		subjectL = new JLabel("Subject:");
-		subjectL.setPreferredSize(label_size_big);
+		htidLabel = new JLabel("HTID:");
+		htidLabel.setPreferredSize(labelSizeSmall);
+		volnumLabel = new JLabel("Volume ID:");
+		volnumLabel.setPreferredSize(labelSizeSmall);
+		callnumLabel = new JLabel("Call Number:");
+		callnumLabel.setPreferredSize(labelSizeSmall);
+		authorLabel = new JLabel("Author:");
+		authorLabel.setPreferredSize(labelSizeSmall);
+		titleLabel = new JLabel("Title:");
+		titleLabel.setPreferredSize(labelSizeBig);
+		publishLabel = new JLabel("Publisher:");
+		publishLabel.setPreferredSize(labelSizeBig);
+		dateLabel = new JLabel("Date:");
+		dateLabel.setPreferredSize(labelSizeSmall);
+		copyLabel = new JLabel("Copy:");
+		copyLabel.setPreferredSize(labelSizeSmall);
+		subjectLabel = new JLabel("Subject:");
+		subjectLabel.setPreferredSize(labelSizeBig);
 		close = new JButton("Close");
 		
-		//Initialize & configure container objects
-		titleSP = new JScrollPane(titleF);
-		titleSP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		titleSP.setPreferredSize(area_size);
-		titleF.setLineWrap(true);
-		titleF.setWrapStyleWord(true);
-		titleF.setEditable(false);
-		publishSP = new JScrollPane(publishF);
-		publishSP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		publishSP.setPreferredSize(area_size);
-		publishF.setLineWrap(true);
-		publishF.setWrapStyleWord(true);
-		publishF.setEditable(false);
-		subjectSP = new JScrollPane(subjectF);		
-		subjectSP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		subjectSP.setPreferredSize(area_size);
-		subjectF.setLineWrap(true);
-		subjectF.setWrapStyleWord(true);
-		subjectF.setEditable(false);
+		//Initialize & configure textfield containers
+		titleScroll = new JScrollPane(titleArea);
+		titleScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		titleScroll.setPreferredSize(areaSize);
+		titleArea.setLineWrap(true);
+		titleArea.setWrapStyleWord(true);
+		titleArea.setEditable(false);
+		publishScroll = new JScrollPane(publishArea);
+		publishScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		publishScroll.setPreferredSize(areaSize);
+		publishArea.setLineWrap(true);
+		publishArea.setWrapStyleWord(true);
+		publishArea.setEditable(false);
+		subjectScroll = new JScrollPane(subjectArea);		
+		subjectScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		subjectScroll.setPreferredSize(areaSize);
+		subjectArea.setLineWrap(true);
+		subjectArea.setWrapStyleWord(true);
+		subjectArea.setEditable(false);
 		
 		//Configure uncontained textfields
-		htidF.setPreferredSize(field_size);
-		htidF.setEditable(false);
-		volnumF.setPreferredSize(field_size);
-		volnumF.setEditable(false);
-		callnumF.setPreferredSize(field_size);
-		callnumF.setEditable(false);
-		authorF.setPreferredSize(field_size);
-		authorF.setEditable(false);
-		dateF.setPreferredSize(field_size);
-		dateF.setEditable(false);
-		copyF.setPreferredSize(field_size);
-		copyF.setEditable(false);
+		htidField.setPreferredSize(fieldSize);
+		htidField.setEditable(false);
+		volnumField.setPreferredSize(fieldSize);
+		volnumField.setEditable(false);
+		callnumField.setPreferredSize(fieldSize);
+		callnumField.setEditable(false);
+		authorField.setPreferredSize(fieldSize);
+		authorField.setEditable(false);
+		dateField.setPreferredSize(fieldSize);
+		dateField.setEditable(false);
+		copyField.setPreferredSize(fieldSize);
+		copyField.setEditable(false);
 		
-		//Add pairs of objects to columns
-		labels.gridy = 0;
-		fields.gridy = 0;
-		add(htidL,labels);
-		add(htidF,fields);
-		labels.gridy = 1;
-		fields.gridy = 1;
-		add(volnumL,labels);
-		add(volnumF,fields);
-		labels.gridy = 2;
-		fields.gridy = 2;
-		add(callnumL,labels);
-		add(callnumF,fields);
-		labels.gridy = 3;
-		fields.gridy = 3;
-		add(authorL,labels);
-		add(authorF,fields);
-		labels.gridy = 4;
-		fields.gridy = 4;
-		add(titleL,labels);
-		add(titleSP,fields);
-		labels.gridy = 5;
-		fields.gridy = 5;
-		add(publishL,labels);
-		add(publishSP,fields);
-		labels.gridy = 6;
-		fields.gridy = 6;
-		add(dateL,labels);
-		add(dateF,fields);
-		labels.gridy = 7;
-		fields.gridy = 7;
-		add(copyL,labels);
-		add(copyF,fields);
-		labels.gridy = 8;
-		fields.gridy = 8;
-		add(subjectL,labels);
-		add(subjectSP,fields);
-		full.gridy = 9;
-		add(close,full);
+		//Add pairs of objects to columns using column+cell property objects
+		labelProperties.gridy = 0;
+		fieldProperties.gridy = 0;
+		add(htidLabel,labelProperties);
+		add(htidField,fieldProperties);
+		labelProperties.gridy = 1;
+		fieldProperties.gridy = 1;
+		add(volnumLabel,labelProperties);
+		add(volnumField,fieldProperties);
+		labelProperties.gridy = 2;
+		fieldProperties.gridy = 2;
+		add(callnumLabel,labelProperties);
+		add(callnumField,fieldProperties);
+		labelProperties.gridy = 3;
+		fieldProperties.gridy = 3;
+		add(authorLabel,labelProperties);
+		add(authorField,fieldProperties);
+		labelProperties.gridy = 4;
+		fieldProperties.gridy = 4;
+		add(titleLabel,labelProperties);
+		add(titleScroll,fieldProperties);
+		labelProperties.gridy = 5;
+		fieldProperties.gridy = 5;
+		add(publishLabel,labelProperties);
+		add(publishScroll,fieldProperties);
+		labelProperties.gridy = 6;
+		fieldProperties.gridy = 6;
+		add(dateLabel,labelProperties);
+		add(dateField,fieldProperties);
+		labelProperties.gridy = 7;
+		fieldProperties.gridy = 7;
+		add(copyLabel,labelProperties);
+		add(copyField,fieldProperties);
+		labelProperties.gridy = 8;
+		fieldProperties.gridy = 8;
+		add(subjectLabel,labelProperties);
+		add(subjectScroll,fieldProperties);
+		fullRowProperties.gridy = 9;
+		add(close,fullRowProperties);
 	}
 	
-	private void DefineButtons() {
+	private void defineListeners() {
 		close.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();

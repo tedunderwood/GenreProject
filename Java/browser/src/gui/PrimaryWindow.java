@@ -11,7 +11,7 @@ import backend.Preferences;
 public class PrimaryWindow extends JFrame {
 
 	/**
-	 * author @mblack884
+	 * author: Mike Black @mblack884
 	 * 
 	 * This class and those it pulls in represent an early version of the GenreBrowser UI.
 	 * The code is not yet well commented and will be re-organized more cleanly going forward.
@@ -27,16 +27,14 @@ public class PrimaryWindow extends JFrame {
 	 * 
 	 * TODO:
 	 * - Migrate to MAVEN
-	 * - Page range/parts editor
 	 * - Complete documentation & comments
-	 * - Make sure object names follow uniform naming scheme across classes
 	 * - Uniform error dialog class?
+	 * - Change database?
 	 *  
-	 * 7/15/13 & onward: UI tweaks, adjustments towards better modularization, debugging/userproofing
+	 * 7/17/13 & onward: UI tweaks, adjustments towards better modularization, debugging/userproofing
 	 * 
 	 * KNOWN BUGS:
-	 * - Header editor throws error if target arff has not been created
-	 * - The Window Closing listener does not activate if user closes from the Mac application menu 
+	 * - The Window Closing listener does not activate if user closes from the MacOS application menu 
 	 * 
 	 */
 	
@@ -73,11 +71,11 @@ public class PrimaryWindow extends JFrame {
 		derby = db;
 		setLayout(new GridLayout(0,1));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		defineClose();
+		defineListeners();
 		setSize(900,600);
 		search = new SearchBox(derby);
-		predict = new PredictionManager(derby);
-		results = new SearchResults(search.rmodel,predict.tmodel,derby);
+		predict = new PredictionManager(derby,prefs);
+		results = new SearchResults(search.resultsModel,predict.targetModel,derby);
 		bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 		bottom.add(search,BorderLayout.WEST);
@@ -87,7 +85,7 @@ public class PrimaryWindow extends JFrame {
 		setVisible(true);
 	}
 	
-	private void defineClose() {
+	private void defineListeners() {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if (predict.getSaveState()) {

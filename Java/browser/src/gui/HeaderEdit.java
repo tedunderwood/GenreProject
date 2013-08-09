@@ -8,24 +8,25 @@ import javax.swing.border.EmptyBorder;
 
 public class HeaderEdit extends JDialog {
 	
-	private JTextArea headingF;
-	private JTextField relationF;
-	private JScrollPane headingSP;
-	private JLabel headingL, relationL;
+	private JTextArea headingField;
+	private JTextField relationField;
+	private JScrollPane headingScroll;
+	private JLabel headingLabel, relationLabel;
 	private JButton accept,cancel;
-	private JPanel pfields,pbuttons,pheading,prelation;
+	private JPanel fieldsPanel,buttonsPanel,headingPanel,relationPanel;
 	private Boolean result;
 
 	public HeaderEdit() {
-		setSize(300, 300);
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setLocationRelativeTo(getParent());
-		DrawGUI();
-		DefineButtons();
+		setAlwaysOnTop(true);
+		setLocationRelativeTo(null);
+		setResizable(false);
+		drawGUI();
+		defineListeners();
 		result = false;
 	}
 	
-	private void DrawGUI() {
+	private void drawGUI() {
 		/*
 		 * Create elements in nested layouts as follows:
 		 * Entire dialog 
@@ -34,47 +35,48 @@ public class HeaderEdit extends JDialog {
 		 * - - Relation TextField and label
 		 * - Buttons and labels
 		 */
+		setSize(300, 300);
 		
 		// Create the text boxes and labels for heading & relation edits
-		pfields = new JPanel();
-		pfields.setLayout(new BorderLayout());
-		pheading = new JPanel();
-		headingL = new JLabel("Heading:");
-		headingF = new JTextArea();
-		headingSP = new JScrollPane(headingF);
-		pheading.setLayout(new BorderLayout());
-		pheading.setBorder(new EmptyBorder(10, 10, 10, 10));
-		pheading.add(headingL,BorderLayout.NORTH);
-		pheading.add(headingSP,BorderLayout.CENTER);
-		pfields.add(pheading,BorderLayout.CENTER);
-		prelation = new JPanel();
-		prelation.setLayout(new BoxLayout(prelation,BoxLayout.X_AXIS));
-		relationL = new JLabel("Relation:");
-		relationF = new JTextField();
-		prelation.add(Box.createHorizontalGlue());
-		prelation.add(relationL);
-		prelation.add(relationF);
-		prelation.add(Box.createHorizontalGlue());
-		pheading.add(prelation,BorderLayout.SOUTH);
+		fieldsPanel = new JPanel();
+		fieldsPanel.setLayout(new BorderLayout());
+		headingPanel = new JPanel();
+		headingLabel = new JLabel("Heading:");
+		headingField = new JTextArea();
+		headingScroll = new JScrollPane(headingField);
+		headingPanel.setLayout(new BorderLayout());
+		headingPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		headingPanel.add(headingLabel,BorderLayout.NORTH);
+		headingPanel.add(headingScroll,BorderLayout.CENTER);
+		fieldsPanel.add(headingPanel,BorderLayout.CENTER);
+		relationPanel = new JPanel();
+		relationPanel.setLayout(new BoxLayout(relationPanel,BoxLayout.X_AXIS));
+		relationLabel = new JLabel("Relation:");
+		relationField = new JTextField();
+		relationPanel.add(Box.createHorizontalGlue());
+		relationPanel.add(relationLabel);
+		relationPanel.add(relationField);
+		relationPanel.add(Box.createHorizontalGlue());
+		headingPanel.add(relationPanel,BorderLayout.SOUTH);
 		
 		// Create the buttons
-		pbuttons = new JPanel();
-		pbuttons.setLayout(new BoxLayout(pbuttons,BoxLayout.X_AXIS));
+		buttonsPanel = new JPanel();
+		buttonsPanel.setLayout(new BoxLayout(buttonsPanel,BoxLayout.X_AXIS));
 		accept = new JButton("Accept");
 		cancel = new JButton("Cancel");
-		pbuttons.add(Box.createHorizontalGlue());
-		pbuttons.add(accept);
-		pbuttons.add(cancel);
-		pbuttons.add(Box.createHorizontalGlue());
-		pbuttons.setBorder(new EmptyBorder(5, 5, 5, 5));
+		buttonsPanel.add(Box.createHorizontalGlue());
+		buttonsPanel.add(accept);
+		buttonsPanel.add(cancel);
+		buttonsPanel.add(Box.createHorizontalGlue());
+		buttonsPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		// Set groups into dialog's primary layout manager
 		setLayout(new BorderLayout());
-		add(pheading,BorderLayout.CENTER);
-		add(pbuttons,BorderLayout.SOUTH);		
+		add(headingPanel,BorderLayout.CENTER);
+		add(buttonsPanel,BorderLayout.SOUTH);		
 	}
 	
-	private void DefineButtons() {
+	private void defineListeners() {
 		accept.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				result = true;
@@ -98,11 +100,11 @@ public class HeaderEdit extends JDialog {
 				single += "\n";
 			}
 		}
-		headingF.setText(single);
+		headingField.setText(single);
 	}
 	
 	String[] getHeading () {
-		String[] output = headingF.getText().split("\\n");
+		String[] output = headingField.getText().split("\\n");
 		for (int i=0;i<output.length;i++) {
 			if (output[i].startsWith("% ") || output[i].startsWith("%")) {
 				continue;
@@ -113,11 +115,11 @@ public class HeaderEdit extends JDialog {
 	}
 	
 	void setRelation (String input) {
-		relationF.setText(input);
+		relationField.setText(input);
 	}
 	
 	String getRelation () {
-		return relationF.getText();
+		return relationField.getText();
 	}
 	
 	Boolean getResult () {

@@ -1,4 +1,4 @@
-package debug;
+package gui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,8 +10,8 @@ import java.util.TreeMap;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
 import backend.VolumeReader;
+import backend.Preferences;
 
 public class PageMapper extends JFrame {
 	private JPanel pagePanel,actionsPanel,movePanel,centerPanel,savePanel,storedPanel;
@@ -29,19 +29,22 @@ public class PageMapper extends JFrame {
 	private TreeMap<Integer,String> codeDictionary;
 	private TreeMap<Integer,Double> capsDictionary;
 	private final double threshold = 2.25;
-	private File mapFile;
+	boolean complete;
 	
-	//TEMPORARY CODEREADERFILES
+	// Passed in via Preferences
 	private String[][] generalCodes, pageCodes;
-	private String codesini = "genrecodes.ini";
+	private String pageMapDir;
 	
-	public PageMapper (VolumeReader input) {
+	public PageMapper (VolumeReader input, Preferences p) {
+		generalCodes = p.getGeneralCodes();
+		pageCodes = p.getPageCodes();
+		pageMapDir = p.getMapDir();
 		volume = input;
 		current = 0;
 		codeDictionary = new TreeMap<Integer,String>();
 		capsDictionary = new TreeMap<Integer,Double>();
 		storedModel = new DefaultTableModel();
-		codeReader(codesini);
+		complete = false;
 		drawGUI();
 		buildCodeBox();
 		displayPage(volume.getPage(current));
@@ -160,22 +163,11 @@ public class PageMapper extends JFrame {
 		position.setText("Page " + Integer.toString(current) + " / " + Integer.toString(volume.getLength()-1));
 	}
 	
-	int countCaps(String[] lines) {
-		int index, caps = 0;
-		for(int i=0;i<lines.length;i++){
-			index = 0;
-			if(!Character.isLetterOrDigit(lines[i].charAt(0))) {
-				// In the event that the first character is a quotation mark, skip.
-				index = 1;
-			}
-			if(Character.isUpperCase(lines[i].charAt(index))) {
-				caps++;
-			}
-		}
-		return caps;
-	}
-	
 	private double getCapsPercent(String[] lines) {
+		/**
+		 * Calculates the percentage of lines in an String array that begin with a 
+		 * capitalized letter. String array is assumed to have one line per cell.
+		 */
 		int index, linecount = 0, caps = 0;
 		for(int i=0;i<lines.length;i++){
 			if (lines[i].length() < 2) {
@@ -207,7 +199,7 @@ public class PageMapper extends JFrame {
 		storePagePercent(); // In case the current page is not stored, store it.
 		Integer[] keys = getIterableKeys(capsDictionary.keySet());
 		for(int i=0;i<keys.length;i++) {
-			if(capsDictionary.get(keys[i]) != -1.0) {
+			if(capsDictionary.get(keys[i]) >= 0.0) {
 				total++;
 				sum+=capsDictionary.get(keys[i]);
 			}
@@ -231,7 +223,7 @@ public class PageMapper extends JFrame {
 		storePagePercent(); // In case the current page is not stored, store it.
 		Integer[] keys = getIterableKeys(capsDictionary.keySet());
 		for(int i=0;i<keys.length;i++) {
-			if(capsDictionary.get(keys[i]) != -1.0) {
+			if(capsDictionary.get(keys[i]) >= 0.0) {
 				total++;
 				variance+=Math.pow(capsDictionary.get(keys[i]) - getMean(),2);
 			}
@@ -244,11 +236,22 @@ public class PageMapper extends JFrame {
 	}
 	
 	private void storePageData() {
+		/**
+		 * When a page is stored, it's caps% and code need to be stored.  They are handled
+		 * by different functions because sometimes its necessary to store percent without
+		 * storing codes (i.e., mean/standev calculations).
+		 */
 		storePagePercent();
 		storePageCode();
 	}
 	
 	private void storePagePercent() {
+		/**
+		 * Updates the capsDictionary (a Map) by setting the value according to page number
+		 * keys. If a page has less than 3 lines, then store -1. Iterators that use this
+		 * data will check to see if value is >= 0 and skip all stored keys with values
+		 * set to -1.
+		 */
 		if(volume.getPage(current).length >= 3) {
 			capsDictionary.put(current, getCapsPercent(volume.getPage(current)));
 		} else {
@@ -257,6 +260,11 @@ public class PageMapper extends JFrame {
 	}
 	
 	private void storePageCode() {
+		/**
+		 * Updates the codeDictionary (a Map) by setting the value according to page number
+		 * keys. It also tells the counter and storedModel to update their displays with
+		 * the currently stored codes.
+		 */
 		codeDictionary.put(current,getCode());
 		updateCodeDisplay();
 		storedCount.setText("Stored: " + codeDictionary.size() + "/" + volume.getLength());
@@ -264,7 +272,8 @@ public class PageMapper extends JFrame {
 	
 	private void updateCodeDisplay() {
 		/**
-		 * This function builds an array from codeDictionary and sets it as data vector for scrollModel.
+		 * This function builds an array from codeDictionary and sets it as data vector for 
+		 * storedModel, which holds for display all pages with assigned codes.
 		 */
 		String[][] codes = new String[codeDictionary.size()][2];
 		String[] columns = {"Page","Code"};
@@ -277,6 +286,13 @@ public class PageMapper extends JFrame {
 	}
 	
 	private void defineListeners() {
+		/**
+		 * Sets all the button commands (ActionListeners).  This function creates them as
+		 * anonymous subclasses.  It's hacky, and for a bigger program it would probably
+		 * be better to define them each separately.  The overall function of each button
+		 * is described in comments preceding the ActionListener definitions.
+		 */
+		
 		store.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(isValidCode()) {
@@ -303,6 +319,11 @@ public class PageMapper extends JFrame {
 		});
 		
 		scan.addActionListener(new ActionListener() {
+			/**
+			 * Fast Forward Function:
+			 * This function first checks to see whether it should go forward or backward.
+			 * If the end of 
+			 */
 			public void actionPerformed(ActionEvent e) {
 				if(isValidCode()) {
 					try {
@@ -324,14 +345,19 @@ public class PageMapper extends JFrame {
 						}
 						
 						for(int i=current;i!=toPage;i+=increment) {
+							setCursorBusy(true);
 							current = i;
 							displayPage(volume.getPage(current));
-							if(Math.abs(getCapsPercent(volume.getPage(current)) - getMean()) > getStanDev()*threshold) {
+							// If the page has more than 3 lines and exceeds the Standard Deviation threshold, then stop and ask user if they wish to continue fast fowarding.
+							if(volume.getPage(current).length > 3 && Math.abs(getCapsPercent(volume.getPage(current)) - getMean()) > getStanDev()*threshold) {
+								setCursorBusy(false);
 								int choice = JOptionPane.showConfirmDialog(null,"Are you sure you wish to assign " + getCode() + " to page " +Integer.toString(current) +"?","Threshold Reached",JOptionPane.YES_NO_OPTION);
+								// If user selects "No", then break from fast-forward loop and return to main program 
 								if(choice == JOptionPane.NO_OPTION) {
 									return;
 								}
 							}
+							// If page is less than 3 lines, does not exceed threshold, or user selected "Yes" then assign code to page and continue to fast-forward.
 							storePageData();
 						}
 						if (current != 0 && current != volume.getLength()-1) {
@@ -339,6 +365,7 @@ public class PageMapper extends JFrame {
 							current+=increment;
 							displayPage(volume.getPage(current));
 						}
+						setCursorBusy(false);
 							
 					} catch (NumberFormatException badnum) {
 						JOptionPane.showMessageDialog(null,"Enter a valid page number.","Invalid Selection",JOptionPane.ERROR_MESSAGE);
@@ -381,18 +408,49 @@ public class PageMapper extends JFrame {
 					}
 				} else {
 					doSave();
+					JOptionPane.showMessageDialog(null, "Page map for " + volume.getHTID() + " saved to disk in " + pageMapDir,"Map Complete.",JOptionPane.INFORMATION_MESSAGE);
+					dispose();
+				}
+			}
+		});
+		
+		cancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to abandon this page map?","Confirm Cancel",JOptionPane.YES_NO_OPTION);
+				if (choice == JOptionPane.YES_OPTION) {
+					dispose();
 				}
 			}
 		});
 	}
 	
 	private Integer[] getIterableKeys(Set<Integer> keys) {
+		/**
+		 * Used to take a Set of keys from a Map (which is similar to a dictionary in 
+		 * Python) and turn them into an iterable array.  To iterate a Map using its keys,
+		 * setup a loop as follows:
+		 * 
+		 * int keys[] = getIterableKeys(someTree.keySet());
+		 * for(int i=0,i<keys.length;i++) {
+		 * 		value = someTree.get(keys[i]);
+		 * 		...
+		 */
 		return keys.toArray(new Integer[keys.size()]);
+	}
+	
+	private void setCursorBusy (boolean busy) {
+		if(busy) {
+			setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		} else {
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
 	}
 	
 	private boolean isValidCode() {
 		/**
-		 * Checks to make sure that the user has not selected a category label. Returns true of the user has selected a genre code.
+		 * Checks to make sure that the user has not selected a category label. Returns 
+		 * true if the user has selected a genre code, false if user's selection is a 
+		 * category label. 
 		 */
 		if(codeBox.getSelectedIndex() == 0) {
 			// The first item will always be a category label
@@ -408,7 +466,8 @@ public class PageMapper extends JFrame {
 	
 	private String getCode() {
 		/**
-		 * Calculates the index of the selected genre code label and returns the label as a String.
+		 * Calculates the index of the selected genre code label and returns the label as
+		 * a String.
 		 */
 		int selected = codeBox.getSelectedIndex(); 
 		if (selected <= generalCodes.length) {
@@ -419,6 +478,10 @@ public class PageMapper extends JFrame {
 	}
 	
 	private void buildCodeBox() {
+		/**
+		 * A simple function to concatenate the two String matrices of codes into a single
+		 * array for display in a combobox (codeBox). 
+		 */
 		codeBox.addItem("GENERAL CODES");
 		for (int i=0;i<generalCodes.length;i++) {
 			codeBox.addItem(generalCodes[i][0] + " - " + generalCodes[i][1]);
@@ -468,15 +531,20 @@ public class PageMapper extends JFrame {
 	}
 	
 	private void doSave() {
-		File mapOutFile = new File(volume.getFileID() + "-pagemap.tsv");
+		File outDir = new File(pageMapDir);
+		if (!outDir.isDirectory()) {
+			outDir.mkdir();
+		}
+		File mapOutFile = new File(pageMapDir + volume.getFileID() + ".tsv");
 		try {
 			BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(mapOutFile),"UTF-8"));
-			output.write("");
+			output.write(volume.getHTID());
 			Integer keys[] = getIterableKeys(codeDictionary.keySet());
 			for(int i=0;i<keys.length;i++){
-				output.append(volume.getHTID() + "\t" + keys[i].toString() + "\t" + codeDictionary.get(keys[i]) + "\n");
+				output.append("\n" + keys[i].toString() + "\t" + codeDictionary.get(keys[i]));
 			}
-			
+			output.close();
+			complete = true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

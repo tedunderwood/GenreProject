@@ -1,5 +1,10 @@
 Change log:
 
+8/9/13 - mikeb
+NEW: PageMapper integrated into PrimaryWindow
+NEW: Test version uploaded, see instructions for basic installation/user in zip
+Backend classes have rough draft comments
+
 8/6/13 - mikeb
 NEW: VolumeReader class will loads processed volumes into memory, acts as interface
 NEW: PageMapper class lets users assign genre codes to pages

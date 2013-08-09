@@ -18,12 +18,12 @@ public class SearchBox extends JPanel {
 	 * TODO: Also require a list model? (To load results into for display in other class)
 	 */
 	
-	private JLabel authorL, titleL,htidL,beforeL,afterL;
-	private JTextField authorF, titleF, htidF,beforeF,afterF;
+	private JLabel authorLabel,titleLabel,htidLabel,beforeLabel,afterLabel;
+	private JTextField authorField,titleField,htidField,beforeField,afterField;
 	private JPanel commands;
 	private JButton submit, clear;
 	private JCheckBox subset;
-	ResultsTableModel rmodel;
+	ResultsTableModel resultsModel;
 	
 	// References to external structures
 	private DerbyDB derby;
@@ -35,14 +35,14 @@ public class SearchBox extends JPanel {
 	public SearchBox (DerbyDB conn) {
 		
 		// Override default settings in table model to forbid users from editing cells because Java doesn't provide this option natively for some reason
-		rmodel = new ResultsTableModel();
+		resultsModel = new ResultsTableModel();
 		
 		// Store reference to DerbyDB internally for all future search actions
 		derby = conn;
 		
 		//Setup UI objects
 		drawGUI();
-		defineButtons();
+		defineListeners();
 				
 	}
 	
@@ -66,43 +66,43 @@ public class SearchBox extends JPanel {
 		//fields.insets = new Insets(3,3,3,3);
 		
 		// Set remaining properties for each label and add to layout
-		authorL = new JLabel("Author:");
+		authorLabel = new JLabel("Author:");
 		labels.gridy = 0;
-		add(authorL,labels);
-		titleL = new JLabel("Title:");
+		add(authorLabel,labels);
+		titleLabel = new JLabel("Title:");
 		labels.gridy = 1;
-		add(titleL,labels);
-		htidL = new JLabel("HTID:");
+		add(titleLabel,labels);
+		htidLabel = new JLabel("HTID:");
 		labels.gridy = 2;
-		add(htidL,labels);
-		beforeL = new JLabel("Before:");
+		add(htidLabel,labels);
+		beforeLabel = new JLabel("Before:");
 		labels.gridy = 3;
-		add(beforeL,labels);
-		afterL = new JLabel("After:");
+		add(beforeLabel,labels);
+		afterLabel = new JLabel("After:");
 		labels.gridy = 4;
-		add(afterL,labels);
+		add(afterLabel,labels);
 		
 		// Set remaining properties for each form and add to layout
-		authorF = new JTextField(null);
-		authorF.setPreferredSize(textbox);
+		authorField = new JTextField(null);
+		authorField.setPreferredSize(textbox);
 		fields.gridy = 0;
-		add(authorF,fields);
-		titleF = new JTextField(null);
-		titleF.setPreferredSize(textbox);
+		add(authorField,fields);
+		titleField = new JTextField(null);
+		titleField.setPreferredSize(textbox);
 		fields.gridy = 1;
-		add(titleF,fields);
-		htidF = new JTextField(null);
-		htidF.setPreferredSize(textbox);
+		add(titleField,fields);
+		htidField = new JTextField(null);
+		htidField.setPreferredSize(textbox);
 		fields.gridy = 2;
-		add(htidF,fields);
-		beforeF = new JTextField(null);
-		beforeF.setPreferredSize(textbox);
+		add(htidField,fields);
+		beforeField = new JTextField(null);
+		beforeField.setPreferredSize(textbox);
 		fields.gridy = 3;
-		add(beforeF,fields);
-		afterF = new JTextField(null);
-		afterF.setPreferredSize(textbox);
+		add(beforeField,fields);
+		afterField = new JTextField(null);
+		afterField.setPreferredSize(textbox);
 		fields.gridy = 4;
-		add(afterF,fields);
+		add(afterField,fields);
 		
 		// Create buttons in universal "full row" constraints but use nested grid for evenly split button sections
 		full.gridx = 0;
@@ -119,7 +119,7 @@ public class SearchBox extends JPanel {
 		add(commands,full);
 	}
 	
-	private void defineButtons() {
+	private void defineListeners() {
 		
 		// Submit query (check to see if search fields are used correctly, then generate SQL and pass to Derby)
 		submit.addActionListener(new ActionListener() {
@@ -127,7 +127,7 @@ public class SearchBox extends JPanel {
 				
 				// TODO: Write a search check function that returns true/false to replace lengthy conditional  
 				if (allowSearch()) {	
-					String sql = parseSearchSQL(authorF.getText(),titleF.getText(),htidF.getText(),beforeF.getText(),afterF.getText(),subset.isSelected());
+					String sql = buildSearchQuery(authorField.getText(),titleField.getText(),htidField.getText(),beforeField.getText(),afterField.getText(),subset.isSelected());
 					String[][] results;
 					try {
 						results = derby.query(sql);
@@ -147,18 +147,18 @@ public class SearchBox extends JPanel {
 		// Clear search fields & reset prediction subset flag to inactive
 		clear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				titleF.setText(null);
-				authorF.setText(null);
-				htidF.setText(null);
-				afterF.setText(null);
-				beforeF.setText(null);
+				titleField.setText(null);
+				authorField.setText(null);
+				htidField.setText(null);
+				afterField.setText(null);
+				beforeField.setText(null);
 				subset.setSelected(false);
-				rmodel.setRowCount(0);
+				resultsModel.setRowCount(0);
 			}
 		});
 	}
 	
-	private String parseSearchSQL (String author, String title, String htid, String before, String after, boolean limit) {
+	private String buildSearchQuery (String author, String title, String htid, String before, String after, boolean limit) {
 		ArrayList<String> clauses = new ArrayList<String>();
 		String query = "";
 		String database;
@@ -197,10 +197,10 @@ public class SearchBox extends JPanel {
 	
 	private boolean allowSearch () {		
 		// First check date fields
-		if ((beforeF.getText().length() != 4 && beforeF.getText().length() != 0) || (afterF.getText().length() != 4 && afterF.getText().length() != 0)) {
+		if ((beforeField.getText().length() != 4 && beforeField.getText().length() != 0) || (afterField.getText().length() != 4 && afterField.getText().length() != 0)) {
 			return false;
 		}
-		else if (authorF.getText().length() < MIN_SEARCH && titleF.getText().length() < MIN_SEARCH && htidF.getText().length() < MIN_SEARCH) {
+		else if (authorField.getText().length() < MIN_SEARCH && titleField.getText().length() < MIN_SEARCH && htidField.getText().length() < MIN_SEARCH) {
 			return false;
 		}
 		else {
@@ -209,7 +209,7 @@ public class SearchBox extends JPanel {
 	}
 	
 	private void addRecord(String[] record) {
-		rmodel.addResult(record[ResultsTableModel.HTID_COL], record[ResultsTableModel.AUTHOR_COL], record[ResultsTableModel.TITLE_COL], record[ResultsTableModel.DATE_COL]);
+		resultsModel.addResult(record[ResultsTableModel.HTID_COL], record[ResultsTableModel.AUTHOR_COL], record[ResultsTableModel.TITLE_COL], record[ResultsTableModel.DATE_COL]);
 	}
 
 }

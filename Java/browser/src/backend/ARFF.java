@@ -4,31 +4,43 @@ import java.util.ArrayList;
 
 public class ARFF {
 	/**
-	 * Goal of this class is to read an ARFF into memory, provide simple access to searching as a table.
+	 * author: Mike Black @mlblack884
 	 * 
-	 * Data is stored in flexible lists rather than fixed length arrays to allow for editing (adding entries from metadata database).
+	 * This class represents ARFF files in memory.  ARFFs must be formatted according to 
+	 * the specifications outlined by @tunderwood in planning documents. Data is stored 
+	 * in flexible lists rather than fixed length arrays so predictions can be passed in 
+	 * one at a time.  The ARFF can accessed as Strings via public methods.  Reading/writing
+	 * to disk should be handled outside of this class using these methods.
 	 * 
-	 * Data can be accessed as Strings (for reading/writing) via public methods.
-	 * 
-	 * TODO: 
-	 * - Adjust constructors for creating new ARFFs from DerbyDB entries
-	 * - Use a sparse matrix?  Check with Ted to see how big these might get
-	 * - Interface methods that will return whole entries or specific values from specific entries
 	 */
 	
 	private String [] header;
 	private String relation;
 	private ArrayList<String> attributes;
 	private ArrayList<String []> data;
-	public static String[] DEFAULT_HEADER = {"% 1. Description","% (Description)","%","% 2. Sources:", "% (List)"};
-	public static String DEFAULT_RELATION = "blank";
-	public static String[] DEFAULT_ATTRIBUTES = {"htid string","startpg numeric","endpg numeric","startpgpart numeric","endpgpart numeric","probability numeric"};
+	public final static String[] DEFAULT_HEADER = {"% 1. Description","% (Description)","%","% 2. Sources:", "% (List)"};
+	public final static String DEFAULT_RELATION = "blank";
+	public final static String[] DEFAULT_ATTRIBUTES = {"htid string","startpg numeric","endpg numeric","startpgpart numeric","endpgpart numeric","probability numeric"};
+	private final static int HTID_COL = 0;
+	private final static int STARTPG_COL = 1;
+	private final static int ENDPG_COL = 2;
+	private final static int STARTPGPART_COL = 3;
+	private final static int ENDPGPART_COL = 4;
+	private final static int PROBABILITY_COL = 5;
 	
 	public ARFF (String[] file) {
+		/**
+		 * This constructor accepts an ARFF file processed as an array where each cell is 
+		 * one line of text from the file.
+		 */
 		read(file);
 	}
 	
 	public ARFF() {
+		/**
+		 * This constructor creates an empty ARFF and populates its metadata fields using 
+		 * default filler.
+		 */
 		header = DEFAULT_HEADER;
 		relation = DEFAULT_RELATION;
 		attributes = new ArrayList<String>();
@@ -39,9 +51,11 @@ public class ARFF {
 	
 	public void read(String[] file) {
 		/**
-	 	* This method accepts an ARFF as an array of strings (each is a line from a file).  File operations should he handled by data loader in GUI
+	 	* This method accepts an ARFF as an array of strings (each is a line from a file).
+	 	* File operations should he handled by data loader in GUI.
 	 	* 
-	 	* When defining relation and attribute labels, this splits the line at the first space and puts all remaining characters as the label.
+	 	* When defining relation and attribute labels, this splits the line at the first 
+	 	* space and puts all remaining characters as the label.
 	 	*/
 		
 		String[] parts;
@@ -71,59 +85,73 @@ public class ARFF {
 	}
 	
 	public void setHeader (String[] input) {
+		/**
+		 * Sets the current metadata header as a String array where each cell represents a
+		 * line of text in the file. 
+		 */
 		header = input.clone();
 	}
 	
 	public String[] getHeader() {
+		/**
+		 * Returns the current metadata header as a String array where each cell represents
+		 * a line of text in the file. 
+		 */
 		return header.clone();
 	}
 	
 	public void setRelation (String input) {
+		/**
+		 * Sets the current metadata relation as a String. 
+		 */
 		relation = input;
 	}
 	
 	public String getRelation() {
+		/**
+		 * Returns the current metadata relation as a String. 
+		 */
 		return relation;
 	}
 	
-	public void add(String htid,String value) {
+	public void add(String htid,String startpg,String endpg,String startpart,String endpart,String probability) {
 		/**
-		 * Temporary add method.  Will need to change as more are used.
+		 * Use this method to add a record to the ARFF. It uses constants to place input in the
+		 * correct order.  If changes are made to the ARFF structure, try update the constants 
+		 * instead of changing this (unless fields are added/removed).
 		 */
-		// If the predictions generated here are 100%, then only page values would need to be set...
-		// For now just use this one for "whole" volumes and clone with additional values passed in for page-level predictions.
-		String[] temp = new String[attributes.size()];
-		for (int i=0;i<temp.length;i++) {
-			if (i==0) {
-				temp[i] = htid;
-			}
-			else if (i==temp.length-1) {
-				temp[i] = value;
-			}
-			else {
-				temp[i] = "0";
-			}
-		}
-		data.add(temp);
+		String[] row = new String[6];
+		row[HTID_COL] = htid;
+		row[STARTPG_COL] = startpg;
+		row[ENDPG_COL] = endpg;
+		row[STARTPGPART_COL] = startpart;
+		row[ENDPGPART_COL] = endpart;
+		row[PROBABILITY_COL] = probability;
+		data.add(row);
 	}
 	
 	public void clearItems() {
 		/**
-		 * Removes all items from the internal data model. This prepares the prediction model to receive updated data from exterior sources.
+		 * Removes all items from the internal data model. This prepares the prediction model
+		 * to receive updated data from exterior sources by removing all records from the ARFF.
+		 * It's faster to clear and add them all than it is to check to see which have been 
+		 * added/removed.
 		 */
 		data = new ArrayList<String[]>();
 	}
 	
 	public String[] getString() {
-
 		/**
-		 * Returns an array of Strings where each value is a line of text.  Does not include new line characters
+		 * Returns an array of Strings where each cell is a line of text in the processed ARFF
+		 * file.  Does not include new line characters and should be added by the GUI's file
+		 * handlers.
 		 */
 
 		String[] output = new String[header.length + 1 + attributes.size() + data.size()];
-		int bigi = 0;
+		int bigi = 0; // The "big index" that keeps track of current line across the loops for header, attributes, and records.
 		String dataline;
 		
+		// Header loop
 		for (int i=0;i<header.length;i++){
 			output[i] = header[i];
 			bigi = i;
@@ -132,11 +160,13 @@ public class ARFF {
 		bigi++;
 		output[bigi] = "@RELATION " + relation;
 		
+		// Attributes loop
 		for(int i=0;i<attributes.size();i++) {
 			bigi++;
 			output[bigi] = "@ATTRIBUTE " + attributes.get(i);
 		}
 		
+		// Records loop
 		for(int i=0;i<data.size();i++) {
 			bigi++;
 			dataline = new String();
@@ -154,12 +184,13 @@ public class ARFF {
 	
 	public String[] getItems () {
 		/**
-		 * Returns a list of item identifiers (first value, should be HTid).  Useful for calling up complete metadata listings from DerbyDB.
+		 * Returns a list of record identifiers (HTid). Right now it's only use is with DeryDB
+		 * for creating subtables.
 		 */
 		
 		String[] items = new String[data.size()];
 		for (int i=0;i<data.size();i++){
-			items[i] = data.get(i)[0];
+			items[i] = data.get(i)[HTID_COL];
 		}
 		return items;
 	}

@@ -1,16 +1,34 @@
 package backend;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.io.*;
 
 public class DerbyDB {
 	
 	/**
-	 * When initializing a DerbyDB, enclose constructor in try/catch for SQLException and IOException.
-	 * SQLExceptions possible if there are multiple embedded connections to the same database.
-	 * IOExceptions possible if source metatable file is unreadable (or doesn't exist).
+	 * author: Mike Black @mlblack884
+	 * NOTE: The load driver function was taken from the Apache Derby documentation.
+	 * 
+	 * This class serves as an interface to an Apache Derby database.  Currently, only the
+	 * embedded driver is functional, but a networked driver should only require (in theory)
+	 * a new constructor to pass login information along.  Once the new driver is loaded, the
+	 * rest of the class should function normally without further changes.
+	 * 
+	 * When initializing a DerbyDB, enclose constructor in try/catch for SQLException and
+	 * IOException.  SQLExceptions possible if there are multiple embedded connections to 
+	 * the same database.  IOExceptions possible if source metatable file is unreadable 
+	 * (or doesn't exist).
 	 */
     
 	private String database;
@@ -20,33 +38,36 @@ public class DerbyDB {
 	
     public DerbyDB (String framework, String location) throws SQLException {
     	/**
-    	 * This constructor establishes a connection to an existing database at a given location.
+    	 * This constructor establishes a connection to an existing database at a given
+    	 * location.
     	 */
     	database = location;
     	if (framework == "embedded") {
     		driver = "org.apache.derby.jdbc.EmbeddedDriver";
     	}
     	loadDriver();
-    	// Test connection
+    	
+    	// Connect to database
     	derbyconn = DriverManager.getConnection(protocol + database);
     	System.out.println("Database successfully connected."); 
     }
     
     public DerbyDB (String framework, String location, String source) throws SQLException, IOException {
     	/**
-    	 * This constructor creates a new database at a given location, establishes a connection, and populates it using a supplied data table.
-    	 * 
-    	 * Supplied data source must be in the expected 9 column, tab-delimited format produced from the metaminer.py script (htid,volumeid,callnum,author,title,publisher,date,copy,subject)
+    	 * This constructor creates a new database at a given location, establishes a 
+    	 * connection, and populates it using a supplied data table. Supplied data source
+    	 * must be in the expected 9 column, tab-delimited format produced from the
+    	 * metaminer.py script: 
+    	 * htid,volumeid,callnum,author,title,publisher,date,copy,subject
     	 */
     	database = location;
     	if (framework == "embedded") {
     		driver = "org.apache.derby.jdbc.EmbeddedDriver";
     	}
     	loadDriver();
+    	
     	// Create database at location from source
     	System.out.println("Creating new database at " + location + ".");
-    	
-		// In production versions, include something to check to see if database exists and create it if not.
 		derbyconn = DriverManager.getConnection(protocol + database + ";create=true");
 		System.out.println("Database successfully connected.");
 		
@@ -118,6 +139,8 @@ public class DerbyDB {
 
     private void loadDriver() {
 		/**
+		 * NOTE: This function & documentation taken from Apache's Derby developer's guide. -mike
+		 * 
 		 *  The JDBC driver is loaded by loading its class.
 		 *  If you are using JDBC 4.0 (Java SE 6) or newer, JDBC drivers may
 		 *  be automatically loaded, making this code optional.
@@ -151,8 +174,8 @@ public class DerbyDB {
     public String[][] query (String sql) throws SQLException {
     	/**
     	 * Accepts a SQL query as a String and returns the results as a matrix of Strings.
-    	 * 
-    	 * Currently, this method is hard-coded to return only four fields (htid, author, title, and date) and only for tables with normal dates.
+    	 * Currently, this method is hard-coded to return only four fields (htid, author, 
+    	 * title, and date) and only for tables with normal dates.
     	 */
     	
     	ArrayList<String[]> results = new ArrayList<String[]>();
@@ -161,6 +184,8 @@ public class DerbyDB {
 		s = derbyconn.createStatement();
 		rs = s.executeQuery(sql);
 		String[] row = new String[4];
+		// Derby results don't work like a normal array. You can't traverse easily via row index.  
+		// Rows start at -1 and are advanced through in sequence. Each column is indexed by field name.
 		while (rs.next()) {
 			row[0] = rs.getString("HTID");
 			row[1] = rs.getString("AUTHOR");
@@ -176,7 +201,9 @@ public class DerbyDB {
     
     public String[] getRecord (String htid) throws SQLException {
     	/**
-    	 * Right now this only works for entries with normal dates.
+    	 * Retrieves a specific record (all 9 entries).  Should only return a single row since
+    	 * HTID is set as a primary key, meaning there can only be one row in the database for
+    	 * a particular HTID.
     	 */
     	String[] record = new String[9];
     	Statement s;
@@ -200,7 +227,10 @@ public class DerbyDB {
     
     public void createSubtable (String[] htids, String name) throws SQLException {
     	/**
-    	 * Generates a subtable of entries with matching htids from all three tables using join
+    	 * Generates a subtable of entries with matching htids from all three tables using
+    	 * using joins. In SQL you can do this in a single line, but Derby forces you to 
+    	 * create the table of a specific columnsize first and then insert rows with matching
+    	 * column sizes.  
     	 */
     	Statement s = derbyconn.createStatement();
     	s.execute("CREATE TABLE " + name.toUpperCase() + "(HTID VARCHAR(30))");
@@ -221,6 +251,8 @@ public class DerbyDB {
     public void command (String sql) throws SQLException{
     	/**
     	 * Use this method to pass commands to Derby which don't require output parsing.
+    	 * It's a public method, but it's primary role is to serve as a primitive for 
+    	 * more abstract method calls.
     	 */
     	Statement s;
     	s = derbyconn.createStatement();
@@ -229,6 +261,9 @@ public class DerbyDB {
     }
     
     public void dropTables() throws SQLException {
+    	/**
+    	 * Drops all tables that aren't part of the primary database (i.e., all subtables)
+    	 */
     	String[] tables = getTables();
     	for(int i=0;i<tables.length;i++){
     		System.out.println("Dropping table " + tables[i] + ".");
@@ -238,6 +273,10 @@ public class DerbyDB {
     }
     
     private String[] getTables() throws SQLException {
+    	/**
+    	 * Returns the filtered results of a SQL query for all table names.  The three tables
+    	 * that comprise the primary metadata database are filtered so they won't be dropped. 
+    	 */
     	ArrayList<String> results = new ArrayList<String>();
     	Statement s;
     	ResultSet rs;

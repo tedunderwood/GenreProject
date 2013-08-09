@@ -3,7 +3,17 @@ package backend;
 import javax.swing.table.DefaultTableModel;
 
 public class ResultsTableModel extends DefaultTableModel {
-
+	/**
+	 * author: Mike Black @mlblack884
+	 * 
+	 * This class handles search results from DerbyDB in memory. It's primary purpose is
+	 * to display them within SearchResults.
+	 * 
+	 * All column names/positions are managed internally by this model.  Use the statics
+	 * when parsing prediction arrays that are retrieved by get methods to access particular
+	 * prediction fields.
+	 * 
+	 */
 	static String[] COL_NAMES = {"HTID","Author","Title","Date"};
 	public static int HTID_COL = 0;
 	public static int AUTHOR_COL = 1;
