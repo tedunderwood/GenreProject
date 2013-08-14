@@ -14,6 +14,24 @@ import backend.VolumeReader;
 import backend.Preferences;
 
 public class PageMapper extends JFrame {
+	/**
+	 * author: Mike Black @mlblack884
+	 * 
+	 * This class allows the user to create page maps of volumes that are locally
+	 * accessible. As currently written, it will assumes users are working with flat
+	 * directories of volumes with legalized HTid filenames.  Support for the full 
+	 * pairtree structure is built into the VolumeReader class that it relies on to 
+	 * read data from the disk, but PageMapper will not ask users whether data directory 
+	 * is a flat or pairtree.
+	 * 
+	 * Many of the functions below are ported with as little modification from 
+	 * @tunderwood's Python script.  TreeMaps are used to store page codes and capitalized
+	 * line percentages because they are similar in function to Python dictionaries.  Some
+	 * wrappers were necessary to make them iterable.
+	 *  
+	 * See user documentation for more information on how pagemapping works.
+	 */
+	
 	private JPanel pagePanel,actionsPanel,movePanel,centerPanel,savePanel,storedPanel;
 	private JLabel position,storedCount;
 	private JTable storedTable;
@@ -28,7 +46,7 @@ public class PageMapper extends JFrame {
 	private JComboBox<String> codeBox;
 	private TreeMap<Integer,String> codeDictionary;
 	private TreeMap<Integer,Double> capsDictionary;
-	private final double threshold = 2.25;
+	private final double threshold = 2.25; // If you want to change standev threshold...
 	boolean complete;
 	
 	// Passed in via Preferences
@@ -36,6 +54,12 @@ public class PageMapper extends JFrame {
 	private String pageMapDir;
 	
 	public PageMapper (VolumeReader input, Preferences p) {
+		/**
+		 * Constructor requires both a volume, and the preferences class (this latter is
+		 * so that the program will not have to prompt users everytime for a list of
+		 * allowable genre codes).  The codes themselves are read from disk by Preferences
+		 * during the program's intialization sequence.  
+		 */
 		generalCodes = p.getGeneralCodes();
 		pageCodes = p.getPageCodes();
 		pageMapDir = p.getMapDir();
@@ -52,6 +76,13 @@ public class PageMapper extends JFrame {
 	}
 	
 	private void drawGUI() {
+		/**
+		 * Basic constructor to call all the window object setting methods.  Does not
+		 * set the text data that appears in any of the display objects (those are 
+		 * updated by their respective methods, called following this method within
+		 * the constructor).
+		 */
+		// Shared look and feel variables used for configuring sets of objects
 		Dimension buttonSize = new Dimension(100,30);
 		Dimension textSize = new Dimension(100,30);
 		Dimension storedSize = new Dimension(200,100);
@@ -60,6 +91,7 @@ public class PageMapper extends JFrame {
 		GridBagConstraints textProperties = new GridBagConstraints();
 		buttonProperties.gridx = 1;
 		
+		// Initializes all panels, layout managers, spacing
 		setSize(600,700);
 		setLayout(new BorderLayout());
 		pagePanel = new JPanel();
@@ -80,6 +112,7 @@ public class PageMapper extends JFrame {
 		storedPanel = new JPanel();
 		storedPanel.setLayout(new BoxLayout(storedPanel,BoxLayout.Y_AXIS));
 		
+		// Intializes all of the graphics objects, passes in variables defined above
 		position = new JLabel();
 		pagetextArea = new JTextArea();
 		pagetextArea.setEditable(false);
@@ -112,6 +145,8 @@ public class PageMapper extends JFrame {
 		storedCount = new JLabel("Stored: 0");
 		storedCount.setAlignmentX(LEFT_ALIGNMENT);
 		
+		// Layout sequence for the navigation/assignment buttons.  Uses a GridBagLayout,
+		// so the position of each but me updated manually before adding to the layout
 		buttonProperties.gridy = 0;
 		textProperties.gridy = 0;
 		movePanel.add(store,buttonProperties);
@@ -125,33 +160,47 @@ public class PageMapper extends JFrame {
 		movePanel.add(skip,buttonProperties);
 		movePanel.add(skipNumField,textProperties);
 		
+		// Layout sequence for save/cancel buttons
 		savePanel.add(Box.createHorizontalGlue());
 		savePanel.add(save);
 		savePanel.add(cancel);
 		savePanel.add(Box.createHorizontalGlue());
 		
+		// Layout sequence for page display
 		pagePanel.add(position,BorderLayout.NORTH);
 		pagePanel.add(pageScroll,BorderLayout.CENTER);
 		
+		// Layout sequence for the stored counter and table display
 		storedPanel.add(storedCount);
 		storedPanel.add(storedScroll);
 		
+		// Layout sequence for the meta-panel that contains navigation and stored display
 		centerPanel.add(Box.createHorizontalGlue());
 		centerPanel.add(movePanel);
 		centerPanel.add(Box.createHorizontalGlue());
 		centerPanel.add(storedPanel);
 		centerPanel.add(Box.createHorizontalGlue());
 		
+		// Layout sequence for the meta-panel that contains all the interactive objects
 		actionsPanel.add(codeBox,BorderLayout.NORTH);
 		actionsPanel.add(centerPanel,BorderLayout.CENTER);
 		actionsPanel.add(savePanel,BorderLayout.SOUTH);
 		
+		// Layout sequence for the entire JFrame, contains page display and interactive objects
 		add(pagePanel,BorderLayout.CENTER);
 		add(actionsPanel,BorderLayout.SOUTH);
 		setVisible(true);
 	}
 	
 	private void displayPage(String[] lines) {
+		/**
+		 * Accepts a page stored as a String array where each cell is a line, stripped of
+		 * newline characters.  This method adds newlines, merging the cells into a
+		 * single String and passing it to the display textarea object.  It also
+		 * clears all of the scan/skip fields and resets the scroll on the textarea object
+		 * so that box will always start with the top of the page (otherwise it will auto-
+		 * scroll to the last line).
+		 */
 		String pageText = new String();
 		for(int i=0;i<lines.length;i++){
 			pageText += lines[i] + "\n";
@@ -217,6 +266,8 @@ public class PageMapper extends JFrame {
 		 * for stored pages.  Because pages that are too short are assigned -1.0, the total
 		 * number of pages counted will not match the size of dictionary.  Returns 0 to
 		 * avoid division error if dictionary is empty.
+		 * 
+		 * TODO: Set to traverse in reverse if increment is reversed!
 		 */
 		double variance = 0.0;
 		int total = 0;
@@ -322,7 +373,19 @@ public class PageMapper extends JFrame {
 			/**
 			 * Fast Forward Function:
 			 * This function first checks to see whether it should go forward or backward.
-			 * If the end of 
+			 * If the number in the scan to box is greater than the number of pages, then it
+			 * the function will jump to the end and move in reverse and stop at the page
+			 * that the user was at before beginning the scan command.  If the number in 
+			 * the scan to box is less than the current page, it will move in reverse from
+			 * the current page to the target page.  Otherwise, will move forward until
+			 * target page is reached.  Either way, the fast forward will be halted if
+			 * the standard deviation is reached.
+			 * 	
+			 * TODO: Modify the StanDev/Mean functions to go inverse if the increment
+			 * is set to -1!
+			 * 
+			 * NOTE: Target page will not be assigned code.  The scan will just stop at 
+			 * that page.  
 			 */
 			public void actionPerformed(ActionEvent e) {
 				if(isValidCode()) {
@@ -379,6 +442,12 @@ public class PageMapper extends JFrame {
 		
 		skip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * This function skips to a page specified by the user without storing a
+				 * code on the current page or on any pages between it and the target page.
+				 * The only thing it checks is that the target page requested exists
+				 * within the volume.
+				 */
 				try {
 					int toPage = Integer.parseInt(skipNumField.getText());
 					if (toPage < 0 || toPage >= volume.getLength()) {
@@ -396,6 +465,12 @@ public class PageMapper extends JFrame {
 		
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * When the user tries to save, this method checks to see if the user has
+				 * stored codes for all pages.  If no, it will navigate to the earliest
+				 * non-coded page.  Otherwise, it will call the save function and close
+				 * the window.
+				 */
 				int missing = volume.getLength() - codeDictionary.size();
 				if(missing > 0) {
 					JOptionPane.showMessageDialog(null, "Page Map is missing " + Integer.toString(missing) + " codes.\nSkipping to first uncoded page.","Incomplete Map.",JOptionPane.WARNING_MESSAGE);
@@ -416,12 +491,18 @@ public class PageMapper extends JFrame {
 		
 		cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * This button just warns the user that they are about to dismiss the
+				 * page map without saving their work
+				 */
 				int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to abandon this page map?","Confirm Cancel",JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
 					dispose();
 				}
 			}
 		});
+		
+		//TODO: A window close listener?
 	}
 	
 	private Integer[] getIterableKeys(Set<Integer> keys) {
@@ -439,6 +520,11 @@ public class PageMapper extends JFrame {
 	}
 	
 	private void setCursorBusy (boolean busy) {
+		/**
+		 * Sets the cursor icon to busy (if true is passed in) and back to the regular
+		 * point (if false is passed in).  This function is used to signal to the user
+		 * that the scan algorithm is still in progress.
+		 */
 		if(busy) {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		} else {
@@ -493,44 +579,14 @@ public class PageMapper extends JFrame {
 		}
 	}
 	
-	private void codeReader (String filename) {
-		///TODO: Transfer to Preferences after prototype is functional
-		String line;
-		ArrayList<String[]> all, page;
-		all = new ArrayList<String[]>();
-		page = new ArrayList<String[]>();
-		boolean both = true;
-		try {
-			InputStream codesIn = new FileInputStream(new File(filename));
-			BufferedReader inLines = new BufferedReader(new InputStreamReader(codesIn,Charset.forName("UTF-8")));
-			while ((line = inLines.readLine()) != null) {
-				if (line.trim().length() > 0) {
-					if(line.contains("#GENERAL")) {
-						both = true;
-					} else if (line.contains("#PAGES")) {
-						both = false;
-					} else {
-						if (both) {
-							all.add(line.trim().split("\\t",2));
-						} else {
-							page.add(line.trim().split("\\t",2));
-						}
-					}
-				}
-			}
-			inLines.close();
-			generalCodes = all.toArray(new String[all.size()][2]);
-			pageCodes = page.toArray(new String[page.size()][2]);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-	}
-	
 	private void doSave() {
+		/**
+		 * This function saves the pagemap to disk.  Rather than use the format of
+		 * @tunderwood's script and repeat htid on each line, this method sets the first
+		 * line to the map's htid and then stores page numbers and codes as a tsv on the
+		 * following lines.  This should save disk space, but it means that single pagemaps
+		 * will may need a bit of processing before they can be merged.
+		 */
 		File outDir = new File(pageMapDir);
 		if (!outDir.isDirectory()) {
 			outDir.mkdir();
@@ -546,8 +602,7 @@ public class PageMapper extends JFrame {
 			output.close();
 			complete = true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Page Map could not be saved in " + pageMapDir + ". Check directory priviledges and try again.","Save Error",JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}

@@ -7,6 +7,17 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class HeaderEdit extends JDialog {
+	/**
+	 * author: Mike Black @mblack884
+	 * 
+	 * This class is a pop-up dialog box with two text fields for use when editing the
+	 * ARFF's header and relation fields.  To use:
+	 * - Initialize with constructor (no data passed in)
+	 * - Use setHeading(String[]) to pass in the target's prediction's header
+	 * - In the owner class, call the display function of the initialized HeaderEdit
+	 * - Use getHeading to retrieve the user's input after the dialog has been closed
+	 * - Optionally, use getResult if you want to see if user saved header or cancelled
+	 */
 	
 	private JTextArea headingField;
 	private JTextField relationField;
@@ -17,6 +28,10 @@ public class HeaderEdit extends JDialog {
 	private Boolean result;
 
 	public HeaderEdit() {
+		/**
+		 * Basic constructor to call all the window object setting methods.  Does not
+		 * set the text data that appears in the input fields.
+		 */
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setAlwaysOnTop(true);
 		setLocationRelativeTo(null);
@@ -27,13 +42,10 @@ public class HeaderEdit extends JDialog {
 	}
 	
 	private void drawGUI() {
-		/*
-		 * Create elements in nested layouts as follows:
-		 * Entire dialog 
-		 * - Text input and labels
-		 * - - Heading TextArea and label
-		 * - - Relation TextField and label
-		 * - Buttons and labels
+		/**
+		 * Initializes all of the graphics objects and positions them within nested
+		 * panels/layout managers.  Panels used by groups are objects are initialized
+		 * in the same section as those objects.
 		 */
 		setSize(300, 300);
 		
@@ -77,8 +89,18 @@ public class HeaderEdit extends JDialog {
 	}
 	
 	private void defineListeners() {
+		/**
+		 * Sets all the button commands (ActionListeners).  This function creates them as
+		 * anonymous subclasses.  It's hacky, and for a bigger program it would probably
+		 * be better to define them each separately.  The overall function of each button
+		 * is described in comments preceding the ActionListener definitions.
+		 */
+		
 		accept.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * Sets "result" to true, indicating that user choice to save their entry.
+				 */
 				result = true;
 				dispose();
 			}
@@ -86,6 +108,9 @@ public class HeaderEdit extends JDialog {
 		
 		cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * Sets "result" to false, indicating that user choice to dismiss their entry.
+				 */
 				result = false;
 				dispose();
 			}
@@ -93,6 +118,12 @@ public class HeaderEdit extends JDialog {
 	}
 	
 	void setHeading (String[] input) {
+		/**
+		 * Accepts the heading as a String array, where each cell is a line of text stripped
+		 * of any trailing white space or newline characters.  This function will format the
+		 * array into a single String, inserting newlines where necessary.  It then stores
+		 * it the heading field.
+		 */
 		String single = new String();
 		for(int i=0;i<input.length;i++) {
 			single += input[i];
@@ -104,6 +135,11 @@ public class HeaderEdit extends JDialog {
 	}
 	
 	String[] getHeading () {
+		/**
+		 * This will strip the newlines from the header's textfield and return it
+		 * as a String array.  Use to retrieve a user's input after the dialog box
+		 * has been closed.
+		 */
 		String[] output = headingField.getText().split("\\n");
 		for (int i=0;i<output.length;i++) {
 			if (output[i].startsWith("% ") || output[i].startsWith("%")) {
@@ -115,14 +151,26 @@ public class HeaderEdit extends JDialog {
 	}
 	
 	void setRelation (String input) {
+		/**
+		 * Used to set the textfield for the relation from the target ARFF.
+		 */
 		relationField.setText(input);
 	}
 	
 	String getRelation () {
+		/**
+		 * Used to retrieve the relation from the textfield after the dialog has been
+		 * closed by the user (to store it in the target ARFF). 
+		 */
 		return relationField.getText();
 	}
 	
 	Boolean getResult () {
+		/**
+		 * Check to see whether the user decided to save or dismiss their input.  This keeps
+		 * the variable for internal use only, not allowing it to be set from outside of the
+		 * class.
+		 */
 		return result;
 	}
 }
