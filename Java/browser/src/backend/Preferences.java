@@ -20,42 +20,31 @@ import javax.swing.JOptionPane;
 public class Preferences {
 	/**
 	 * The purposes of this class is to read, write, and hold application preferences.
+	 * Essentially, anything that needs to be loaded from disk at runtime and passed 
+	 * into any of the core components for configuration purposes is done by this class.
+	 * Currently, it's primary tasks include:
+	 * - providing the location of the derby database
+	 * - keeping track of which seed file was used to create the derby database
+	 * - remembering which genre codes file users selected (optional)
 	 * 
-	 * For now, it just stores the location of the active DerbyDB directory.
-	 * 
-	 * pageMapDir will default to "pagemaps/" and users will not be prompted from within
-	 * the program to edit this value.  However, if a pagemapsdir= line is added to the ini
-	 * file, then Preferences will override the default.
-	 * 
-	 * TODO:
-	 * Add codes.ini (and possibly pagemap file?)
+	 * NOTE: Although not explicitly supported within the program, you can bypass the
+	 * default pagemaps/ directory by editing the configuration file that Preferences
+	 * loads and adding a pagemapdir= field.  Otherwise, Preferences will stick with
+	 * the internal default (defined here, NOT IN PAGEMAPPER).
 	 */
 	
 	private File prefsFile;
-	private final String DEFAULT_PREF_FILE = "genrebrowser.ini";
+	public final static String DEFAULT_PREF_FILE = "genrebrowser.ini";
 	private String derbyDir = null, genreCodes = null, pageMapDir = "pagemaps/"; 
 	private String source;
 	private String[][] generalCodes, pageCodes;
-	
-	public Preferences () {
-		prefsFile = new File(DEFAULT_PREF_FILE);
-		while(derbyDir == null) {		
-			if (prefsFile.exists()) {
-				try {
-					readPrefs();
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Problem reading file. Please try again.\nExiting.","Loading Error",JOptionPane.ERROR_MESSAGE);
-				}
-			} else {
-				System.out.println("No preferences found. Creating new workspace.");
-				chooseMetadata();
-			}
-		}
-	}
-	
+		
 	public Preferences(String filename) {
 		/**
-		 * This constructor is for testing purposes. Allows for alternate preference profiles.
+		 * This constructor allows for alternate preference profiles. To use just the 
+		 * default file (as PrimaryWindow does), call it as: 
+		 * Preferences p = new Preferences(Preferences.DEFAULT_PREF_FILE).
+		 * 
 		 */
 		prefsFile = new File(filename);
 		while(derbyDir == null) {
@@ -66,13 +55,20 @@ public class Preferences {
 					JOptionPane.showMessageDialog(null, "Problem reading file. Please try again.\nExiting.","Loading Error",JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
+				// If the filename passed into the constructor isn't found, assume that 
+				// this is a first-time run and run configuration sequence.
 				System.out.println(filename + " does not exist. Creating new workspace.");
-				chooseMetadata();
+				firstTimeConfig();
 			}
 		}
 	}
 	
 	private void readPrefs() throws IOException {
+		/**
+		 * Reads the selected preferences file from disk and parses its contents, setting
+		 * the internal configuration variables to match the fields it finds.  Line input
+		 * is parsed using a simple regex split and a String switch.
+		 */
 		ArrayList<String> rawtext = new ArrayList<String>();
 		String line;
 		BufferedReader lines = new BufferedReader(new FileReader(prefsFile));
@@ -85,6 +81,8 @@ public class Preferences {
 				continue;
 			} else if (rawtext.get(i).length() > 1 && rawtext.get(i).indexOf("=") > 0) {
 				String[] parts = rawtext.get(i).split("=");
+				// Right now there are only four possible fields, but you could add more
+				// by expanding this switch statement.
 				switch(parts[0]) {
 					case "databasedir":
 						derbyDir = parts[1];
@@ -95,19 +93,27 @@ public class Preferences {
 					case "genrecodes":
 						genreCodes = parts[1];
 						break;
+					case "pagemapdir":
+						pageMapDir = parts[1];
+						break;
 				}
 
 			}
 		}
 		System.out.println("Preferences loaded.");
 		if(genreCodes != null) {
+			// If users selected a genre codes file during a past session, retrieve it!
 			System.out.println("Trying to load genre codes file.");
 			readCodes();
 		}
 	}
 	
-	private void chooseMetadata() {
-		//Pop-up asking for select source file
+	private void firstTimeConfig() {
+		/**
+		 * This method is a series of pop-up dialogs that ask users to configure the
+		 * browser.  Right now, it only asks for a seed file and for a directory name
+		 * for the local derby database.
+		 */
 		JOptionPane.showMessageDialog(null, "Please specify a seed file for the browser's database.","First Time Configuration",JOptionPane.OK_OPTION);
 		JFileChooser seed = new JFileChooser(System.getProperty("user.dir"));
 		seed.showOpenDialog(null);
@@ -118,14 +124,21 @@ public class Preferences {
 	}
 	
 	public void writePrefs() {
+		/**
+		 * Writes configuration settings to disk.  It will write to the same file that it
+		 * read from initially, or in the case of a first-run to the filename passed into
+		 * the constructor at creation.
+		 */
 		try {
 			BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(prefsFile.getAbsolutePath()),"UTF-8"));
 			output.write("#PREFS\n");
 			output.write("databasedir=" + derbyDir + "\n");
 			output.write("sourcefile=" + source + "\n");
+			// If the pagemapdir was overrided by the current configuration file, remember it.
 			if (!pageMapDir.equals("pagemaps/")) {
 				output.write("pagemapdir=" + pageMapDir + "\n");
 			}
+			// If users selected a genre codes file, remember it.
 			if (genreCodes != null) {
 				output.write("genrecodes=" + genreCodes + "\n");
 			}
@@ -135,6 +148,10 @@ public class Preferences {
 			JOptionPane.showMessageDialog(null, "Problem writing file. Please ensure you have the necessary privledges.","Write Error",JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	// The following block of codes are just private variables that require public
+	// request methods so that they are effectively read only outside of this class.
+	// This is standard OOP practice.
 	
 	public String getDerbyDir() {
 		return derbyDir;
@@ -162,15 +179,23 @@ public class Preferences {
 	
 	public void setGenreCodes(String filename) {
 		/**
-		 * If user 
+		 * Public interface method for genre code files.  The code reader is private and
+		 * internal.  This sets the internal filename and then loads the internal code reader.
 		 */
 		genreCodes = filename;
 		readCodes();
 	}
 	
 	private void readCodes () {
-		///TODO: Transfer to Preferences after prototype is functional
+		/**
+		 * Reads the genre codes file from disk and parses codes into two categories:
+		 * general codes that reflect volume and page level data and those that could 
+		 * reflect only page level data.  There's no real reason to keep them separate right
+		 * now other than to display them as distinct categories to users.
+		 */
 		String line;
+		// ArrayLists are used for their Python-like functionally.  They are converted to
+		// fixed length arrays at the end of this method.
 		ArrayList<String[]> all, page;
 		all = new ArrayList<String[]>();
 		page = new ArrayList<String[]>();
@@ -203,6 +228,11 @@ public class Preferences {
 	}
 	
 	public boolean hasGenreCodes() {
+		/**
+		 * Simple check to see if a genre code file has been selected (either at load-time
+		 * from the configuration file or during run-time by the user when starting the
+		 * PageMapper).
+		 */
 		if (genreCodes == null) {
 			return false;
 		} else {

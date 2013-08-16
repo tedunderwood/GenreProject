@@ -11,11 +11,10 @@ import backend.PredictionTableModel;
 import backend.ResultsTableModel;
 
 public class SearchResults extends JPanel {
-	/*
-	 * TODO:
-	 * - Pass in table model for predictions
-	 * - Write button logic for adding to predictions
-	 * - Write record display logic (setup a new dialog class or pass to optionpane?)
+	/**
+	 * This class mostly just displays the results of SQL queries.  It also acts
+	 * as an interface between the search and prediction portions of the progra by
+	 * passing data from the ResultsTable to the PredictionTable.
 	 */
 	
 	private JScrollPane resultsScroll;
@@ -24,14 +23,19 @@ public class SearchResults extends JPanel {
 	private JPanel buttons;
 	private RecordViewer recordView;
 	
-	// Referenced from other classes
+	// References to external data structures
 	private PredictionTableModel targetModel;
 	private DerbyDB derby;
 	
 	public SearchResults (ResultsTableModel results, PredictionTableModel predictions, DerbyDB conn) {
+		/**
+		 * Basic constructor that stores references to Derby and the prediction manager's 
+		 * table.  It also initializes the table container for search results and passes
+		 * the search table model into it.
+		 */
 		derby = conn;
 		targetModel = predictions;
-		resultsTable = new JTable(results);
+		resultsTable = new JTable(results); // The ResultsTableModel isn't stored as its own reference here because this class shouldn't directly access it
 		resultsScroll = new JScrollPane(resultsTable);
 		add = new JButton("Add to prediction");
 		view = new JButton("View complete record");
@@ -41,6 +45,12 @@ public class SearchResults extends JPanel {
 	}
 	
 	private void drawGUI() {
+		/**
+		 * Initializes all of the graphics objects and positions them within nested
+		 * panels/layout managers.  Panels used by groups are objects are initialized
+		 * in the same section as those objects.
+		 */
+		
 		setBorder(new EmptyBorder(5, 10, 10, 10));
 		setLayout(new BorderLayout());
 		resultsTable.setAutoCreateColumnsFromModel(false);
@@ -62,6 +72,11 @@ public class SearchResults extends JPanel {
 	}
 	
 	private String[] getSelection(int row) {
+		/**
+		 * This method pulls the record data from the ResultsTableModel, primarily for
+		 * passing it to the PredictionManager without needing to do another
+		 * SQL query but also for passing to the RecordViewer.
+		 */
 		String[] record = new String[resultsTable.getModel().getColumnCount()];
 		for(int i=0;i<record.length;i++){
 			record[i] = resultsTable.getModel().getValueAt(row, i).toString();
@@ -71,14 +86,24 @@ public class SearchResults extends JPanel {
 	
 	private void addRecord(String[] record) {
 		/**
-		 * Passes the row vector to the ResultsTableModel. 
+		 * Passes htid, author, and title for a record to the Prediction Manager's table
+		 * along with some empty data in prediction fields that wouldn't be in DerbyDB. 
 		 */		
 		targetModel.addPrediction(record[ResultsTableModel.HTID_COL],record[ResultsTableModel.AUTHOR_COL],record[ResultsTableModel.TITLE_COL],record[ResultsTableModel.DATE_COL], "--");
 	}
 	
 	private void defineListeners() {
+		/**
+		 * Sets all the button commands (ActionListeners).  This function creates them as
+		 * anonymous subclasses.  It's hacky, and for a bigger program it would probably
+		 * be better to define them each separately.  The overall function of each button
+		 * is described in comments preceding the ActionListener definitions.
+		 */
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * This button adds selected search results to the target prediction.
+				 */
 				int[] selected = resultsTable.getSelectedRows();
 				for (int i=0;i<selected.length;i++) {
 					addRecord(getSelection(selected[i]));
@@ -88,6 +113,11 @@ public class SearchResults extends JPanel {
 		
 		view.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * If users have selected a single record, they button issues a SQL
+				 * query to get all 9 fields for a record and passes them to a newly 
+				 * initialized RecordViewer.
+				 */
 				int[] selected = resultsTable.getSelectedRows();
 				if (selected.length == 1){
 					try {
@@ -104,8 +134,6 @@ public class SearchResults extends JPanel {
 				} 
 			}
 		});
-		
-		//TODO: Add a table listener?
 	}
 	
 }

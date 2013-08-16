@@ -77,11 +77,11 @@ public class PageMapper extends JFrame {
 	
 	private void drawGUI() {
 		/**
-		 * Basic constructor to call all the window object setting methods.  Does not
-		 * set the text data that appears in any of the display objects (those are 
-		 * updated by their respective methods, called following this method within
-		 * the constructor).
+		 * Initializes all of the graphics objects and positions them within nested
+		 * panels/layout managers.  Panels used by groups are objects are initialized
+		 * in the same section as those objects.
 		 */
+		
 		// Shared look and feel variables used for configuring sets of objects
 		Dimension buttonSize = new Dimension(100,30);
 		Dimension textSize = new Dimension(100,30);
@@ -267,7 +267,8 @@ public class PageMapper extends JFrame {
 		 * number of pages counted will not match the size of dictionary.  Returns 0 to
 		 * avoid division error if dictionary is empty.
 		 * 
-		 * TODO: Set to traverse in reverse if increment is reversed!
+		 * TED: See below note in the scan button's for a quick way to implement a more selective
+		 * mean/standev check that only calculates them for specific portions of a volume. 
 		 */
 		double variance = 0.0;
 		int total = 0;
@@ -346,6 +347,12 @@ public class PageMapper extends JFrame {
 		
 		store.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * Stores the current page (if a valid code is selected) and advances
+				 * to the next in the direction specified by the user.  If the end of a
+				 * volume is reached in either direction, a pop-up will notify the user
+				 * instead of advancing.
+				 */
 				if(isValidCode()) {
 					storePageData();
 					if (!reverse.isSelected()) {
@@ -381,11 +388,16 @@ public class PageMapper extends JFrame {
 			 * target page is reached.  Either way, the fast forward will be halted if
 			 * the standard deviation is reached.
 			 * 	
-			 * TODO: Modify the StanDev/Mean functions to go inverse if the increment
-			 * is set to -1!
-			 * 
 			 * NOTE: Target page will not be assigned code.  The scan will just stop at 
-			 * that page.  
+			 * that page.
+			 * 
+			 * TED: As we discussed at the final summer meeting, the way this works right now
+			 * is that it checks the mean/standev for all pages from the beginning. The easiest
+			 * way to modify this function to do so only for specific sections of a volume would
+			 * be to wrap the getIterableKeys call within the getMean and getStanDev functions
+			 * with a function that culls the iterable keys array to only include those pages
+			 * you want included in the check (something like start from the current page, working 
+			 * backwards and adding keys to a new array until a different page code is reached).
 			 */
 			public void actionPerformed(ActionEvent e) {
 				if(isValidCode()) {

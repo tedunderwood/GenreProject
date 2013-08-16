@@ -13,28 +13,9 @@ public class PrimaryWindow extends JFrame {
 	/**
 	 * author: Mike Black @mblack884
 	 * 
-	 * This class and those it pulls in represent an early version of the GenreBrowser UI.
-	 * The code is not yet well commented and will be re-organized more cleanly going forward.
-	 * 
-	 * Working as of 7/13/13:
-	 * - Preferences class loads/saves database location on program start/exit
-	 * - Derby database creation from metadata.txt if no database or preferences file are found
-	 * - Loading/saving of predictions
-	 * - Database searching (complete & limited to source prediction records)
-	 * - Adding results to target prediction from search or from source prediction
-	 * - Header editing for target prediction
-	 * - Set records in target prediction as match/miss
-	 * 
-	 * TODO:
-	 * - Migrate to MAVEN
-	 * - Complete documentation & comments
-	 * - Uniform error dialog class?
-	 * - Change database?
-	 *  
-	 * 7/17/13 & onward: UI tweaks, adjustments towards better modularization, debugging/userproofing
-	 * 
-	 * KNOWN BUGS:
-	 * - The Window Closing listener does not activate if user closes from the MacOS application menu 
+	 * Functionally speaking, this class is the GenreBrowser.  It loads all of the core
+	 * components in sequence, passing in the backend objects (DerbyDB and Preferences)
+	 * to primary GUI components (PredictionManager, SearchBox, SearchResults).  
 	 * 
 	 */
 	
@@ -47,9 +28,10 @@ public class PrimaryWindow extends JFrame {
 	
 	public static void main(String[] args) {
 		DerbyDB database;
+		// Derby log level of 3000 is pretty verbose, but I chose it because it records the
+		// complete command of any SQL query that produced an error.
 		System.setProperty("derby.stream.error.logSeverityLevel", "3000");
-		//TODO: Move exception handling for preferences to here?
-		Preferences p = new Preferences();
+		Preferences p = new Preferences(Preferences.DEFAULT_PREF_FILE);
 		try {
 			if (!p.exists()) {
 				database = new DerbyDB("embedded",p.getDerbyDir(),p.getSource());
@@ -67,6 +49,14 @@ public class PrimaryWindow extends JFrame {
 	}
 	
 	PrimaryWindow (DerbyDB db, Preferences p) {
+		/**
+		 * This is essentially the main program.  The main above starts two more core
+		 * backend components.  The core GUI objects are intialized here and then the
+		 * main window is displayed.  Layout-wise, the main window is subdivided into
+		 * two equal panels using the Grid Layout, and the bottom is subdivided using
+		 * Border with SearchBox taking the smaller West space and SearchResults the
+		 * larger Center space.
+		 */
 		prefs = p;
 		derby = db;
 		setLayout(new GridLayout(0,1));
@@ -88,6 +78,14 @@ public class PrimaryWindow extends JFrame {
 	private void defineListeners() {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				/**
+				 * This Window Listener should behave like those in most other data editting programs.
+				 * If data has been modified without save, it will prompt users to save.  If users select
+				 * yes, then data will be saved and program closed.  If they select no, then any changes
+				 * since the last save will be dismissed and program will close.  If they select cancel,
+				 * then the program will remain open.  As far as changes go, this Listener only checks 
+				 * for changes to the target prediction.
+				 */
 				if (predict.getSaveState()) {
 					int response = JOptionPane.showConfirmDialog(null,"Target prediction has been modified. Save on exit?","Exit without Saving",JOptionPane.YES_NO_CANCEL_OPTION);
 					switch (response) {
@@ -95,7 +93,8 @@ public class PrimaryWindow extends JFrame {
 							if (predict.doSave()) {
 								doClose();
 							} else {
-								//TODO: Error message
+								// If the user accidently closes the save file dialog, this will remind them that they still need to save.
+								JOptionPane.showMessageDialog(null, "Document was not saved successfully by user. Program close halted.","Save Error",JOptionPane.WARNING_MESSAGE);
 							}
 							break;					
 						case JOptionPane.NO_OPTION:
@@ -112,6 +111,12 @@ public class PrimaryWindow extends JFrame {
 	}
 	
 	private void doClose() {
+		/**
+		 * Program close sequence.  Any subtables created during this session must be dropped
+		 * so that there will not be a problem later on if users decide to load the same
+		 * source ARFF during a later session.  Preferences must also be written to disk. If
+		 * for any reason this sequence is interrupted, program close will be aborted.
+		 */
 		try {
 			derby.dropTables();
 			derby.close();

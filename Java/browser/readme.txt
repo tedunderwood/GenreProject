@@ -1,4 +1,18 @@
+Build Instructions:
+
+In addition to placing both the backend and gui directories into your source directory,
+you'll need to include the two external jar's referenced by the browser's classes in
+your build path. Derby.jar and commons-compress-1.5.jar should be here on the project
+repo, but if not they're both from Apache projects. 
+
+I'm not very familiar with MAVEN, but since Boris has previously suggested it I put together a very basic definition file in Eclipse that makes note of the derby.jar and commons-compress-1.5.jar dependencies and identifies src/ as the source directory.
+
 Change log:
+
+8/16/13 - mikeb
+Updated browser executed jar
+Added documentation to all classes
+Added a very basic MAVEN definition (pom.xml) with derby/compress dependencies noted
 
 8/9/13 - mikeb
 NEW: PageMapper integrated into PrimaryWindow
@@ -34,30 +48,3 @@ DerbyDB: Added a return record method in anticipation of GUI.
 
 6/3/13 - mikeb
 For the time being, I'm going to store all of the classes I write to handle the data sources available to users of the browser tool in this folder.  Right now there is just the DerbyDB interface (and its dependency).  I will eventually setup Eclipse to handle git commits, so this folder will eventually be assimilated into the organization it prefers.
-
-Class information:
-
---DerbyDB--
-Dependencies: derby.jar
-Possible exceptions thrown: SQLException, IOException
-
-This is a class written using the Derby API to handle basic operations with the large metadata table that was generated during an earlier phase of the project.  Currently, it is capable of:
-- connecting to an existing, local database
-- creating a new database and populating it using metatable.txt (or a similar structured table)
-- filtering metatable.txt entries with ranges or fuzzy dates into separate tables within the Derby database so that queries can be made based on publication date and/or results ordered by date
-- issuing SQL queries and returning the results as a String[][] matrix
-
-Databases are connected to (or created) using the constructors.  In addition to specifying a local database or a seed metatable.txt file, a framework must be also be specified.  For now, this should always be "embedded".  Changes to the constructors to setup a networked connection shouldn't affect the rest of the methods.
-
-To use an instance of DerbyDB to perform a search, the object will need to be passed into the object that deals with user input.  The user input object will then need to parse search fields into an SQL string for DerbyDB.  I left the query method open-ended, accepting just an SQL command as a String so that there wouldn't be any limitations on searches in DerbyDB.
-
-
---ARFF--
-This class has no dependencies and throws no exceptions.
-
-This is a very simple class that can read/write ARFF files as String[]'s (where each line is a line from an ARFF file).  File reading and writing should be handled by the application itself.  Currently also uses a very basic "add" function which assumes all pages and page parts are part of a prediction with a probability of 100%.
-
-TODO: 
-- Interface methods that return particular entries from the csv or specific values for particular entries in the csv.
-- More flexible add method
-- Use a sparse matrix to store the data?

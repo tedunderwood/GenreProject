@@ -14,8 +14,9 @@ import backend.ResultsTableModel;
 
 public class SearchBox extends JPanel {
 	/**
-	 * Constructor requires that a DerbyDB database be specified.
-	 * TODO: Also require a list model? (To load results into for display in other class)
+	 * This class takes data input from the user and passes it into the main DerbyDB
+	 * object as SQL queries.  The table model for SearchResults lives here as the 
+	 * other class doesn't write to the table model.
 	 */
 	
 	private JLabel authorLabel,titleLabel,htidLabel,beforeLabel,afterLabel;
@@ -25,28 +26,33 @@ public class SearchBox extends JPanel {
 	private JCheckBox subset;
 	ResultsTableModel resultsModel;
 	
-	// References to external structures
+	// References to external data structures
 	private DerbyDB derby;
 	
 	// Search interface constants
 	final private String[] COL_NAMES = {"HTID","Author","Title","Date"};
-	final private int MIN_SEARCH = 2;
+	final private int MIN_SEARCH = 1;
 	
 	public SearchBox (DerbyDB conn) {
-		
-		// Override default settings in table model to forbid users from editing cells because Java doesn't provide this option natively for some reason
+		/**
+		 * Basic constructor that requires an initialized (and successfully connected)
+		 * DerbyDB object. This reference is stored internally for use by this class'
+		 * private methods.
+		 */
 		resultsModel = new ResultsTableModel();
-		
-		// Store reference to DerbyDB internally for all future search actions
 		derby = conn;
-		
-		//Setup UI objects
 		drawGUI();
 		defineListeners();
 				
 	}
 	
 	private void drawGUI () {
+		/**
+		 * Initializes all of the graphics objects and positions them within nested
+		 * panels/layout managers.  Panels used by groups are objects are initialized
+		 * in the same section as those objects.
+		 */
+		
 		GridBagConstraints labels,fields,full;
 		setBorder(new EmptyBorder(10, 10, 5, 5));
 		Dimension textbox = new Dimension(175,30);
@@ -120,12 +126,22 @@ public class SearchBox extends JPanel {
 	}
 	
 	private void defineListeners() {
+		/**
+		 * Sets all the button commands (ActionListeners).  This function creates them as
+		 * anonymous subclasses.  It's hacky, and for a bigger program it would probably
+		 * be better to define them each separately.  The overall function of each button
+		 * is described in comments preceding the ActionListener definitions.
+		 */
 		
-		// Submit query (check to see if search fields are used correctly, then generate SQL and pass to Derby)
 		submit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				// TODO: Write a search check function that returns true/false to replace lengthy conditional  
+			public void actionPerformed(ActionEvent e) {  
+				/**
+				 * After checking to see if the search fields contain valid data, a SQL
+				 * query is passed to DerbyDB.  Any results are added to the table model.
+				 * If a SQL error is encountered here, it likely means that the database has
+				 * been unexpectedly disconnected (which should only be a problem if
+				 * DerbyDB is modified to work with remote databases).
+				 */
 				if (allowSearch()) {	
 					String sql = buildSearchQuery(authorField.getText(),titleField.getText(),htidField.getText(),beforeField.getText(),afterField.getText(),subset.isSelected());
 					String[][] results;
@@ -135,7 +151,6 @@ public class SearchBox extends JPanel {
 							addRecord(results[i]);
 						}
 					} catch (SQLException badQuery) {
-						// TODO More specific error message?
 						JOptionPane.showMessageDialog(null, "Database query cannot be processed.\n\nConsult derby.log for details.","Search Error",JOptionPane.WARNING_MESSAGE);
 					}
 				} else {
@@ -144,9 +159,11 @@ public class SearchBox extends JPanel {
 			}
 		});
 		
-		// Clear search fields & reset prediction subset flag to inactive
 		clear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * Clears all search fields and erases the data stored into the table.
+				 */
 				titleField.setText(null);
 				authorField.setText(null);
 				htidField.setText(null);
@@ -159,6 +176,10 @@ public class SearchBox extends JPanel {
 	}
 	
 	private String buildSearchQuery (String author, String title, String htid, String before, String after, boolean limit) {
+		/**
+		 * This method constructs a SQL query as a String to be passed to the Derby database.
+		 * Clauses are added together and inserted into a query template.
+		 */
 		ArrayList<String> clauses = new ArrayList<String>();
 		String query = "";
 		String database;
@@ -169,14 +190,14 @@ public class SearchBox extends JPanel {
 			database = "COMPLETE";
 		}	
 		// Clause builder
-		if (author.length() >= MIN_SEARCH) {
+		if (author.trim().length() >= MIN_SEARCH) {
 			clauses.add(" LOWER(AUTHOR) LIKE LOWER('%" + author + "%')");
 		}
-		if (title.length() >= MIN_SEARCH) {
+		if (title.trim().length() >= MIN_SEARCH) {
 			clauses.add(" LOWER(TITLE) LIKE LOWER('%" + title + "%')");
 		}
 		
-		if (htid.length() >= MIN_SEARCH) {
+		if (htid.trim().length() >= MIN_SEARCH) {
 			clauses.add(" LOWER(HTID) LIKE LOWER('%" + htid + "%')");
 		}
 		if (after.trim().length() == 4) {
@@ -195,8 +216,11 @@ public class SearchBox extends JPanel {
 		return "SELECT HTID, TITLE, AUTHOR, DATE FROM " + database + " WHERE" + query + " ORDER BY DATE ASC";
 	}
 	
-	private boolean allowSearch () {		
-		// First check date fields
+	private boolean allowSearch () {
+		/**
+		 * Checks to see if the search fields have valid data (ie, dates are a full 4 digits
+		 * and that at least one field actually has text in it).
+		 */
 		if ((beforeField.getText().length() != 4 && beforeField.getText().length() != 0) || (afterField.getText().length() != 4 && afterField.getText().length() != 0)) {
 			return false;
 		}
@@ -209,6 +233,10 @@ public class SearchBox extends JPanel {
 	}
 	
 	private void addRecord(String[] record) {
+		/**
+		 * Adds a search result to the ResultsTableModel using that class's static
+		 * field indices.
+		 */
 		resultsModel.addResult(record[ResultsTableModel.HTID_COL], record[ResultsTableModel.AUTHOR_COL], record[ResultsTableModel.TITLE_COL], record[ResultsTableModel.DATE_COL]);
 	}
 

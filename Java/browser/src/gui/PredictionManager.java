@@ -29,8 +29,6 @@ public class PredictionManager extends JPanel {
 	 */
 	
 	PredictionTableModel targetModel;
-	private Preferences prefs;
-	private DerbyDB derby;
 	private ARFF source,target;
 	private JPanel filesPanel, buttonsPanel;
 	private JScrollPane targetScroll;
@@ -44,6 +42,10 @@ public class PredictionManager extends JPanel {
 	private HeaderEdit headerEditor;
 	private RangeEdit rangeEditor;
 	private String volumeDataDir;
+	
+	// References to external data structures
+	private Preferences prefs;
+	private DerbyDB derby;
 	
 	public PredictionManager(DerbyDB conn, Preferences p) {
 		/**
@@ -64,6 +66,12 @@ public class PredictionManager extends JPanel {
 	}
 	
 	private void drawGUI() {
+		/**
+		 * Initializes all of the graphics objects and positions them within nested
+		 * panels/layout managers.  Panels used by groups are objects are initialized
+		 * in the same section as those objects.
+		 */
+		
 		// File filter for use with saving/loading arff's
 		arffOnly = new FileNameExtensionFilter("Predictions","arff");
 		
@@ -192,6 +200,8 @@ public class PredictionManager extends JPanel {
 				}
 				source = new ARFF(input);
 				// TODO: Some sort of check to make sure the ARFF processed correctly?
+				
+				// Normal load sequence: produce subtable using the prediction's records, enable only those buttons pertaining to loading.
 				try {
 					derby.createSubtable(source.getItems(),sourceName.getText().substring(0, sourceName.getText().indexOf(".")) + "ARFF");
 					clear.setEnabled(true);
@@ -295,9 +305,10 @@ public class PredictionManager extends JPanel {
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/**
-				 * Remove a volume from the target prediction.
+				 * Remove a volume (or volumes) from the target prediction.
 				 */
 				if (targetTable.getSelectedRowCount() != 0) {
+					// Cycle through rows in reverse so that indices will not change as rows are removed
 					int selected[] = targetTable.getSelectedRows();
 					for(int i=selected.length-1;i>=0;i--) {
 						targetModel.removeRow(selected[i]);
@@ -334,7 +345,7 @@ public class PredictionManager extends JPanel {
 		setMatch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/**
-				 * Set the probability of a selected volume to 1.0.
+				 * Set the probability of a selected volume (or volumes) to 1.0.
 				 */
 				int[] selected = targetTable.getSelectedRows();
 				for(int i=0;i<selected.length;i++){
@@ -346,7 +357,7 @@ public class PredictionManager extends JPanel {
 		setMiss.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/**
-				 * Set the probability of a selected volume to 0.0.
+				 * Set the probability of a selected volume (or volumes) to 0.0.
 				 */
 				int[] selected = targetTable.getSelectedRows();
 				for(int i=0;i<selected.length;i++){
@@ -387,8 +398,11 @@ public class PredictionManager extends JPanel {
 				 * Call the RangeEdit object.  This allows the user to manually set the
 				 * page range and page part range for a volume in the target prediction.
 				 */
+				
+				// The selection mode is multi, so first make sure the user only selected one row
 				int[] selected = targetTable.getSelectedRows();
 				if (selected.length == 1) {
+					// If so, then call then initialize a RangeEdit object and pass in that row's range data
 					rangeEditor = new RangeEdit();
 					rangeEditor.setRange(targetModel.getRange(selected[0]));
 					rangeEditor.setVisible(true);
@@ -404,7 +418,10 @@ public class PredictionManager extends JPanel {
 		loadFromSource.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/**
-				 * Transfer records from source prediction to target prediction
+				 * Transfer records from source prediction to target prediction.  I wrote this
+				 * as a separate function because I originally intended to have the browser 
+				 * ask users if they wanted to transfer source to target whenever a source was
+				 * loaded but later decided not to.  See the full method below...
 				 */
 				loadSourceRecords();
 			}
@@ -473,6 +490,7 @@ public class PredictionManager extends JPanel {
 		try {
 			BufferedReader lines = new BufferedReader(new FileReader(arffin));
 			while((line = lines.readLine()) != null){
+				// Arraylist used here for Python-like functionality, converted to String array for return
 				rawtext.add(line.trim());
 			}
 			lines.close();			
@@ -489,7 +507,8 @@ public class PredictionManager extends JPanel {
 	private void saveFile(String[] contents, File savefile) throws IOException {
 		/**
 		 * Saves a file to disk.  The file should be passed in a String array where each
-		 * line has been stripped of new line characters.
+		 * line has been stripped of new line characters.  For use with ARFF class, which
+		 * can output the a prediction in .arff format as a String array.
 		 */
 		BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(savefile),"UTF-8"));
 		output.write("");
@@ -542,26 +561,29 @@ public class PredictionManager extends JPanel {
 		 * all missing items are reported.
 		 */
 		try {
+			//There are two subtables created (one just with HTids used to create a more complete one via JOIN).
+			//The complete subtable will always be called PREDICTION.  The following line calls that subtable
+			//from the DerbyDB as a String matrix.
 			String[][] records = derby.query("SELECT HTID, TITLE, AUTHOR, DATE FROM PREDICTION");			
 			String[] arff = source.getString();
 			String notfound = "";
-			
-			
-			// RESUME DOCUMENTING HERE!!!!
-			
-			
+						
+			//After retrieving the table from Derby, pass each row into the PreditionTableModel for target.
 			for(int i=0;i<arff.length;i++) {
 				if(!arff[i].startsWith("%") && !arff[i].startsWith("@")) {
 					String[] csv = arff[i].split(",");
 					int recindex = findIndex(csv[0],records);
 					if (recindex > -1) {
+						// The target table displays a mixture of ARFF and Derby contents. The csv array is for ARFF content, the records array is for Derby content.
 						targetModel.addPrediction(csv[0],records[recindex][1],records[recindex][2],records[recindex][3],csv[1],csv[2],csv[3],csv[4],csv[5]);
 					} else {
+						// Constructs a list of ARFF entries not found in the Derby database, to be displayed after all source records transferred to target
 						notfound += "\n" + csv[0]; 
 					}
 				} 
 			}
 			if (notfound != "") {
+				// Show missing ARFF predictions missing from Derby
 				JOptionPane.showMessageDialog(null, "The following predictions were not found in the database:" + notfound,"Predictions Not Found",JOptionPane.WARNING_MESSAGE);
 			}
 			
@@ -572,7 +594,10 @@ public class PredictionManager extends JPanel {
 	
 	private int findIndex(String htid, String[][] records) {
 		/**
-		 * A simple check that returns the index of the record array that contains an HTid matching the one passed into the method.
+		 * A simple check that returns the index of the record array that contains an HTid
+		 * matching the one passed into the method.  This is because the DerbyDB results
+		 * may not have rows in the same order as they are in a given ARFF.  This is 
+		 * primarily for use just with the loadFromSource method.
 		 */
 		int index = -1;
 		for(int i=0;i<records.length;i++) {
@@ -585,20 +610,31 @@ public class PredictionManager extends JPanel {
 	
 	public boolean getSaveState() {
 		/**
-		 * This method allows other classes to check whether the target prediction data has been saved since it was modified.  For use with doSave and window listeners in containing classes.
+		 * This method allows other classes to check whether the target prediction data 
+		 * has been saved since it was modified.  For use with doSave and window listeners
+		 * in containing classes (its best practice to keep this kind of variable private
+		 * so that it can't be modified outside the class, so it needs a method for other
+		 * objects to see its state)
 		 */
 		return modified;
 	}
 	
 	public boolean doSave() {
 		/**
-		 * This method allows other classes to instruct this class to perform save operations.  Useful for window listeners in containing classes that prompt users to save before closing the program. 
+		 * This method allows other classes to instruct this class to perform save 
+		 * operations.  Useful for window listeners in containing classes that prompt users
+		 * to save before closing the program, so its kept public. 
 		 */
+		// If user hasn't chosen a file to save to, interrupt the save sequence.
+		// This will work with WindowListeners too and prevent the program from closing
+		// if users select they want to save before closing but haven't selected a save 
+		// file yet.
 		if(target==null) {
 			JOptionPane.showMessageDialog(null, "Please create a target prediction file to save to.","Target Missing.",JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		
+		// Add all rows to the target ARFF, then write to disk.
 		try {
 			addToARFF();
 			saveFile(target.getString(),targetFile);
@@ -610,6 +646,11 @@ public class PredictionManager extends JPanel {
 	}
 	
 	public boolean checkForMap(String htid) {
+		/**
+		 * This method checks to see if a pagemap exists for a given HTid in the default
+		 * pagemaps/ directory.  It does so by creating an empty VolumeReader object in 
+		 * order to use its HTid parser utility. 
+		 */
 		VolumeReader checker = new VolumeReader();
 		checker.learnNameParts(htid);
 		if(new File(prefs.getMapDir() + checker.getFileID() + ".tsv").exists()) {

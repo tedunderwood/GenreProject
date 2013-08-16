@@ -7,7 +7,12 @@ import javax.swing.*;
 
 public class RecordViewer extends JDialog {
 	/**
-	 * TODO: Documentation
+	 * This class displays the full contents of a volume's metadata record from
+	 * the Derby database in a pop-up window.  It accepts the record as a String
+	 * array with fields in the following order: htid, volume number, call number,
+	 * author, title, publisher, data, copy information, subject keywords.  It accepts
+	 * data from the SearchResults getSelection method (so any changes there must be
+	 * reflected here, and vice versa).
 	 */
 	
 	JLabel htidLabel, volnumLabel, callnumLabel, authorLabel, titleLabel, publishLabel, dateLabel, copyLabel, subjectLabel;
@@ -18,6 +23,11 @@ public class RecordViewer extends JDialog {
 	JPanel labelsPane, fieldsPane;
 	
 	public RecordViewer (String[] record) {
+		/**
+		 * Basic constructor that initializes textfields with the passed in record
+		 * String array and then calls the UI drawing and action defining methods.
+		 */
+		
 		// Set pop-up properties
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setLocationRelativeTo(null);
@@ -41,7 +51,13 @@ public class RecordViewer extends JDialog {
 	}
 	
 	private void drawGUI() {
-		// Initialize UI size objects and set window size property
+		/**
+		 * Initializes all of the graphics objects and positions them within nested
+		 * panels/layout managers.  Panels used by groups are objects are initialized
+		 * in the same section as those objects.
+		 */
+		
+		// Initialize shared size definitions and set window size property
 		Dimension areaSize = new Dimension(269,75);
 		Dimension fieldSize = new Dimension(275,25);
 		Dimension labelSizeSmall = new Dimension(100,25);

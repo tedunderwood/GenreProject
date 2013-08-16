@@ -8,13 +8,18 @@ import javax.swing.border.EmptyBorder;
 
 public class RangeEdit extends JDialog {
 	
+	/**
+	 * This class is a customized pop-up with four fields that allows users to
+	 * edit the Range values for a given prediction.  This class is necessary because
+	 * the table that holds table is not editable (to prevent users from accidentally
+	 * creating errors in the HTids).
+	 */
+	
 	private JLabel pageStartLabel,pageEndLabel,partStartLabel,partEndLabel;
 	private JTextField pageStartField,pageEndField,partStartField,partEndField;
 	private JButton accept, cancel;
 	private JPanel fieldsPanel,buttonsPanel;
 	private Boolean result;
-	
-	//TODO: RESIZE AND ADD BORDERS!
 	
 	public RangeEdit() {
 		setModalityType(ModalityType.APPLICATION_MODAL);
@@ -27,6 +32,12 @@ public class RangeEdit extends JDialog {
 	}
 		
 	public void drawGUI () {
+		/**
+		 * Initializes all of the graphics objects and positions them within nested
+		 * panels/layout managers.  Panels are initialized separately here, but objects
+		 * (including nested panels) are added in groups to their respective containers.
+		 */
+		
 		// Set shared UI size objects
 		Dimension objectSize = new Dimension(100,30);
 		
@@ -82,8 +93,19 @@ public class RangeEdit extends JDialog {
 	}
 	
 	private void defineListeners() {
+		/**
+		 * Sets all the button commands (ActionListeners).  This function creates them as
+		 * anonymous subclasses.  It's hacky, and for a bigger program it would probably
+		 * be better to define them each separately.  The overall function of each button
+		 * is described in comments preceding the ActionListener definitions.
+		 */
 		accept.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * Remembers that users wanted to save their changes so that when the
+				 * object is queried after it closes, those changes can be transferred
+				 * to the prediction table.
+				 */
 				result = true;
 				dispose();
 			}
@@ -91,6 +113,10 @@ public class RangeEdit extends JDialog {
 		
 		cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * Remembers that users wanted to dismiss their changes so that when the
+				 * object is queried after it closes, those changes will be ignored.
+				 */
 				result = false;
 				dispose();
 			}
@@ -98,6 +124,11 @@ public class RangeEdit extends JDialog {
 	}
 	
 	public void setRange (String[] range) {
+		/**
+		 * This accepts an array of values passed in from the PredictionTableModel and
+		 * displays them in the text fields for editing. For use with PredictionTableModel,
+		 * which includes a method for retrieving a record's range as an array.
+		 */
 		pageStartField.setText(range[0]);
 		pageEndField.setText(range[1]);
 		partStartField.setText(range[2]);
@@ -105,6 +136,11 @@ public class RangeEdit extends JDialog {
 	}
 	
 	public String[] getRange () {
+		/**
+		 * Takes the values stored in the text fields at the moment the dialog box was
+		 * closed and passed them back out as an array.  For use with PredictionTableModel,
+		 * which includes a method for setting a record's range using an array.
+		 */
 		String[] range = new String[4];
 		range[0] = pageStartField.getText();
 		range[1] = pageEndField.getText();
@@ -114,6 +150,9 @@ public class RangeEdit extends JDialog {
 	}
 	
 	public Boolean getResult () {
+		/**
+		 * Used to query whether or not users wanted to save changes made to range values.
+		 */
 		return result;
 	}
 	
