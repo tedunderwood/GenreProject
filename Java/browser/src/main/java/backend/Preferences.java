@@ -83,21 +83,23 @@ public class Preferences {
 				String[] parts = rawtext.get(i).split("=");
 				// Right now there are only four possible fields, but you could add more
 				// by expanding this switch statement.
-				switch(parts[0]) {
-					case "databasedir":
-						derbyDir = parts[1];
-						break;
-					case "sourcefile":
-						source = parts[1];
-						break;
-					case "genrecodes":
-						genreCodes = parts[1];
-						break;
-					case "pagemapdir":
-						pageMapDir = parts[1];
-						break;
-				}
+				if ("databasedir".equals(parts[0]))
+					derbyDir = parts[1];
+				
+				else
 
+				if ("sourcefile".equals(parts[0]))
+					source = parts[1];
+
+				else 
+
+				if ("genrecodes".equals(parts[0]))
+					genreCodes = parts[1];
+
+				else
+
+				if ("pagemapdir".equals(parts[0]))
+					pageMapDir = parts[1];
 			}
 		}
 		System.out.println("Preferences loaded.");

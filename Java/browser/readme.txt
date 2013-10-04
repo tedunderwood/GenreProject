@@ -9,6 +9,11 @@ I'm not very familiar with MAVEN, but since Boris has previously suggested it I 
 
 Change log:
 
+10/3/13 - borice
+Updated pom.xml and directory structure to adhere to maven best practices
+Added ability to generate deployment jar with dependencies via 'mvn package'
+Updated code to be Java 1.6 compatible
+
 8/16/13 - mikeb
 Updated browser executed jar
 Added documentation to all classes
