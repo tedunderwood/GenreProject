@@ -15,10 +15,12 @@ Example invocation:
 The tool uses 2 configuration files:
 config.ini
 	- lives in the same folder as the create_work.py script 
-	- contains general config parameters in the [general] section
+	- contains general config parameters in the [config] section
 	- see config.ini.sample in this folder for details
 
 ~/.genreproject.ini
 	- lives in the user's HOME folder
 	- contains private configuration parameters for the [remote] config section
 	- see genreproject.ini.sample in this folder for required parameters
+
+The arff.template file is also required to be present in the same folder where the python script and config.ini files are found.
