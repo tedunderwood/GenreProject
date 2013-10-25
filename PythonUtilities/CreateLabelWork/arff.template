@@ -1,0 +1,13 @@
+% List of files in associated folder.
+% Does not really use arff format.
+
+@RELATION $batch_name
+
+@ATTRIBUTE htid string
+@ATTRIBUTE startpg numeric
+@ATTRIBUTE endpg numeric
+@ATTRIBUTE startpgpart numeric
+@ATTRIBUTE endpgpart numeric
+@ATTRIBUTE probability numeric
+
+$volumes

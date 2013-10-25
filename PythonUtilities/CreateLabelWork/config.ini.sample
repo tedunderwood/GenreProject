@@ -1,0 +1,5 @@
+[config]
+raters = Bob, John, Alex, Fred
+reliability_factor = 3	# must assign same work to at least this number of people to increase accuracy and break ties
+batch_size = 20		# create work batches of at most this many volumes
+
