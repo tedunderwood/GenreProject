@@ -10,7 +10,7 @@ arguments:
   --vols VOLS  The ZIP file containing the volumes referenced by the TSV file
 
 Example invocation:
-   > create_work.py --tsv master1.tsv --vols volumes1.tsv
+   > create_work.py --tsv master1.tsv --vols volumes1.zip
 
 The tool uses 2 configuration files:
 config.ini
