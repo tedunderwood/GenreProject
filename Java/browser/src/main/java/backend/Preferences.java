@@ -117,7 +117,8 @@ public class Preferences {
          */
         JOptionPane.showMessageDialog(null, "Please specify a seed file for the browser's database.","First Time Configuration",JOptionPane.OK_OPTION);
         JFileChooser seed = new JFileChooser(System.getProperty("user.dir"));
-        seed.showOpenDialog(null);
+        if (seed.showOpenDialog(null) == JFileChooser.CANCEL_OPTION)
+            System.exit(1);
         source = seed.getSelectedFile().getAbsolutePath();
         derbyDir = (String)JOptionPane.showInputDialog(null,"Choose a name for the browser's database:","First Time Configuration",JOptionPane.PLAIN_MESSAGE,null,null,null);
         derbyDir = new File(derbyDir).getAbsolutePath();
