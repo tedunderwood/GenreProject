@@ -1,5 +1,5 @@
 # SonicScrewdriver.py
-# Version June 8, 2014
+# Version July 4, 2014
 
 def addtodict(word, count, lexicon):
 	'''Adds an integer (count) to dictionary (lexicon) under
@@ -20,6 +20,28 @@ def sortkeysbyvalue(lexicon, whethertoreverse = False):
 
 	tuplelist = sorted(tuplelist, reverse = whethertoreverse)
 	return tuplelist
+
+def sortvaluesbykey(lexicon):
+    '''Accepts a dictionary of numeric keys, such as page numbers, and
+    returns a tuplelist of key-value pairs sorted by the key.'''
+
+    tuplelist = list()
+    for key, value in lexicon.items():
+        tuplelist.append((key, value))
+
+    tuplelist = sorted(tuplelist)
+    return tuplelist
+
+def add_dicts(source, target):
+    '''Adds the values in source to corresponding
+    keys in target, or creates them if missing.'''
+
+    for key, value in source.items():
+        if key in target:
+            target[key] += value
+        else:
+            target[key] = value
+
 
 ## REVISED utility
 ## that reads my standard tab-separated metadata table,
@@ -45,7 +67,7 @@ def readtsv(filepath):
 
     table = dict()
     indices = list()
-    
+
     for i in range(0, numcolumns):
         table[fieldnames[i]] = dict()
 
@@ -61,7 +83,7 @@ def readtsv(filepath):
             thisentry = fields[thisfield]
             table[thiscolumn][rowindex] = thisentry
 
-    return indices, fieldnames, table           
+    return indices, fieldnames, table
 
 def writetsv(columns, rowindices, table, filepath):
 
@@ -72,7 +94,7 @@ def writetsv(columns, rowindices, table, filepath):
     filebuffer = list()
 
     ## Only create a header if the file does not yet exist.
-    
+
     if not os.path.exists(filepath):
 
         headerstring = ""
@@ -108,7 +130,7 @@ def easywritetsv(columns, rowindices, table, filepath):
     table[firstcolumn] = dict()
     for idx in rowindices:
         table[firstcolumn][idx] = idx
-        
+
     import os
 
     headerstring = ""
@@ -116,7 +138,7 @@ def easywritetsv(columns, rowindices, table, filepath):
     filebuffer = list()
 
     ## Only create a header if the file does not yet exist.
-    
+
     if not os.path.exists(filepath):
 
         headerstring = ""
@@ -145,11 +167,11 @@ def easywritetsv(columns, rowindices, table, filepath):
             file.write(line)
 
     return len(filebuffer)
-       
+
 def pairtreefile(htid):
     ''' Given a dirty htid, returns a clean one that can be used
     as a filename.'''
-    
+
     if ':' in htid or '/' in htid:
         htid = htid.replace(':','+')
         htid = htid.replace('/','=')
@@ -159,9 +181,9 @@ def pairtreefile(htid):
 def pairtreelabel(htid):
     ''' Given a clean htid, returns a dirty one that will match
     the metadata table.'''
-    
+
     if '+' in htid or '=' in htid:
         htid = htid.replace('+',':')
         htid = htid.replace('=','/')
 
-    return htid  
+    return htid
