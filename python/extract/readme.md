@@ -17,16 +17,26 @@ the work done in other modules.
 Allowable command-line options include
 
  -g or -genre    A genre or comma-separated list of genres to fetch.
+ 
  -id             A specified volume to fetch.
+
  -idfile         Path to a file listing multiple volume IDs.
+
  -index          Overrides default index for prediction files.
+
  -root           Overrides default rootpath.
+
  -wordlist       Overrides default feature set (all features.)
+
  -phraselist     Defines a list of two-word phrases to be extracted. At present we don't
                  provide for longer phrases. Default is, no such list.
+
  -rh             Remove running headers from the selected volumes.
+
  -o              Output folder. Otherwise defaults to output folder in PathDictionary.
+
  -v              Verbose.
+
  -sub            Make subdirectories for the top-level HathiTrust domains within the
                  output folder.
 
