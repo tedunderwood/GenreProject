@@ -12,7 +12,6 @@ The files in /Plans are descriptions of plans for the project, or some aspect of
 metadata.txt - which is an updated copy of metadata for the collection
 
 In order to access data on the htrc sandbox:
-============================================
 
 ssh tunder@sandbox.htrc.illinois.edu
 
