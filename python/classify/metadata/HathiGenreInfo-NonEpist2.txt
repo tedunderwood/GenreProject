@@ -1,0 +1,303 @@
+HathiTrust ID	Pub Date	Title	Author	Person	Perspectives	Narr Form	Genre	Vol #	FLAG
+uc1.31822038199097	1703	"The second part of the mouse grown a rat, or, The story of the city and country mouse"	"Tutchin, John,"	first	mult	dialogue	unknown	1 of 1	
+mdp.39015031385944	1774	The spiritual Quixote	"Graves, Richard,"	third	sing	unspec	unknown	1 of 3	
+mdp.39015031385936	1774	The spiritual Quixote	"Graves, Richard,"	third	sing	unspec	unknown	2 of 3	
+mdp.39015031385928	1774	The spiritual Quixote	"Graves, Richard,"	third	sing	unspec	unknown	3 of 3	
+nyp.33433074955463	1752	Young Scarron	"Mozeen, Thomas,"	first	sing	unspec	unknown	1 of 1	
+uc2.ark:/13960/t84j0ch7d	1765	The council in the moon	<blank>	first	sing	unspec	unknown	1 of 1	
+nnc1.0035537477	1752	"A genuine account of the life and transactions of Howell ap David Price, gentleman of Wales"	<blank>	first	sing	unspec	unknown	1 of 1	
+mdp.39015063891314	1762	"Longsword, Earl of Salisbury"	"Leland, Thomas,"	third	sing	unspec	unknown	1 of 2	
+mdp.39015063891306	1762	"Longsword, Earl of Salisbury"	"Leland, Thomas,"	third	sing	unspec	unknown	2 of 2	
+mdp.39015078562108	1751	"The life and adventures of Peter Wilkins, a Cornish man"	"Paltock, Robert,"	first	sing	unspec	unknown	1 of 2	
+mdp.39015078562298	1751	"The life and adventures of Peter Wilkins, a Cornish man"	"Paltock, Robert,"	first	sing	unspec	unknown	2 of 2	
+mdp.39015078548669	1756	The life and surprizing adventures of Crusoe Richard Davis	"Bannac, Adolphus."	first	sing	unspec	unknown	1 of 1	
+nyp.33433074911730	1758	"The South sea fortune; or, The chaplain advanced to the saddle"	"Richwould,"	first	sing	unspec	unknown	1 of 1	
+njp.32101077780516	1768	Tales	"ʻInāyat Allāh,"	third	mult	unspec	unknown	1 of 1	
+njp.32101077780524	1768	Tales	"ʻInāyat Allāh,"	third	mult	unspec	unknown	1 of 2	
+mdp.39015078562140	1770	"The life and astonishing adventures of John Daniel, a smith at Royston in Hertfordshire, for a course of seventy years"	"Morris, Ralph."	first	sing	unspec	unknown	1 of 1	
+nyp.33433074913645	1751	The history of Miss Betsy Thoughtless	"Haywood, Eliza Fowler,"	mix	sing	unspec	unknown	1 of 4	
+nyp.33433074913637	1751	The history of Miss Betsy Thoughtless	"Haywood, Eliza Fowler,"	mix	sing	unspec	unknown	2 of 4	
+nyp.33433074913629	1751	The history of Miss Betsy Thoughtless	"Haywood, Eliza Fowler,"	mix	sing	unspec	unknown	3 of 4	
+uiuo.ark:/13960/t17m0vk3v	1769	The Hermit	<blank>	mix	mult	unspec	unknown	1 of 2	
+uiuo.ark:/13960/t4dn4qn2v	1769	The Hermit	<blank>	mix	mult	unspec	unknown	2 of 2	
+nyp.33433074913330	1758	The lives of Cleopatra and Octavia	"Fielding, Sarah,"	first	mult	unspec	unknown	1 of 1	
+nyp.33433074948542	1752	"The female Quixote; or, The adventures of Arabella"	"Lennox, Charlotte,"	third	mult	unspec	courtship	1 of 2	
+nyp.33433074948559	1752	"The female Quixote; or, The adventures of Arabella"	"Lennox, Charlotte,"	third	mult	unspec	courtship	2 of 2	
+mdp.39015065443171	1754	Dialogues of the dead;	"Fénelon, François de Salignac de La Mothe-,"	first	mult	dialogue	unknown	1 of 2	
+mdp.39015065443189	1754	Dialogues of the dead;	"Fénelon, François de Salignac de La Mothe-,"	first	mult	dialogue	unknown	2 of 2	
+nyp.33433074911623	1798	The young philosopher	"Smith, Charlotte,"	third	mult	unspec	unknown	1 of 4	
+nyp.33433074911631	1798	The young philosopher	"Smith, Charlotte,"	third	mult	unspec	unknown	2 of 4	
+nyp.33433074911649	1798	The young philosopher	"Smith, Charlotte,"	third	mult	unspec	unknown	3 of 4	
+nyp.33433074911656	1798	The young philosopher	"Smith, Charlotte,"	third	mult	unspec	unknown	4 of 4	
+mdp.39015013469849	1798	The works of don Francisco de Quevedo	"Quevedo, Francisco de,"	first	mult	shorts	unknown	1 of 3	
+mdp.39015013469856	1798	The works of don Francisco de Quevedo	"Quevedo, Francisco de,"	first	mult	shorts	unknown	2 of 3	
+mdp.39015065718523	1798	The works of don Francisco de Quevedo	"Quevedo, Francisco de,"	first	mult	shorts	unknown	3 of 3	
+nyp.33433076093685	1796	"The miscellaneous works of Tobias Smollett, M. D"	"Smollett, T."	first	mult	unspec	unknown	1 of 6	
+nyp.33433076093677	1796	"The miscellaneous works of Tobias Smollett, M. D"	"Smollett, T."	first	mult	unspec	unknown	2 of 6	
+nyp.33433076093669	1796	"The miscellaneous works of Tobias Smollett, M. D"	"Smollett, T."	first	mult	unspec	unknown	3 of 6	
+nyp.33433076093651	1796	"The miscellaneous works of Tobias Smollett, M. D"	"Smollett, T."	first	mult	unspec	unknown	4 of 6	
+nyp.33433076093701	1796	"The miscellaneous works of Tobias Smollett, M. D"	"Smollett, T."	first	mult	unspec	unknown	5 of 6	
+nyp.33433076093693	1796	"The miscellaneous works of Tobias Smollett, M. D"	"Smollett, T."	first	mult	unspec	unknown	6 of 6	
+nyp.33433074955109	1792	A Sicilian romance	"Radcliffe, Ann Ward,"	mix	sing	unspec	gothic	1 of 2	
+nyp.33433074955091	1792	A Sicilian romance	"Radcliffe, Ann Ward,"	mix	sing	unspec	gothic	2 of 2	
+mdp.39015059896913	1780	An entire new collection of romances and novels	<blank>	third	mult	unspec	unknown	1 of 1	
+mdp.39015018052723	1787	The life of the Rev. Dr. Jonathan Swift	"Sheridan, Thomas,"	mix	sing	unspec	unknown	1 of 1	
+njp.32101076058054	1793	Amelia	"Fielding, Henry,"	first	sing	unspec	unknown	1 of 3	
+njp.32101076058062	1793	Amelia	"Fielding, Henry,"	first	sing	unspec	unknown	2 of 3	
+njp.32101076058070	1793	Amelia	"Fielding, Henry,"	first	sing	unspec	unknown	3 of 3	
+nnc1.0037104179	1798	Henry	"Cumberland, Richard,"	mix	sing	unspec	unknown	1 of 4	
+nnc1.0037104160	1798	Henry	"Cumberland, Richard,"	mix	sing	unspec	unknown	2 of 4	
+nnc1.0037104152	1798	Henry	"Cumberland, Richard,"	mix	sing	unspec	unknown	3 of 4	
+nnc1.0037104144	1798	Henry	"Cumberland, Richard,"	mix	sing	unspec	unknown	4 of 4	
+mdp.39015078549311	1793	The life and adventures of Robinson Crusoe	"Defoe, Daniel,"	first	sing	unspec	unknown	1 of 3	
+mdp.39015078549303	1793	The life and adventures of Robinson Crusoe	"Defoe, Daniel,"	first	sing	unspec	unknown	2 of 3	
+mdp.39015078549295	1793	The life and adventures of Robinson Crusoe	"Defoe, Daniel,"	first	sing	unspec	unknown	3 of 3	
+mdp.39015031938452	1796	"Private history of Peregrinus Proteus, the philosopher"	"Wieland, Christoph Martin,"	first	mult	dialogue	unknown	1 of 2	
+mdp.39015031938460	1796	"Private history of Peregrinus Proteus, the philosopher"	"Wieland, Christoph Martin,"	first	mult	dialogue	unknown	2 of 2	
+nyp.33433074955117	1794	The packet	"Gunning,"	mix	mult	unspec	unknown	1 of 3	
+nyp.33433074955125	1794	The packet	"Gunning,"	mix	mult	unspec	unknown	2 of 3	
+nyp.33433074955133	1794	The packet	"Gunning,"	mix	mult	unspec	unknown	3 of 3	
+nyp.33433074911599	1795	Montalbert	"Smith, Charlotte,"	third	sing	unspec	unknown	1 of 3	
+nyp.33433074911607	1795	Montalbert	"Smith, Charlotte,"	third	sing	unspec	unknown	2 of 3	
+nyp.33433074911615	1795	Montalbert	"Smith, Charlotte,"	third	sing	unspec	unknown	3 of 3	
+nyp.33433074913348	1791	A simple story	"Inchbald,"	third	sing	unspec	"courtship, jacobin"	1 of 4	
+nyp.33433074913355	1791	A simple story	"Inchbald,"	third	sing	unspec	"courtship, jacobin"	2 of 4	
+nyp.33433074913363	1791	A simple story	"Inchbald,"	third	sing	unspec	"courtship, jacobin"	3 of 4	
+nyp.33433074913371	1791	A simple story	"Inchbald,"	third	sing	unspec	"courtship, jacobin"	4 of 4	
+mdp.39015078548990	1790	"The life and adventures of Robinson Crusoe, of York, mariner"	"Defoe, Daniel,"	first	sing	unspec	unknown	1 of 2	
+mdp.39015078549006	1790	"The life and adventures of Robinson Crusoe, of York, mariner"	"Defoe, Daniel,"	first	sing	unspec	unknown	2 of 2	
+uc2.ark:/13960/t1mg7h137	1791	"The wonder working water-mill displayed with its apparatus, appurtenances, appendages, and operations, or, The mill to grind old people young"	<blank>	third	sing	unspec	unknown	1 of 1	
+mdp.39015063560596	1785	Constance	"Mathews, Charles,"	third	sing	unspec	unknown	1 of 4	
+mdp.39015063560554	1785	Constance	"Mathews, Charles,"	third	sing	unspec	unknown	2 of 4	
+mdp.39015063560604	1785	Constance	"Mathews, Charles,"	third	sing	unspec	unknown	3 of 4	
+mdp.39015063560612	1785	Constance	"Mathews, Charles,"	third	sing	unspec	unknown	4 of 4	
+mdp.39015020051671	1799	A tale of the times	"West,"	first	sing	unspec	courtship	1 of 3	
+mdp.39015020051820	1799	A tale of the times	"West,"	first	sing	unspec	courtship	2 of 3	
+mdp.39015020051663	1799	A tale of the times	"West,"	first	sing	unspec	courtship	3 of 3	
+hvd.hn6dgl	1792	The fool of quality;	"Brooke, Henry,"	third	sing	unspec	unknown	1 of 5	NOT IN METADATA
+hvd.hn6dgp	1792	The fool of quality;	"Brooke, Henry,"	third	sing	unspec	unknown	2 of 5	NOT IN METADATA
+hvd.hn6dgn	1792	The fool of quality;	"Brooke, Henry,"	third	sing	unspec	unknown	3 of 5	
+hvd.hn6dgq	1792	The fool of quality;	"Brooke, Henry,"	third	sing	unspec	unknown	4 of 5	
+hvd.hn6dgm	1792	The fool of quality;	"Brooke, Henry,"	third	sing	unspec	unknown	5 of 5	
+nyp.33433075821854	1820	The adventures of Gil Blas of Santillane (177?)	"Le Sage, Alain René,"	first	sing	unspec	unknown	vols 1-3	
+mdp.39015024477674	1792	Anecdotes of the Delborough family	"Gunning,"	third	sing	unspec	unknown	1 of 5	
+mdp.39015024477625	1792	Anecdotes of the Delborough family	"Gunning,"	third	sing	unspec	unknown	2 of 5	
+mdp.39015024477617	1792	Anecdotes of the Delborough family	"Gunning,"	third	sing	unspec	unknown	3 of 5	
+mdp.39015024477682	1792	Anecdotes of the Delborough family	"Gunning,"	third	sing	unspec	unknown	4 of 5	
+mdp.39015024477732	1792	Anecdotes of the Delborough family	"Gunning,"	third	sing	unspec	unknown	5 of 5	
+nyp.33433075733406	1793	The German Gil Blas;	"Kneigge, Adolf Franz Friedrich Ludwig,"	first	sing	unspec	unknown	2 of 3	
+njp.32101037606348	1796	Modern Gulliver's travels	"Whitmore, H."	first	sing	unspec	unknown	1 of 1	
+mdp.39015063617024	1783	"Chrysal; or, The adventures of a guinea"	"Johnstone, Charles,"	first	sing	unspec	unknown	1 of 4	
+mdp.39015063617016	1783	"Chrysal; or, The adventures of a guinea"	"Johnstone, Charles,"	first	sing	unspec	unknown	2 of 4	
+mdp.39015063617008	1783	"Chrysal; or, The adventures of a guinea"	"Johnstone, Charles,"	first	sing	unspec	unknown	3 of 4	
+mdp.39015063616992	1783	"Chrysal; or, The adventures of a guinea"	"Johnstone, Charles,"	first	sing	unspec	unknown	4 of 4	
+njp.32101036889531	1795	The banished man	"Smith, Charlotte,"	third	sing	unspec	unknown	2 of 4	
+njp.32101036889523	1795	The banished man	"Smith, Charlotte,"	third	sing	unspec	unknown	3 of 4	
+njp.32101036889515	1795	The banished man	"Smith, Charlotte,"	third	sing	unspec	unknown	4 of 4	
+nyp.33433074913512	1786	"Cecilia, or, Memoirs of an heiress"	"Burney, Fanny,"	third	sing	unspec	courtship	1 of 5	
+nyp.33433074913520	1786	"Cecilia, or, Memoirs of an heiress"	"Burney, Fanny,"	third	sing	unspec	courtship	2 of 5	
+nyp.33433074913538	1786	"Cecilia, or, Memoirs of an heiress"	"Burney, Fanny,"	third	sing	unspec	courtship	3 of 5	
+nyp.33433074913546	1786	"Cecilia, or, Memoirs of an heiress"	"Burney, Fanny,"	third	sing	unspec	courtship	4 of 5	
+nyp.33433074913553	1786	"Cecilia, or, Memoirs of an heiress"	"Burney, Fanny,"	third	sing	unspec	courtship	5 of 5	
+mdp.39015013472009	1795	The mysteries of Udolpho	"Radcliffe, Ann Ward,"	third	sing	unspec	gothic	1 of 4	
+mdp.39015013472017	1795	The mysteries of Udolpho	"Radcliffe, Ann Ward,"	third	sing	unspec	gothic	2 of 4	
+mdp.39015013472025	1795	The mysteries of Udolpho	"Radcliffe, Ann Ward,"	third	sing	unspec	gothic	3 of 4	
+mdp.39015013472033	1795	The mysteries of Udolpho	"Radcliffe, Ann Ward,"	third	sing	unspec	gothic	4 of 4	
+nyp.33433074907720	1794	The confessions of James Baptiste Couteau	"Jephson, Robert,"	first	sing	unspec	unknown	1 of 2	
+nyp.33433074907712	1794	The confessions of James Baptiste Couteau	"Jephson, Robert,"	first	sing	unspec	unknown	2 of 2	
+nyp.33433074911334	1784	The adventures of Peregrine Pickle	"Smollett, T."	third	sing	unspec	unknown	1 of 4	
+nyp.33433074911342	1784	The adventures of Peregrine Pickle	"Smollett, T."	third	sing	unspec	unknown	2 of 4	
+nyp.33433074911359	1784	The adventures of Peregrine Pickle	"Smollett, T."	third	sing	unspec	unknown	3 of 4	
+nyp.33433074911367	1784	The adventures of Peregrine Pickle	"Smollett, T."	third	sing	unspec	unknown	4 of 4	
+njp.32101079873558	1798	The two cousins	"Pinchard, Elizabeth Sibthorpe."	mix	mult	"unspec, dialogue"	unknown	1 of 1	
+uc2.ark:/13960/t5n878d24	1824	The Albigenses	"Maturin, Charles Robert,"	third	sing	unspec	gothic	2 of 4	
+uc2.ark:/13960/t6k073h5r	1824	The Albigenses	"Maturin, Charles Robert,"	third	sing	unspec	gothic	4 of 4	
+njp.32101067172963	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	1 of 12	
+njp.32101067172971	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	2 of 12	
+njp.32101067172989	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	3 of 12	
+njp.32101067172997	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	4 of 12	
+njp.32101067173003	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	5 of 12	
+njp.32101067173011	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	6 of 12	
+njp.32101067173029	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	7 of 12	
+njp.32101067173037	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	8 of 12	
+njp.32101067173045	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	9 of 12	
+njp.32101067173052	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	10 of 12	
+njp.32101067173060	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	11 of 12	
+njp.32101067173078	1819	Novels and tales of the author of Waverley	"Scott, Walter,"	mix	sing	unspec	historical	12 of 12	
+mdp.39015012113810	1818	Stories for the middle ranks of society and tales for the common people	"More, Hannah,"	third	mult	shorts	unknown	1 of 2	
+mdp.39015009162184	1818	Stories for the middle ranks of society and tales for the common people	"More, Hannah,"	third	mult	shorts	unknown	2 of 2	
+uiuo.ark:/13960/t04x5xf7m	1808	A winter in Dublin	"Sedley, Charles,"	third	sing	unspec	unknown	1 of 3	
+uiuo.ark:/13960/t8sb4qd43	1808	A winter in Dublin	"Sedley, Charles,"	third	sing	unspec	unknown	2 of 3	
+uiuo.ark:/13960/t8gf1fc8c	1808	A winter in Dublin	"Sedley, Charles,"	third	sing	unspec	unknown	3 of 3	
+uiuo.ark:/13960/t6vx10k7w	1808	"The white knight, or, The monastery of Morne"	"Melville, Theodore."	third	sing	unspec	gothic	1 of 3	
+uiuo.ark:/13960/t2988vx2b	1808	"The white knight, or, The monastery of Morne"	"Melville, Theodore."	third	sing	unspec	gothic	2 of 3	
+uiuo.ark:/13960/t4bp0qf69	1802	"The white knight, or, The monastery of Morne"	"Melville, Theodore."	third	sing	unspec	gothic	3 of 3	
+dul1.ark:/13960/t8mc9nw09	1810	"The fatal cabinet, or, The profligate mother"	<blank>	third	sing	unspec	unknown	1 of 1	
+uc2.ark:/13960/t6445ks3r	1823	Popular tales and romances of the northern nations	<blank>	third	mult	shorts	unknown	1 of 3	
+uc2.ark:/13960/t0sq8sg1g	1823	Popular tales and romances of the northern nations	<blank>	third	mult	shorts	unknown	2 of 3	
+uc2.ark:/13960/t82j6bq0z	1823	Popular tales and romances of the northern nations	<blank>	third	mult	shorts	unknown	3 of 3	
+uiuo.ark:/13960/t2t446x08	1812	"Malcolm Douglas, or, The Sibylline prophecy"	<blank>	third	sing	unspec	unknown	1 of 3	
+uiuo.ark:/13960/t6k07m540	1812	"Malcolm Douglas, or, The Sibylline prophecy"	<blank>	third	sing	unspec	unknown	2 of 3	
+uc1.b3290799	1818	"Tales of wonder, of humour, and of sentiment;"	"Plumptre, Anne,"	third	mult	unspec	unknown	1 of 3	
+uc1.b3290800	1818	"Tales of wonder, of humour, and of sentiment;"	"Plumptre, Anne,"	third	mult	unspec	unknown	2 of 3	
+uc1.b3290801	1818	"Tales of wonder, of humour, and of sentiment;"	"Plumptre, Anne,"	third	mult	unspec	unknown	3 of 3	
+uiuo.ark:/13960/t2891wf6s	1810	"The grey friar, and the black spirit of the Wye"	"English, John,"	third	sing	unspec	gothic	1 of 2	
+uiuo.ark:/13960/t12n5t636	1810	"The grey friar, and the black spirit of the Wye"	"English, John,"	third	sing	unspec	gothic	2 of 2	
+nyp.33433074915608	1809	Cœlebs in search of a wife	"More, Hannah,"	first	sing	unspec	"courtship, evangelical"	1 of 2	
+nyp.33433074915590	1809	Cœlebs in search of a wife	"More, Hannah,"	first	sing	unspec	"courtship, evangelical"	2 of 2	
+nyp.33433074855200	1821	Annals of the parish	"Galt, John,"	first	sing	unspec	"historical, industrial"	1 of 1	
+njp.32101004412126	1823	Ada Reis	"Lamb, Caroline,"	third	sing	unspec	"silver fork, gothic"	1 of 3	
+njp.32101066591742	1823	Ada Reis	"Lamb, Caroline,"	third	sing	unspec	"silver fork, gothic"	2 of 3	
+njp.32101066591759	1823	Ada Reis	"Lamb, Caroline,"	third	sing	unspec	"silver fork, gothic"	3 of 3	
+uiuo.ark:/13960/t6nz8qp53	1801	The microcosm	"Acton, Eugenia de,"	third	sing	unspec	unknown	1 of 5	
+uiuo.ark:/13960/t3st84p8j	1801	The microcosm	"Acton, Eugenia de,"	third	sing	unspec	unknown	2 of 5	
+uiuo.ark:/13960/t4xh05574	1801	The microcosm	"Acton, Eugenia de,"	third	sing	unspec	unknown	3 of 5	
+uiuo.ark:/13960/t48p6k665	1801	The microcosm	"Acton, Eugenia de,"	third	sing	unspec	unknown	4 of 5	
+uiuo.ark:/13960/t6b28ds6f	1801	The microcosm	"Acton, Eugenia de,"	third	sing	unspec	unknown	5 of 5	
+mdp.39015063526795	1816	Eighteen hundred and fifteen;	"Agg, John,"	mix	mult	unspec	unknown	1 of 3	
+mdp.39015063526787	1816	Eighteen hundred and fifteen;	"Agg, John,"	mix	mult	unspec	unknown	2 of 3	
+mdp.39015063526779	1816	Eighteen hundred and fifteen;	"Agg, John,"	mix	mult	unspec	unknown	3 of 3	
+uiuo.ark:/13960/t9n30cc0p	1803	"Peregrine, or, The fool of fortune"	"Lyttleton, M."	third	sing	unspec	unknown	1 of 3	
+uiuo.ark:/13960/t1pg2683c	1803	"Peregrine, or, The fool of fortune"	"Lyttleton, M."	third	sing	unspec	unknown	2 of 3	
+uiuo.ark:/13960/t8v98nt2g	1803	"Peregrine, or, The fool of fortune"	"Lyttleton, M."	third	sing	unspec	unknown	3 of 3	
+nnc1.0315131394	1812	The Milesian chief. A romance	"Maturin, Charles Robert,"	third	sing	unspec	unknown	1 of 4	
+nnc1.0043378170	1812	The Milesian chief. A romance	"Maturin, Charles Robert,"	third	sing	unspec	unknown	2 of 4	
+nnc1.0043378153	1812	The Milesian chief. A romance	"Maturin, Charles Robert,"	third	sing	unspec	unknown	3 of 4	
+nnc1.0043378161	1812	The Milesian chief. A romance	"Maturin, Charles Robert,"	third	sing	unspec	unknown	4 of 4	
+mdp.39015033490403	1824	The adventures of Hajji Baba of Ispahan	"Morier, James Justinian,"	first	sing	unspec	unknown	1 of 3	
+mdp.39015033490387	1824	The adventures of Hajji Baba of Ispahan	"Morier, James Justinian,"	first	sing	unspec	unknown	2 of 3	
+mdp.39015003856351	1824	The adventures of Hajji Baba of Ispahan	"Morier, James Justinian,"	first	sing	unspec	unknown	3 of 3	
+njp.32101064751637	1819	"Twenty years confinement, or, The Casimirs"	"Wall, D."	thid	sing	unspec	unknown	1 of 1	
+uiuo.ark:/13960/t7cr6hq4j	1800	Memoirs of modern philosophers	"Hamilton, Elizabeth,"	third	mult	unspec	unknown	1 of 3	
+uiuo.ark:/13960/t6h13qh1g	1800	Memoirs of modern philosophers	"Hamilton, Elizabeth,"	third	mult	unspec	unknown	2 of 3	
+uiuo.ark:/13960/t0ks7d013	1800	Memoirs of modern philosophers	"Hamilton, Elizabeth,"	third	mult	unspec	unknown	3 of 3	
+hvd.hn1i44	1816	"Trecothick bower, or, The lady of the west country"	"Roche, Regina Maria,"	third	sing	unspec	unknown	1 of 2	
+hvd.hn1i43	1816	"Trecothick bower, or, The lady of the west country"	"Roche, Regina Maria,"	third	sing	unspec	unknown	2 of 2	
+dul1.ark:/13960/t3dz14r97	1807	A winter in Bath	"Bayfield, E. G.,"	mix	mult	unspec	unknown	1 of 4	
+dul1.ark:/13960/t0tq6sw6t	1807	A winter in Bath	"Bayfield, E. G.,"	mix	mult	unspec	unknown	2 of 4	
+dul1.ark:/13960/t6058fr3w	1807	A winter in Bath	"Bayfield, E. G.,"	mix	mult	unspec	unknown	3 of 4	
+dul1.ark:/13960/t6ww88v9c	1807	A winter in Bath	"Bayfield, E. G.,"	mix	mult	unspec	unknown	4 of 4	
+hvd.hn2hed	1801	"Lessons of virtue, or, The book of happiness"	"Kendall, Edward Augustus,"	mix	mult	unspec	unknown	1 of 1	
+mdp.39015027528721	1801	The infernal Quixote	"Lucas, Charles,"	first	sing	unspec	anti-jacobin	1 of 4	NOT IN METADATA
+mdp.39015027528713	1801	The infernal Quixote	"Lucas, Charles,"	first	sing	unspec	anti-jacobin	2 of 4	NOT IN METADATA
+mdp.39015027528705	1801	The infernal Quixote	"Lucas, Charles,"	first	sing	unspec	anti-jacobin	3 of 4	NOT IN METADATA
+mdp.39015027528697	1801	The infernal Quixote	"Lucas, Charles,"	first	sing	unspec	anti-jacobin	4 of 4	
+uiuo.ark:/13960/t23b6jq3g	1822	Osmond	"Kelty, Mary Ann,"	third	sing	unspec	unknown	1 of 3	
+uiuo.ark:/13960/t0ht34n1h	1822	Osmond	"Kelty, Mary Ann,"	third	sing	unspec	unknown	2 of 3	
+uiuo.ark:/13960/t60582h93	1822	Osmond	"Kelty, Mary Ann,"	third	sing	unspec	unknown	3 of 3	NOT IN METADATA
+mdp.39015009220768	1823	The fire-eater	"Wilson, James,"	first	sing	unspec	unknown	1 of 1	
+hvd.hn2gtk	1820	"The welcome visitor, or, The good uncle"	<blank>	mix	mult	shorts	unknown	1 of 1	
+uiuo.ark:/13960/t25b0fv2w	1813	Adelaide	"Cuthbertson, Catherine."	third	sing	unspec	unknown	1 of 5	
+uiuo.ark:/13960/t6737442q	1813	Adelaide	"Cuthbertson, Catherine."	third	sing	unspec	unknown	2 of 5	
+uiuo.ark:/13960/t77s82104	1813	Adelaide	"Cuthbertson, Catherine."	third	sing	unspec	unknown	3 of 5	
+uiuo.ark:/13960/t0cv4vh3v	1813	Adelaide	"Cuthbertson, Catherine."	third	sing	unspec	unknown	4 of 5	
+uiuo.ark:/13960/t6qz2kp2b	1813	Adelaide	"Cuthbertson, Catherine."	third	sing	unspec	unknown	5 of 5	
+njp.32101068163862	1823	Isabella	<blank>	mix	mult	unspec	unknown	1 of 3	
+njp.32101068163854	1823	Isabella	<blank>	mix	mult	unspec	unknown	2 of 3	
+njp.32101068163847	1823	Isabella	<blank>	mix	mult	unspec	unknown	3 of 3	
+mdp.39015064544847	1820	Tales of the Priory	"Hofland,"	third	sing	unspec	unknown	1 of 4	
+mdp.39015064544839	1820	Tales of the Priory	"Hofland,"	third	sing	unspec	unknown	2 of 4	
+mdp.39015064544821	1820	Tales of the Priory	"Hofland,"	third	sing	unspec	unknown	3 of 4	
+mdp.39015064544813	1820	Tales of the Priory	"Hofland,"	third	sing	unspec	unknown	4 of 4	
+nyp.33433075840227	1815	The history of Tekeli	"Pigault-Lebrun,"	third	mult	unspec	unknown	1 of 1	
+mdp.39015047645919	1806	A winter in London;	"Surr, T. S."	third	sing	unspec	unknown	1 of 3	
+mdp.39015047645901	1806	A winter in London;	"Surr, T. S."	third	sing	unspec	unknown	2 of 3	
+mdp.39015047645893	1806	A winter in London;	"Surr, T. S."	third	sing	unspec	unknown	3 of 3	
+dul1.ark:/13960/t3cz43m9v	1817	Six weeks at Long's	"Barrett, Eaton Stannard,"	third	sing	unspec	unknown	1 of 3	
+dul1.ark:/13960/t8hd8qk80	1817	Six weeks at Long's	"Barrett, Eaton Stannard,"	third	sing	unspec	unknown	2 of 3	
+dul1.ark:/13960/t8ff4nt0n	1817	Six weeks at Long's	"Barrett, Eaton Stannard,"	third	sing	unspec	unknown	3 of 3	
+njp.32101062933435	1814	Alicia de Lacy	"West, Jane,"	third	sing	unspec	unknown	1 of 4	
+njp.32101062933443	1814	Alicia de Lacy	"West, Jane,"	third	sing	unspec	unknown	2 of 4	
+njp.32101062933468	1814	Alicia de Lacy	"West, Jane,"	third	sing	unspec	unknown	4 of 4	
+njp.32101041607233	1818	"Brighton; or, The Steyne"	"Brown, Thomas,"	mix	sing	unspec	unknown	1 of 3	
+njp.32101041607241	1818	"Brighton; or, The Steyne"	"Brown, Thomas,"	mix	sing	unspec	unknown	2 of 3	
+njp.32101041607258	1818	"Brighton; or, The Steyne"	"Brown, Thomas,"	mix	sing	unspec	unknown	3 of 3	
+mdp.39015063967304	1824	Rothelan;	"Calt, John,"	mix	sing	unspec	unknown	1 of 3	
+mdp.39015063967296	1824	Rothelan;	"Calt, John,"	mix	sing	unspec	unknown	2 of 3	
+mdp.39015063967445	1824	Rothelan;	"Calt, John,"	mix	sing	unspec	unknown	3 of 3	
+uiuo.ark:/13960/t0sq9gk7c	1813	The history of myself and my friend;	"Plumptre, Anne,"	third	sing	unspec	unknown	1 of 4	
+uiuo.ark:/13960/t3126gn1p	1813	The history of myself and my friend;	"Plumptre, Anne,"	third	sing	unspec	unknown	2 of 4	
+uiuo.ark:/13960/t2m623x3j	1813	The history of myself and my friend;	"Plumptre, Anne,"	third	sing	unspec	unknown	3 of 4	
+uiuo.ark:/13960/t3fx7w710	1813	The history of myself and my friend;	"Plumptre, Anne,"	third	sing	unspec	unknown	4 of 4	
+njp.32101037989942	1812	Thinks-I-to-myself	"Nares, Edward,"	first	sing	unspec	unknown	1 of 2	
+njp.32101037989959	1812	Thinks-I-to-myself	"Nares, Edward,"	first	sing	unspec	unknown	2 of 2	
+uiuo.ark:/13960/t9w09nn61	1811	Like master like man	"Palmer, John,"	third	mult	unspec	unknown	1 of 2	
+uiuo.ark:/13960/t6543995p	1811	Like master like man	"Palmer, John,"	third	mult	unspec	unknown	2 of 2	
+hvd.32044090306135	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	1 of 10	
+hvd.32044090306226	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	2 of 10	
+hvd.32044019401306	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	3 of 10	
+hvd.32044090306127	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	4 of 10	
+hvd.32044090306234	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	5 of 10	
+hvd.32044090306549	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	6 of 10	NOT IN METADATA
+hvd.32044021140686	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	7 of 10	
+hvd.32044019401314	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	8 of 10	NOT IN METADATA
+hvd.32044090306242	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	9 of 10	
+hvd.32044090306119	1832	Tales and novels	"Edgeworth, Maria,"	mix	mult	"unspec, essay"	unknown	10 of 10	NOT IN METADATA
+mdp.39015035960882	1847	Ranthorpe	"Lewes, George Henry,"	third	sing	unspec	unknown	1 of 1	
+hvd.32044050537992	1828	Life in India;	"Monkland, Anne Catharine."	third	sing	unspec	unknown	1 of 3	
+hvd.32044050537984	1828	Life in India;	"Monkland, Anne Catharine."	third	sing	unspec	unknown	2 of 3	
+nyp.33433107804183	1828	Life in India;	"Monkland, Anne Catharine."	third	sing	unspec	unknown	3 of 3	NOT IN METADATA
+uiuo.ark:/13960/t7dr36h2b	1834	The maiden's talisman	"Dalton, James,"	mix	sing	unspec	unknown	1 of 3	
+uiuo.ark:/13960/t0pr84m1t	1834	The maiden's talisman	"Dalton, James,"	mix	sing	unspec	unknown	2 of 3	
+uiuo.ark:/13960/t46q29m0j	1834	The maiden's talisman	"Dalton, James,"	mix	sing	unspec	unknown	3 of 3	
+uc1.b3325206	1840	Tippoo Sultaun	"Taylor, Meadows,"	third	sing	unspec	unknown	1 of 3	
+uc2.ark:/13960/t1wd3vq81	1840	Tippoo Sultaun	"Taylor, Meadows,"	third	sing	unspec	unknown	2 of 3	
+uc1.b3325207	1840	Tippoo Sultaun	"Taylor, Meadows,"	third	sing	unspec	unknown	3 of 3	
+nyp.33433075747141	1835	Sephora	"Oliver, N. W."	mix	mult	unspec	unknown	1 of 1	
+hvd.hn4ejd	1836	Abaellino	"Zschokke, Heinrich,"	third	sing	unspec	unknown	1 of 1	
+nyp.33433074895859	1828	"Marly, or, A planter's life in Jamaica"	<blank>	third	sing	unspec	unknown	1 of 1	
+uiuo.ark:/13960/t3tt50h1f	1847	Evelyn Harcourt	"Gascoigne, Caroline Leigh Smith,"	third	sing	unspec	unknown	1 of 3	
+uiuo.ark:/13960/t1wd47k9n	1847	Evelyn Harcourt	"Gascoigne, Caroline Leigh Smith,"	third	sing	unspec	unknown	2 of 3	
+uiuo.ark:/13960/t16m3mq7h	1847	Evelyn Harcourt	"Gascoigne, Caroline Leigh Smith,"	third	sing	unspec	unknown	3 of 3	
+hvd.hwad9y	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	1 of 48	
+hvd.hwad9z	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	2 of 48	
+hvd.hwadah	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	3 of 48	
+hvd.hwadai	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	4 of 48	
+hvd.hwadaj	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	5 of 48	
+hvd.hwadak	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	6 of 48	
+hvd.hwadal	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	7 of 48	
+hvd.hwadam	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	8 of 48	
+hvd.hwadan	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	9 of 48	
+hvd.hwadap	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	10 of 48	
+hvd.hwadb7	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	11 of 48	
+hvd.hwadb8	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	12 of 48	
+hvd.hwadb9	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	13 of 48	
+hvd.hwadba	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	14 of 48	
+hvd.hwadbb	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	15 of 48	
+hvd.hwadbc	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	16 of 48	
+hvd.hwadbd	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	17 of 48	
+hvd.hwadbw	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	18 of 48	
+hvd.hwadbx	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	19 of 48	
+hvd.hwadby	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	20 of 48	
+hvd.hwadbz	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	21 of 48	
+hvd.hwadc1	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	22 of 48	
+hvd.hwadc2	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	23 of 48	
+hvd.hwadc3	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	24 of 48	
+hvd.hwadu6	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	25 of 48	
+hvd.hwaduj	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	26 of 48	
+hvd.hwadul	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	28 of 48	
+hvd.hwadum	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	29 of 48	
+hvd.hwadun	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	30 of 48	
+hvd.hwadup	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	31 of 48	
+hvd.hwaduq	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	32 of 48	
+hvd.hwadur	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	33 of 48	
+hvd.hwadus	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	34 of 48	
+hvd.hwadut	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	35 of 48	
+hvd.hwaduu	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	36 of 48	
+hvd.hwaduv	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	37 of 48	
+hvd.hwadv9	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	38 of 48	
+hvd.hwadva	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	39 of 48	
+hvd.hwadvb	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	40 of 48	
+hvd.hwadvc	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	41 of 48	
+hvd.hwadvd	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	42 of 48	
+hvd.hwadvf	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	44 of 48	
+hvd.hwadvg	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	45 of 48	
+hvd.hwadvh	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	46 of 48	
+hvd.hwadvi	1829	The Waverley novels	"Scott, Walter,"	mix	mult	unspec	historical	47 of 48	
+njp.32101068581824	1831	The bravo	"Cooper, James Fenimore,"	third	sing	unspec	unknown	1 of 1	
+hvd.hn5e3b	1843	Genevieve and Marcelin and other tales	"Bouilly, Jean Nicolas,"	mix	mult	shorts	unknown	1 of 1	
+wu.89098868524	1859	"Kate Kilborn, or, Sowing and reaping"	<blank>	third	sing	unspec	unknown	1 of 1	
+uiuo.ark:/13960/t1bk1r34s	1886	The master of the ceremonies	"Fenn, George Manville,"	third	sing	unspec	unknown	2 of 3	
+uiuo.ark:/13960/t9w09fc9d	1886	The master of the ceremonies	"Fenn, George Manville,"	third	sing	unspec	unknown	3 of 3	
+mdp.39015063955465	1881	The sword of Damocles;	"Green, Anna Katharine,"	third	mult	unspec	unknown	1 of 1	
+uc1.b4104982	1877	That lass o' Lowrie's	"Burnett, Frances Hodgson,"	third	mult	unspec	unknown	1 of 1	

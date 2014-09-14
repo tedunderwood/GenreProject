@@ -1,0 +1,207 @@
+HathiTrust ID	Pub Date	Title	Author	Person	Perspectives	Narr Form	Genre	Vol #
+nyp.33433074955257	1784	The tutor of truth	"Pratt,"	first	mult	letters	unknown	1 of 2
+njp.32101032332254	1810	The history of Sir Charles Grandison	"Richardson, Samuel,"	first	mult	letters	courtship	1 of 7
+njp.32101032332940	1810	The history of Sir Charles Grandison	"Richardson, Samuel,"	first	mult	letters	courtship	2 of 7
+njp.32101032330431	1810	The history of Sir Charles Grandison	"Richardson, Samuel,"	first	mult	letters	courtship	3 of 7
+njp.32101032335505	1810	The history of Sir Charles Grandison	"Richardson, Samuel,"	first	mult	letters	courtship	4 of 7
+njp.32101030764698	1810	The history of Sir Charles Grandison	"Richardson, Samuel,"	first	mult	letters	courtship	5 of 7
+njp.32101015573023	1810	The history of Sir Charles Grandison	"Richardson, Samuel,"	first	mult	letters	courtship	6 of 7
+njp.32101068602265	1810	The history of Sir Charles Grandison	"Richardson, Samuel,"	first	mult	letters	courtship	7 of 7
+mdp.39015063546520	1795	Arundel	"Cumberland, Richard,"	first	mult	letters	unknown	1 of 2
+mdp.39015063546538	1795	Arundel	"Cumberland, Richard,"	first	mult	letters	unknown	2 of 2
+nyp.33433067367627	1811	The history of Clarissa Harlowe	"Richardson, Samuel,"	first	mult	letters	unknown	1 of 8
+nyp.33433067367619	1811	The history of Clarissa Harlowe	"Richardson, Samuel,"	first	mult	letters	unknown	2 of 8
+nyp.33433067367601	1811	The history of Clarissa Harlowe	"Richardson, Samuel,"	first	mult	letters	unknown	3 of 8
+nyp.33433067367593	1811	The history of Clarissa Harlowe	"Richardson, Samuel,"	first	mult	letters	unknown	4 of 8
+nyp.33433067367585	1811	The history of Clarissa Harlowe	"Richardson, Samuel,"	first	mult	letters	unknown	5 of 8
+nyp.33433067367577	1811	The history of Clarissa Harlowe	"Richardson, Samuel,"	first	mult	letters	unknown	6 of 8
+nyp.33433067367569	1811	The history of Clarissa Harlowe	"Richardson, Samuel,"	first	mult	letters	unknown	7 of 8
+nyp.33433067367551	1811	The history of Clarissa Harlowe	"Richardson, Samuel,"	first	mult	letters	unknown	8 of 8
+uc1.b3575739	1813	"Pamela, or Virtue rewarded;"	"Richardson, Samuel,"	first	mult	letters	courtship	1 of 1
+mdp.39015031001335	1711	"The lucubrations of Isaac Bickerstaff, esq;"	<blank>	first	sing	sketch	unknown	1 of 4
+mdp.39015031001343	1712	"The lucubrations of Isaac Bickerstaff, esq;"	<blank>	first	sing	sketch	unknown	2 of 4
+mdp.39015005765303	1713	"The lucubrations of Isaac Bickerstaff, esq;"	<blank>	first	sing	sketch	unknown	3 of 4
+mdp.39015031001350	1714	"The lucubrations of Isaac Bickerstaff, esq;"	<blank>	first	sing	sketch	unknown	4 of 4
+mdp.39015063980125	1789	The young widow;	"Hayley, William,"	first	mult	letters	unknown	2 of 4
+mdp.39015063980117	1789	The young widow;	"Hayley, William,"	first	mult	letters	unknown	3 of 4
+mdp.39015063912136	1789	The young widow;	"Hayley, William,"	first	mult	letters	unknown	4 of 4
+nyp.33433074916390	1792	"Athenian letters, or, The epistolary correspondence of an agent of the King of Persia, residing at Athens during the Peloponnesian War"	<blank>	first	mult	letters	unknown	1 of 2
+nyp.33433074916408	1792	"Athenian letters, or, The epistolary correspondence of an agent of the King of Persia, residing at Athens during the Peloponnesian War"	<blank>	first	mult	letters	unknown	2 of 2
+nyp.33433075729792	1806	Leonora	"Edgeworth, Maria,"	first	mult	letters	unknown	1 of 2
+nyp.33433075729800	1806	Leonora	"Edgeworth, Maria,"	first	mult	letters	unknown	2 of 2
+nyp.33433045280553	1888	Memoirs of Fanny Hill	"Cleland, John,"	first	sing	letters	unknown	1 of 1
+uc2.ark:/13960/t4zg6hh32	1756	Letters on the English nation	"Shabbeare, John,"	mix	sing	letters	unknown	2 of 2
+uva.x000534718	1761	"Eloisa: or, A series of original letters collected and published by J.J. Rousseau"	"Rousseau, Jean-Jacques,"	first	mult	letters	unknown	1 of 4
+uva.x000534713	1761	"Eloisa: or, A series of original letters collected and published by J.J. Rousseau"	"Rousseau, Jean-Jacques,"	first	mult	letters	unknown	2 of 4
+uva.x000534719	1761	"Eloisa: or, A series of original letters collected and published by J.J. Rousseau"	"Rousseau, Jean-Jacques,"	first	mult	letters	unknown	3 of 4
+uva.x000534712	1761	"Eloisa: or, A series of original letters collected and published by J.J. Rousseau"	"Rousseau, Jean-Jacques,"	first	mult	letters	unknown	4 of 4
+mdp.39015012357391	1761	Memoirs of Miss Sidney Bidulph	"Sheridan, Frances Chamberlaine,"	mix	mult	journal	unknown	1 of 1
+nyp.33433074955356	1762	Letters between Emilia and Harriet	"Cooper, Maria Susanna."	first	mult	letters	unknown	1 of 1
+dul1.ark:/13960/t4mk7258x	1762	"A description of Millenium Hall, and the country adjacent"	"Scott, Sarah,"	first	sing	letters	unknown	1 of 1
+nyp.33433074909999	1775	The history of Lady Julia Mandeville	"Brooke, Frances,"	first	sing	letters	courtship	1 of 1
+mdp.39015063932647	1764	The letters that passed between Theodosius and Constantia;	"Langhorne, John,"	first	mult	letters	unknown	1 of 1
+njp.32101037606322	1763	The histories of Lady Frances S--- and Lady Caroline S---	"Gunning,"	first	mult	letters	unknown	1 of 1
+mdp.39015057157748	1766	"The history of the Marquis de Roselle, in a series of letters"	"Elie de Beaumont,"	first	mult	letters	unknown	1 of 2
+mdp.39015057157755	1766	"The history of the Marquis de Roselle, in a series of letters"	"Elie de Beaumont,"	first	mult	letters	unknown	2 of 2
+ucm.5320262557	1767	Memoirs of a Magdalen or The history of Louisa Mildway	"Kelly, Hugh,"	first	mult	letters	unknown	1 of 1
+njp.32101037021043	1766	Letters on different subjects	"Pennington, Sarah,"	first	mult	letters	unknown	1 of 4
+njp.32101037021035	1766	Letters on different subjects	"Pennington, Sarah,"	first	mult	letters	unknown	2 of 4
+njp.32101037021027	1766	Letters on different subjects	"Pennington, Sarah,"	first	mult	letters	unknown	3 of 4
+njp.32101037021019	1766	Letters on different subjects	"Pennington, Sarah,"	first	mult	letters	unknown	4 of 4
+nnc1.1002347679	1766	The history of Sir Charles Beaufort	<blank>	first	mult	letters	unknown	1 of 2
+nnc1.1002347725	1766	The history of Sir Charles Beaufort	<blank>	first	mult	letters	unknown	2 of 2
+nyp.33433075885487	1776	Letters from Altamont in the capital to his friends in the country	"Jenner, Charles,"	first	sing	letters	unknown	1 of 1
+mdp.39015063758570	1769	The masquerade;	<blank>	first	mult	letters	unknown	1 of 2
+mdp.39015063758588	1769	The masquerade;	<blank>	first	mult	letters	unknown	2 of 2
+dul1.ark:/13960/t4qj7xg01	1777	The history of Emily Montague	"Brooke, Frances,"	first	mult	letters	courtship	1 of 4
+dul1.ark:/13960/t70v9094q	1777	The history of Emily Montague	"Brooke, Frances,"	first	mult	letters	courtship	2 of 4
+dul1.ark:/13960/t6h13j73s	1777	The history of Emily Montague	"Brooke, Frances,"	first	mult	letters	courtship	3 of 4
+dul1.ark:/13960/t15m6qx0w	1777	The history of Emily Montague	"Brooke, Frances,"	first	mult	letters	courtship	4 of 4
+nyp.33433074917604	1769	Letters supposed to have passed between M. de St. Evremond and Mr. Waller	"Langhorne, John,"	first	mult	letters	unknown	1 of 1
+uc2.ark:/13960/t9280921r	1820	The expedition of Humphry Clinker	"Smollett, T."	first	mult	letters	unknown	1 of 2
+uc2.ark:/13960/t3zs2q212	1772	The expedition of Humphry Clinker	"Smollett, T."	first	mult	letters	unknown	2 of 2
+njp.32101076970555	1774	"The fatal effects of inconstancy, or, Letters of the Marchioness de Syrcé, the Count de Mirbelle and others"	"Dorat, Claude Joseph,"	first	mult	letters	unknown	2 of 2
+njp.32101037021589	1777	Liberal opinions	"Pratt,"	first	sing	sketch	unknown	1 of 6
+njp.32101037021597	1777	Liberal opinions	"Pratt,"	first	sing	sketch	unknown	2 of 6
+njp.32101079239479	1777	Liberal opinions	"Pratt,"	first	sing	sketch	unknown	3 of 6
+njp.32101037021563	1777	Liberal opinions	"Pratt,"	first	sing	sketch	unknown	4 of 6
+njp.32101079239461	1777	Liberal opinions	"Pratt,"	first	sing	sketch	unknown	5 of 6
+njp.32101037021548	1777	Liberal opinions	"Pratt,"	first	sing	sketch	unknown	6 of 6
+nyp.33433074913389	1784	"The history of Julia Benson, in a series of letters"	<blank>	first	mult	letters	unknown	1 of 1
+nyp.33433074955349	1777	Letters from Henrietta to Morvina	Henrietta.	first	sing	letters	unknown	1 of 2
+nyp.33433074955331	1777	Letters from Henrietta to Morvina	Henrietta.	first	sing	letters	unknown	2 of 2
+mdp.39015021279412	1779	The sylph;	"Devonshire, Georgiana Spencer Cavendish,"	first	mult	letters	unknown	1 of 2
+mdp.39015021279255	1779	The sylph;	"Devonshire, Georgiana Spencer Cavendish,"	first	mult	letters	unknown	2 of 2
+nyp.33433075724918	1808	The sorrows of Werter;	"Goethe, Johann Wolfgang von,"	first	sing	letters	unknown	1 of 1
+njp.32101037602313	1780	The relapse;	<blank>	first	mult	letters	unknown	1 of 1
+nyp.33433074947445	1780	Love and madness;	"Croft, Herbert,"	first	mult	letters	unknown	1 of 1
+njp.32101037021290	1783	Emma Corbett	"Pratt,"	first	mult	letters	unknown	1 of 2
+njp.32101037021282	1783	Emma Corbett	"Pratt,"	first	mult	letters	unknown	2 of 2
+nyp.33433074955075	1795	Letters of an Italian nun and an English gentleman	<blank>	first	mult	letters	unknown	1 of 1
+hvd.hn62x4	1781	The masqued weddings;	"Espenscheid, Gertrude E."	first	mult	letters	unknown	1 of 2
+hvd.hn62x5	1781	The masqued weddings;	"Espenscheid, Gertrude E."	first	mult	letters	unknown	2 of 2
+mdp.39015010794421	1796	Adelaide and Theodore;	"Genlis, Stéphanie Félicité,"	first	mult	letters	unknown	1 of 3
+mdp.39015010794413	1796	Adelaide and Theodore;	"Genlis, Stéphanie Félicité,"	first	mult	letters	unknown	2 of 3
+mdp.39015010794405	1796	Adelaide and Theodore;	"Genlis, Stéphanie Félicité,"	first	mult	letters	unknown	3 of 3
+dul1.ark:/13960/t1dj65k1r	1787	"The recess, or, A tale of other times"	"Lee, Sophia,"	first	sing	letters	unknown	1 of 3
+dul1.ark:/13960/t0gt6bf90	1787	"The recess, or, A tale of other times"	"Lee, Sophia,"	first	sing	letters	unknown	2 of 3
+dul1.ark:/13960/t90870v2v	1787	"The recess, or, A tale of other times"	"Lee, Sophia,"	first	sing	letters	unknown	3 of 3
+ucm.5325889951	1803	The Two mentors	"Reeve, Clara,"	first	mult	letters	unknown	1 of 1
+mdp.39015063918562	1785	Eleanora: from the Sorrows of Werter	<blank>	first	sing	letters	unknown	1 of 1
+nyp.33433082353917	1802	Interesting memoirs	"Keir, Susanna Harvey,"	mix	mult	"letters, unspec"	unknown	1 of 1
+uc2.ark:/13960/t6tx35s35	1810	Letters of Charlotte	<blank>	first	sing	letters	unknown	1 of 1
+nyp.33433074907571	1787	The history of Miss Greville	"Keir,"	first	mult	letters	unknown	1 of 2
+nyp.33433074907563	1787	The history of Miss Greville	"Keir,"	first	mult	letters	unknown	2 of 2
+nyp.33433074916465	1789	Agnes de-Courci	"Bennett,"	first	mult	letters	unknown	1 of 4
+nyp.33433074916457	1789	Agnes de-Courci	"Bennett,"	first	mult	letters	unknown	2 of 4
+nyp.33433074916440	1789	Agnes de-Courci	"Bennett,"	first	mult	letters	unknown	3 of 4
+nyp.33433074916432	1789	Agnes de-Courci	"Bennett,"	first	mult	letters	unknown	4 of 4
+uc1.31822038205332	1894	The power of sympathy	"Brown, William Hill,"	first	mult	letters	unknown	1 of 1
+hvd.hn37v1	1792	"The denial, or The happy retreat;"	"Thomson, James,"	first	mult	letters	unknown	2 of 2
+mdp.39015033367668	1791	The school for widows	"Reeve, Clara,"	first	mult	letters	gothic	1 of 3
+mdp.39015033367650	1791	The school for widows	"Reeve, Clara,"	first	mult	letters	gothic	2 of 3
+mdp.39015033367643	1791	The school for widows	"Reeve, Clara,"	first	mult	letters	gothic	3 of 3
+mdp.39015073763644	1808	Marcus Flaminius;	"Knight, Ellis Cornelia,"	first	sing	letters	unknown	1 of 2
+mdp.39015073763651	1808	Marcus Flaminius;	"Knight, Ellis Cornelia,"	first	sing	letters	unknown	2 of 2
+mdp.39015063919081	1795	The hapless orphan;	<blank>	first	mult	letters	unknown	1 of 1
+mdp.39015063931482	1794	Memoirs of Mary	"Gunning,"	first	mult	letters	courtship	1 of 5
+mdp.39015063931490	1794	Memoirs of Mary	"Gunning,"	first	mult	letters	courtship	2 of 5
+mdp.39015063931474	1794	Memoirs of Mary	"Gunning,"	first	mult	letters	courtship	3 of 5
+mdp.39015063931466	1794	Memoirs of Mary	"Gunning,"	first	mult	letters	courtship	4 of 5
+mdp.39015063931458	1794	Memoirs of Mary	"Gunning,"	first	mult	letters	courtship	5 of 5
+mdp.39015012107705	1795	The victim of magical delusion	"Tschink, Cajetan,"	first	sing	oral	unknown	2 of 2
+nyp.33433074864178	1802	Memoirs of Emma Courtney	"Hays, Mary,"	first	sing	letters	"courtship, jacobin"	1 of 1
+njp.32101036889507	1796	"D'Arcy, a novel"	"Smith, Charlotte,"	first	mult	letters	new woman	1 of 1
+wu.89098865025	1866	"The coquette, or, The life and letters of Eliza Wharton"	"Foster, Hannah (Webster)"	first	mult	letters	unknown	1 of 1
+dul1.ark:/13960/t3jw95z4h	1798	Reuben and Rachel;	"Rowson,"	mix	mult	"letters, unspec"	unknown	1 of 1
+njp.32101067630754	1827	Edgar Huntly	"Brown, Charles Brockden,"	first	sing	letters	unknown	1 of 1
+nyp.33433075821862	1799	"The young exiles, or, Correspondence of some juvenile emigrants"	"Genlis, Stéphanie Félicité,"	first	mult	letters	unknown	1 of 2
+nyp.33433075821870	1799	"The young exiles, or, Correspondence of some juvenile emigrants"	"Genlis, Stéphanie Félicité,"	first	mult	letters	unknown	2 of 2
+nyp.33433074911748	1799	The false friend	"Robinson, Mary Darby,"	first	mult	letters	unknown	1 of 4
+nyp.33433074911755	1799	The false friend	"Robinson, Mary Darby,"	first	mult	letters	unknown	2 of 4
+nyp.33433074911763	1799	The false friend	"Robinson, Mary Darby,"	first	mult	letters	unknown	3 of 4
+nyp.33433074911771	1799	The false friend	"Robinson, Mary Darby,"	first	mult	letters	unknown	4 of 4
+nyp.33433074911540	1800	The letters of a solitary wanderer	"Smith, Charlotte,"	first	sing	letters	unknown	1 of 5
+nyp.33433074911557	1800	The letters of a solitary wanderer	"Smith, Charlotte,"	first	sing	letters	unknown	2 of 5
+nyp.33433074911565	1800	The letters of a solitary wanderer	"Smith, Charlotte,"	first	sing	letters	unknown	3 of 5
+nyp.33433074911573	1800	The letters of a solitary wanderer	"Smith, Charlotte,"	first	sing	letters	unknown	4 of 5
+nyp.33433074911581	1800	The letters of a solitary wanderer	"Smith, Charlotte,"	first	sing	letters	unknown	5 of 5
+nyp.33433074910260	1800	Mordaunt	"Moore, John,"	first	sing	letters	anti-jacobin	1 of 3
+nyp.33433074910278	1800	Mordaunt	"Moore, John,"	first	sing	letters	anti-jacobin	2 of 3
+nyp.33433074910286	1800	Mordaunt	"Moore, John,"	first	sing	letters	anti-jacobin	3 of 3
+hvd.32044015589484	1827	Jane Talbot	"Brown, Charles Brockden,"	first	mult	letters	unknown	1 of 1
+njp.32101068167194	1801	Percival	"Dallas, Robert Charles,"	first	mult	letters	unknown	1 of 4
+njp.32101068167186	1801	Percival	"Dallas, Robert Charles,"	first	mult	letters	unknown	2 of 4
+njp.32101068167178	1801	Percival	"Dallas, Robert Charles,"	first	mult	letters	unknown	3 of 4
+njp.32101068167160	1801	Percival	"Dallas, Robert Charles,"	first	mult	letters	unknown	4 of 4
+uc2.ark:/13960/t7qn62s9j	1810	Letters from Mrs. Palmerstone to her daughter;	"Hunter, Rachel,"	first	sing	letters	unknown	1 of 3
+uc2.ark:/13960/t51g0n874	1810	Letters from Mrs. Palmerstone to her daughter;	"Hunter, Rachel,"	first	sing	letters	unknown	2 of 3
+uc2.ark:/13960/t28914x1j	1810	Letters from Mrs. Palmerstone to her daughter;	"Hunter, Rachel,"	first	sing	letters	unknown	3 of 3
+uiuo.ark:/13960/t97660n1s	1803	"La belle sauvage, or A progress through the beau-monde"	"Lyttleton, M."	first	mult	letters	unknown	1 of 2
+uiuo.ark:/13960/t8nc6gf8f	1803	"La belle sauvage, or A progress through the beau-monde"	"Lyttleton, M."	first	mult	letters	unknown	2 of 2
+uc2.ark:/13960/t0qr4qf0x	1812	St. Clair;	"Morgan,"	first	sing	letters	national	1 of 2
+uc2.ark:/13960/t0dv1fc95	1812	St. Clair;	"Morgan,"	first	sing	letters	national	2 of 2
+uva.x001213985	1836	Delphine	"Staël,"	first	mult	letters	unknown	1 of 3
+uva.x001477225	1836	Delphine	"Staël,"	first	mult	letters	unknown	2 of 3
+hvd.hn1x1x	1836	Delphine	"Staël,"	first	mult	letters	unknown	3 of 3
+mdp.39015063571783	1804	The life of a lover	"Lee, Sophia,"	first	mult	letters	unknown	1 of 6
+mdp.39015063571692	1804	The life of a lover	"Lee, Sophia,"	first	mult	letters	unknown	2 of 6
+mdp.39015063571700	1804	The life of a lover	"Lee, Sophia,"	first	mult	letters	unknown	3 of 6
+mdp.39015063571775	1804	The life of a lover	"Lee, Sophia,"	first	mult	letters	unknown	4 of 6
+mdp.39015063571767	1804	The life of a lover	"Lee, Sophia,"	first	mult	letters	unknown	5 of 6
+mdp.39015063571759	1804	The life of a lover	"Lee, Sophia,"	first	mult	letters	unknown	6 of 6
+nyp.33433081595237	1808	The wild Irish girl;	"Morgan,"	first	sing	letters	"national, gothic"	1 of 1
+uiuo.ark:/13960/t8v98r53p	1807	Feudal tyrants;	"Lewis, M. G."	first	mult	letters	unknown	1 of 4
+uiuo.ark:/13960/t4dn4r24m	1807	Feudal tyrants;	"Lewis, M. G."	first	mult	letters	unknown	2 of 4
+uiuo.ark:/13960/t7cr6dr6q	1807	Feudal tyrants;	"Lewis, M. G."	first	mult	letters	unknown	3 of 4
+uiuo.ark:/13960/t5n87v68c	1807	Feudal tyrants;	"Lewis, M. G."	first	mult	letters	unknown	4 of 4
+nyp.33433075798169	1807	The memoirs of Charles Westcote	<blank>	first	sing	memoir	unknown	1 of 1
+nyp.33433074797832	1820	Salmagundi;	"Irving, Washington,"	first	mult	sketch	unknown	1 of 1
+njp.32101038084727	1808	The wild Irish boy	"Maturin, Charles Robert,"	first	mult	letters	national	1 of 3
+njp.32101038084735	1808	The wild Irish boy	"Maturin, Charles Robert,"	first	mult	letters	national	2 of 3
+njp.32101038084743	1808	The wild Irish boy	"Maturin, Charles Robert,"	first	mult	letters	national	3 of 3
+uiuo.ark:/13960/t22b9mp83	1808	The exile of Erin	"Gunning,"	first	mult	letters	unknown	1 of 3
+uiuo.ark:/13960/t5z614h53	1808	The exile of Erin	"Gunning,"	first	mult	letters	unknown	2 of 3
+uiuo.ark:/13960/t5db8n53x	1808	The exile of Erin	"Gunning,"	first	mult	letters	unknown	3 of 3
+njp.32101066457647	1824	Letters between Amelia in London and her mother in the country	"Combe, William,"	first	mult	letters	unknown	1 of 1
+nyp.33433074947916	1812	"The spirit of ""The book""; or, Memoirs of Caroline princess of Hasburg, a political and amatory romance"	"Ashe, Thomas,"	first	sing	letters	unknown	1 of 1
+mdp.39015059389588	1813	The heroine	"Barrett, Eaton Stannard,"	first	sing	letters	courtship	1 of 3
+mdp.39015059389596	1813	The heroine	"Barrett, Eaton Stannard,"	first	sing	letters	courtship	2 of 3
+mdp.39015059389604	1813	The heroine	"Barrett, Eaton Stannard,"	first	sing	letters	courtship	3 of 3
+uiuo.ark:/13960/t9j39d90p	1813	The old school	"Smith, Julia Bernard."	first	sing	letters	unknown	1 of 2
+uiuo.ark:/13960/t11n8qx17	1813	The old school	"Smith, Julia Bernard."	first	sing	letters	unknown	2 of 2
+hvd.32044010418184	1835	O'Donnell	"Morgan,"	third	mult	"unspec, docs"	"silver fork, national"	1 of 1
+mdp.39015063931243	1815	"Iwanowna; or, The maid of Moscow"	"Hofland,"	first	mult	letters	unknown	1 of 1
+mdp.39015004200997	1891	Frankenstein	"Shelley, Mary Wollstonecraft,"	first	mult	"letters, oral"	gothic	1 of 1
+uc2.ark:/13960/t94748r51	1819	Oakwood Hall	"Hutton, Catherine,"	first	mult	letters	unknown	1 of 3
+uc2.ark:/13960/t3mw29z63	1819	Oakwood Hall	"Hutton, Catherine,"	first	mult	letters	unknown	2 of 3
+uiuo.ark:/13960/t2n593s79	1819	Dudley	"O'Keeffe, Adelaide,"	first	mult	letters	unknown	1 of 3
+uiuo.ark:/13960/t4xh05m31	1819	Dudley	"O'Keeffe, Adelaide,"	first	mult	letters	unknown	2 of 3
+uiuo.ark:/13960/t88g9646w	1819	Dudley	"O'Keeffe, Adelaide,"	first	mult	letters	unknown	3 of 3
+nyp.33433074863246	1819	Hesitation	"Ross,"	mix	mult	"unspec, letters"	unknown	2 of 2
+mdp.39015063552759	1821	"The Ayrshire legatees, or, The Pringle family"	"Galt, John,"	mix	mult	letters	"historical, industrial"	1 of 1
+uiuo.ark:/13960/t7fr08z44	1821	Happiness;	<blank>	mix	mult	"unspec, letters"	unknown	1 of 2
+uiuo.ark:/13960/t2n58z16x	1821	Happiness;	<blank>	mix	mult	"unspec, letters"	unknown	2 of 2
+nyp.33433074868112	1828	"The young cadet, or, Henry Delamere's voyage to India, his travels in Hindostan, his account of the Burmese war, and the wonders of Elora"	"Hofland,"	mix	mult	"unspec, letters"	unknown	1 of 1
+uiuo.ark:/13960/t79s2d639	1822	Madeline	"Opie, Amelia Alderson,"	first	sing	journal	unknown	1 of 2
+uiuo.ark:/13960/t3zs3cp1c	1822	Madeline	"Opie, Amelia Alderson,"	first	sing	journal	unknown	2 of 2
+wu.89042936229	1823	Randolph	"Neal, John,"	first	mult	letters	unknown	1 of 1
+uiuo.ark:/13960/t9280pk4g	1824	Rosaline de Vere	"Dillon, Henry Augustus Dillon-Lee,"	first	mult	letters	unknown	1 of 2
+uiuo.ark:/13960/t2w383x4r	1824	Rosaline de Vere	"Dillon, Henry Augustus Dillon-Lee,"	first	mult	letters	unknown	2 of 2
+mdp.39015063938784	1824	The history of Matthew Wald	"Lockhart, J. G."	first	mult	"letters, memoir"	unknown	1 of 1
+njp.32101067173755	1824	Redgauntlet	"Scott, Walter,"	first	mult	letters	historical	1 of 2
+njp.32101067173763	1824	Redgauntlet	"Scott, Walter,"	first	mult	letters	historical	2 of 2
+nyp.33433074937610	1830	Falkland	"Lytton, Edward Bulwer Lytton,"	mix	mult	letters	silver fork	1 of 1
+uc1.b3581583	1827	The O'Briens and the O'Flahertys;	"Morgan,"	first	mult	letters	"silver fork, national"	1 of 4
+uc1.b3581584	1827	The O'Briens and the O'Flahertys;	"Morgan,"	first	mult	letters	"silver fork, national"	2 of 4
+uc1.b3581585	1827	The O'Briens and the O'Flahertys;	"Morgan,"	first	mult	letters	"silver fork, national"	3 of 4
+uc1.b3581586	1827	The O'Briens and the O'Flahertys;	"Morgan,"	first	mult	letters	"silver fork, national"	4 of 4
+hvd.32044079555199	1827	"The tale of a modern genius, or, The miseries of Parnassus"	"Pennie, J. F."	first	mult	letters	unknown	3 of 3
+uiuo.ark:/13960/t5x64473c	1827	Blue-stocking Hall	"Scargill, William Pitt,"	first	mult	letters	unknown	1 of 3
+uiuo.ark:/13960/t74t77c6m	1827	Blue-stocking Hall	"Scargill, William Pitt,"	first	mult	letters	unknown	2 of 3
+uiuo.ark:/13960/t08w41v7r	1827	Blue-stocking Hall	"Scargill, William Pitt,"	first	mult	letters	unknown	3 of 3
+njp.32101069165320	1830	Journal of the heart	"Bury, Charlotte Campbell,"	first	sing	journal	silver fork	1 of 1
+hvd.hwkzv7	1839	Pericles and Aspasia	"Landor, Walter Savage,"	first	mult	letters	unknown	1 of 2
+hvd.hwkzv8	1839	Pericles and Aspasia	"Landor, Walter Savage,"	first	mult	letters	unknown	2 of 2
+mdp.39015063973583	1838	Probus	"Ware, William,"	first	mult	letters	unknown	1 of 2
+mdp.39015063973575	1838	Probus	"Ware, William,"	first	mult	letters	unknown	2 of 2
