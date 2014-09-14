@@ -3,6 +3,10 @@ python
 
 This folder contains groups of python modules used in the genre project, mostly on the Taub campus cluster.
 
+classify
+--------
+Just an example of regularized logistic regression for text classification. This works on volume-level bags of words that are generated *after* volumes have already been divided by genre at the page level. Contains some data and metadata for a sample application identifying epistolary novels.
+
 extract
 -------
 A utility that extracts pages matching specified genre(s) from specified volume(s), and aggregates feature counts -- either all features or specified words/phrases.
