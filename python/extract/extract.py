@@ -102,7 +102,7 @@ def process_volumes(volumedictionary, targetwords, targetphrases, argdict, outpu
             #     print(removed)
 
         tokenstream = wordcounter.makestream(pagelist)
-        wordcounts, wordsfused, triplets = wordcounter.count_tokens(tokenstream, targetwords=targetwords, targetphrases=targetphrases, verbose = verbose)
+        wordcounts, wordsfused, triplets, alphanum_tokens = wordcounter.count_tokens(tokenstream, targetwords=targetwords, targetphrases=targetphrases, verbose = verbose)
 
         sortedcounts = sort_wordcounts(wordcounts)
 
@@ -130,10 +130,9 @@ def process_volumes(volumedictionary, targetwords, targetphrases, argdict, outpu
                 for count, word in sortedcounts:
                     outline = word + '\t' + str(count) + '\n'
                     f.write(outline)
-                    if not all_nonalphanumeric(word) and not word == "|'s|":
-                        totalcount += count
+                    totalcount += count
 
-            fileswritten.append((filename, totalcount))
+            fileswritten.append((filename, alphanum_tokens, totalcount))
 
         # if verbose:
         #     print(volID + "\tfused: " + str(wordsfused) + "\ttriplets: " + str(triplets))
@@ -246,11 +245,11 @@ def main(argdict):
 
     if not os.path.exists(outputpath):
         with open(outputpath, mode = 'w', encoding = 'utf-8') as f:
-            f.write('filename\talphanumericwordcount\n')
+            f.write('filename\talphanumericwordcount\talltokensreturned\n')
 
     with open(outputpath, mode='a', encoding = 'utf-8') as f:
-        for filename, wordcount in fileswritten:
-            f.write(filename + '\t' + str(wordcount) + '\n')
+        for filename, alphanum_tokens, totalcount in fileswritten:
+            f.write(filename + '\t' + str(alphanum_tokens) +'\t' + str(totalcount) + '\n')
 
     print("Done.")
 

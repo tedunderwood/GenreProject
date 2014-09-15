@@ -295,6 +295,7 @@ def count_tokens(tokens, targetwords = [], targetphrases = [], verbose = False):
     skipflag = 0
     wordsfused = 0
     triplets = 0
+    alphanum_tokens = 0
 
     # The phrases in targetphrases are stored as tuples. But we also need them to be in the list
     # of targetwords as space-separated strings. Otherwise they won't be recognized by count_word.
@@ -331,6 +332,9 @@ def count_tokens(tokens, targetwords = [], targetphrases = [], verbose = False):
         if all_nonalphanumeric(thisword):
             count_word(thisword, counts, targetwords)
             continue
+
+        # This is an alphanumeric token: a word or number, not punctuation.
+        alphanum_tokens += 1
 
         if i < (streamlen - 1):
             nextword = tokens[i + 1]
@@ -459,7 +463,7 @@ def count_tokens(tokens, targetwords = [], targetphrases = [], verbose = False):
         count_word(thisword, counts, targetwords)
 
 
-    return counts, wordsfused, triplets
+    return counts, wordsfused, triplets, alphanum_tokens
 
 
 
