@@ -65,6 +65,18 @@ def readtsv(filepath):
     numcolumns = len(fieldnames)
     indexfieldname = fieldnames[0]
 
+    print(numcolumns)
+
+    mincols = 1000
+    for line in filelines:
+        colnum = len(line.split('\t'))
+        if colnum < mincols:
+            mincols = colnum
+
+    if mincols < numcolumns:
+        numcolumns = mincols
+        fieldnames = fieldnames[0:numcolumns]
+
     table = dict()
     indices = list()
 
@@ -80,7 +92,11 @@ def readtsv(filepath):
         indices.append(rowindex)
         for thisfield in range(0, numcolumns):
             thiscolumn = fieldnames[thisfield]
-            thisentry = fields[thisfield]
+            if len(fields) > thisfield:
+                thisentry = fields[thisfield]
+            else:
+                thisentry = ""
+
             table[thiscolumn][rowindex] = thisentry
 
     return indices, fieldnames, table
