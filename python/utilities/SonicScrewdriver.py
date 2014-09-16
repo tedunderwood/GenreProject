@@ -42,6 +42,25 @@ def add_dicts(source, target):
         else:
             target[key] = value
 
+def clean_pairtree(htid):
+    period = htid.find('.')
+    prefix = htid[0:period]
+    postfix = htid[(period+1): ]
+    if ':' in postfix:
+        postfix = postfix.replace(':','+')
+        postfix = postfix.replace('/','=')
+    cleanname = prefix + "." + postfix
+    return cleanname
+
+def dirty_pairtree(htid):
+    period = htid.find('.')
+    prefix = htid[0:period]
+    postfix = htid[(period+1): ]
+    if '=' in postfix:
+        postfix = postfix.replace('+',':')
+        postfix = postfix.replace('=','/')
+    dirtyname = prefix + "." + postfix
+    return dirtyname
 
 ## REVISED utility
 ## that reads my standard tab-separated metadata table,
@@ -64,8 +83,6 @@ def readtsv(filepath):
     fieldnames = header.split('\t')
     numcolumns = len(fieldnames)
     indexfieldname = fieldnames[0]
-
-    print(numcolumns)
 
     mincols = 1000
     for line in filelines:
