@@ -45,3 +45,5 @@ select. All the other options have default settings.
 
 This script assumes there is a file PathDictionary.txt in its directory; it needs a path to
 the folder containing parsing rules.
+
+The folder also includes CollectByYear, which is designed to collect the results of extract and sum them as yearly counts for diachronic analysis.
