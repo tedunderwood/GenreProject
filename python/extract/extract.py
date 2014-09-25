@@ -27,6 +27,8 @@
 # -v              Verbose.
 # -sub            Make subdirectories for the top-level HathiTrust domains within the
 #                 output folder.
+# -threshold      Sets the threshold (ratio of pages in genre / total pages) that a
+#                 volume must exceed in order to be extracted.
 #
 # The only options that are mandatory are the ones providing volumes to process, and genre(s) to
 # select. All the other options have default settings.
@@ -214,7 +216,10 @@ def main(argdict):
 
     # Default value for the percentage of pages that must match targetgenre in order for us
     # to process the volume at all.
-    threshold = 0.1
+    if "-threshold" in argdict:
+        threshold = float(argdict["-threshold"])
+    else:
+        threshold = 0.1
 
     fileswritten = list()
     numIDs = len(htidList)
