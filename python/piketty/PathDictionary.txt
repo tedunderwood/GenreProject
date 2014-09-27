@@ -1,0 +1,8 @@
+datapath	/Users/tunder/Dropbox/pagedata/newfeatures/texts/
+metadatapath	/Users/tunder/Dropbox/PythonScripts/contextual/meta/
+dictionarypath	/Users/tunder/Dropbox/Hathi/typeindex/dictionaries/
+outpath	/Volumes/TARDIS/output/dump/
+contextrulepath	/Users/tunder/Dropbox/PythonScripts/contextual/rules/
+volumerulepath	/Users/tunder/Dropbox/PythonScripts/workflow/rules/
+slicepath	/Users/tunder/Dropbox/PythonScripts/workflow/localslicefiles/
+metaoutpath	/Users/tunder/Dropbox/PythonScripts/workflow/metadata/newfeaturemetadata4.txt
