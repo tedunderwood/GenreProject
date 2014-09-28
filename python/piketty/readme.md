@@ -15,4 +15,10 @@ The scripts I used to build pbs arrays for these jobs are in /extract. The resul
 
 3) Create the dataset /metadata/filteredfiction.tsv by running refine_fiction.py in this repo. This takes as raw material the file filenames.txt that was created in the /usesofscale/fiction/ directory. It compares it to metadata, and filters it by removing any volumes explicitly labeled as 'Biography' or 'Autobiography' in the metadata. Then it pairs filenames with the metadata to create the metadata subtable filteredfiction.
 
-FictionSample.py --
+4) A final optional step involves selecting files from filteredfiction to use for topic modeling. I did this with constraints on temporal distribution (trying to get as close as possible to 50 vols per year) and also attempting to avoid duplication as far as possible with an easy metadata-based strategy.
+
+FictionSample.py -- Used this for selecting the topic modeling sample.
+
+refine_fiction.py -- Filtered the initial fiction extraction by comparing it to metadata and removing any known biographies.
+
+modelingcounter.py -- A variant of wordcounter.py that I'm using for more precise counting of currency-related words.
