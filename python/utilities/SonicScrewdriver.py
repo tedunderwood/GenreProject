@@ -273,3 +273,11 @@ def infer_date(datetype, firstdate, seconddate, textdate):
         # for 'the earliest attested date for the item.'
 
     return intdate
+
+def simple_date(row, table):
+    datetype = table["datetype"][row]
+    firstdate = table["startdate"][row]
+    secondate = table["enddate"][row]
+    textdate = table["textdate"][row]
+    intdate = infer_date(datetype, firstdate, secondate, textdate)
+    return intdate
