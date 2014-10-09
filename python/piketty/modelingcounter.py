@@ -231,7 +231,7 @@ def arabic_digits(astring):
     if astring.endswith("s") or astring.endswith("d"):
         priceflag = True
 
-    if len(astring) < 1 or counter/len(astring) < .4:
+    if len(astring) < 1 or counter/len(astring) < .49:
         return "none"
     elif priceflag == True:
         return "|arabicprice|"
@@ -468,30 +468,39 @@ def count_tokens(tokens, targetwords = [], targetphrases = [], verbose = False):
     return counts, wordsfused, triplets, alphanum_tokens
 
 
-def extract_context(tokens, targetwords = {}):
+def extract_context(tokens, WINDOW, targetwords = {}):
     ''' Get words on either side of a targetword.
+    WINDOW = the window radius.
     '''
 
     contexts = []
     streamlen = len(tokens)
+    WINDOWDIAMETER = (2 * WINDOW) + 1
 
     for idx, token in enumerate(tokens):
 
-        if idx < 4:
+        if idx < (WINDOW + 1):
             continue
-        if (idx + 5) > streamlen:
+        if (idx + WINDOW + 2) > streamlen:
             continue
 
         prefix, word, suffix = strip_punctuation(token)
         word = word.lower()
+        code = arabic_digits(word)
+        if code == "|arabicprice|":
+            word = "|arabicprice|"
+            # We make that conversion to make it possible to search
+            # for all prices. It's still not possible to search for other numbers, though
+            # I could enable that here.
 
         if word in targetwords:
-            context = tokens[idx - 3 : idx + 4]
+            context = tokens[idx - WINDOW : idx + WINDOW + 1]
 
             # We compress the very large range of possible numbers into
             # two numeric codes.
-            for i in range(7):
-                code = arabic_digits(context[i])
+            for i in range(WINDOWDIAMETER):
+                prefix, keyword, suffix = strip_punctuation(context[i].lower())
+                code = arabic_digits(keyword)
                 if code == "|arabicprice|":
                     context[i] = "|price|"
                 elif code != "none":

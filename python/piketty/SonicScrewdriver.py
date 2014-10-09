@@ -220,3 +220,64 @@ def pairtreelabel(htid):
         htid = htid.replace('=','/')
 
     return htid
+
+def infer_date(datetype, firstdate, seconddate, textdate):
+    '''Receives a date type and three dates, as strings, with no guarantee that any
+    of the dates will be numeric. The logic of the data here is defined by
+    MARC standards for controlfield 008:
+
+    http://www.loc.gov/marc/bibliographic/concise/bd008a.html
+
+    Returns a date that represents either a shaky consensus
+    about the earliest attested date for this item, or 0, indicating no
+    consensus.
+    '''
+
+    if "--" in textdate and "estimate" in textdate:
+        return 0
+    # Because that's something like <estimate="18--?">
+
+    try:
+        intdate = int(firstdate)
+    except:
+        # No readable date
+        if firstdate.endswith('uu'):
+            # Two missing places is too many.
+            intdate = 0
+        elif firstdate.endswith('u'):
+            # but one is okay
+            try:
+                decade = int(firstdate[0:3])
+                intdate = decade * 10
+            except:
+                # something's weird. fail.
+                intdate = 0
+        else:
+            intdate = 0
+
+    try:
+        intsecond = int(seconddate)
+    except:
+        intsecond = 0
+
+    if intsecond - intdate > 25:
+        # A gap of more than twenty-five years is too much.
+        # This is usually an estimated date that could be anywhere within
+        # the nineteenth century.
+        intdate = 0
+
+    if datetype == 't' and intsecond > 0 and intsecond < intdate:
+        intdate = intsecond
+        # This is a case where we have both a publication date and
+        # a copyright date. Accept the copyright date. We're going
+        # for 'the earliest attested date for the item.'
+
+    return intdate
+
+def simple_date(row, table):
+    datetype = table["datetype"][row]
+    firstdate = table["startdate"][row]
+    secondate = table["enddate"][row]
+    textdate = table["textdate"][row]
+    intdate = infer_date(datetype, firstdate, secondate, textdate)
+    return intdate
