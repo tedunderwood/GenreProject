@@ -468,12 +468,14 @@ def count_tokens(tokens, targetwords = [], targetphrases = [], verbose = False):
     return counts, wordsfused, triplets, alphanum_tokens
 
 
-def extract_context(tokens, WINDOW, targetwords = {}):
+def extract_snippets(tokens, WINDOW, targetwords = {}):
     ''' Get words on either side of a targetword.
     WINDOW = the window radius.
+    Right now this function is built to return all prices,
+    whether |arabicprice| is in targetwords or not.
     '''
 
-    contexts = []
+    sniptuples = []
     streamlen = len(tokens)
     WINDOWDIAMETER = (2 * WINDOW) + 1
 
@@ -487,28 +489,36 @@ def extract_context(tokens, WINDOW, targetwords = {}):
         prefix, word, suffix = strip_punctuation(token)
         word = word.lower()
         code = arabic_digits(word)
+
         if code == "|arabicprice|":
-            word = "|arabicprice|"
-            # We make that conversion to make it possible to search
+            priceflag = True
+        else:
+            priceflag = False
+
+            # We set that flag to make it possible to search
             # for all prices. It's still not possible to search for other numbers, though
             # I could enable that here.
 
-        if word in targetwords:
-            context = tokens[idx - WINDOW : idx + WINDOW + 1]
+        if (word in targetwords) or priceflag:
+            snippet = tokens[idx - WINDOW : idx + WINDOW + 1]
+
+            snippettomodel = []
 
             # We compress the very large range of possible numbers into
             # two numeric codes.
             for i in range(WINDOWDIAMETER):
-                prefix, keyword, suffix = strip_punctuation(context[i].lower())
-                code = arabic_digits(keyword)
+                prefix, thisword, suffix = strip_punctuation(snippet[i].lower())
+                code = arabic_digits(thisword)
                 if code == "|arabicprice|":
-                    context[i] = "|price|"
+                    thisword = "|price|"
                 elif code != "none":
-                    context[i] = "|number|"
+                    thisword = "|number|"
 
-            contexts.append(context)
+                snippettomodel.append(thisword)
 
-    return contexts
+            sniptuples.append((snippet, snippettomodel))
+
+    return sniptuples
 
 
 

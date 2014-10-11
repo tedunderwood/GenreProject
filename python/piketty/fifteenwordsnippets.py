@@ -198,19 +198,20 @@ for filename in filelist:
 
     tokenstream = modelingcounter.makestream(pagelist)
 
-    newcontexts = modelingcounter.extract_context(tokenstream,  WINDOWRADIUS, alltargetwords)
+    newcontexts = modelingcounter.extract_snippets(tokenstream,  WINDOWRADIUS, alltargetwords)
 
     approvedcontexts = []
 
-    for alist in newcontexts:
-        keyword = alist[WINDOWRADIUS]
+    for snippet, snippettomodel in newcontexts:
+        assert len(snippet) == len(snippettomodel)
+        keyword = snippettomodel[WINDOWRADIUS]
         keyword = keyword.lower()
         prefix, keyword, suffix = strip_punctuation(keyword)
 
         if keyword in wealthwords:
             category = 'wealth'
         elif keyword in ambiguouswords:
-            currency = is_money(alist, WINDOWRADIUS, logisticmodel, features, standardizer)
+            currency = is_money(snippettomodel, WINDOWRADIUS, logisticmodel, features, standardizer)
             if currency:
                 category = 'money'
             else:
@@ -222,13 +223,13 @@ for filename in filelist:
             # Cause that's how I do error handling.
             category = 'null'
 
-        if not category == 'null':
-            approvedcontexts.append((htid, date, alist, keyword, category))
+        if category == 'money':
+            approvedcontexts.append((htid, date, snippet, keyword, category))
 
     print(ctr)
     ctr += 1
 
-    outfile = "/Volumes/TARDIS/work/moneycontext/fifteenwords.tsv"
+    outfile = "/Volumes/TARDIS/work/moneycontext/moneysnippets.tsv"
     with open(outfile, mode='a', encoding='utf-8') as f:
         for context in approvedcontexts:
             htid, date, alist, keyword, category = context
@@ -279,18 +280,19 @@ for filename in filelist:
 
     tokenstream = modelingcounter.makestream(pagelist)
 
-    newcontexts = modelingcounter.extract_context(tokenstream, WINDOWRADIUS, alltargetwords)
+    newcontexts = modelingcounter.extract_snippets(tokenstream, WINDOWRADIUS, alltargetwords)
     approvedcontexts = []
 
-    for alist in newcontexts:
-        keyword = alist[WINDOWRADIUS]
+    for snippet, snippettomodel in newcontexts:
+        assert len(snippet) == len(snippettomodel)
+        keyword = snippettomodel[WINDOWRADIUS]
         keyword = keyword.lower()
         prefix, keyword, suffix = strip_punctuation(keyword)
 
         if keyword in wealthwords:
             category = 'wealth'
         elif keyword in ambiguouswords:
-            currency = is_money(alist, WINDOWRADIUS, logisticmodel, features, standardizer)
+            currency = is_money(snippettomodel, WINDOWRADIUS, logisticmodel, features, standardizer)
             if currency:
                 category = 'money'
             else:
@@ -302,10 +304,10 @@ for filename in filelist:
             # Cause that's how I do error handling.
             category = 'null'
 
-        if not category == 'null':
-            approvedcontexts.append((htid, date, alist, keyword, category))
+        if category == 'money':
+            approvedcontexts.append((htid, date, snippet, keyword, category))
 
-    outfile = "/Volumes/TARDIS/work/moneycontext/fifteenwords.tsv"
+    outfile = "/Volumes/TARDIS/work/moneycontext/moneysnippets.tsv"
     with open(outfile, mode='a', encoding='utf-8') as f:
         for context in approvedcontexts:
             htid, date, alist, keyword, category = context
