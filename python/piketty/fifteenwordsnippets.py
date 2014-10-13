@@ -151,7 +151,7 @@ rows, columns, table = utils.readtsv('/Volumes/TARDIS/work/metadata/MergedMonogr
 
 ambiguouswords = {'crown', 'crowns', 'guinea', 'guineas', 'nickel', 'sovereign', 'sovereigns', 'pound', 'pounds', 'quid'}
 
-moneywords = {'dollar', 'dollars', 'dime', 'dimes', 'nickel', 'nickels', 'pound', 'pounds', 'shilling', 'shillings', 'sovereign', 'sovereigns','cent', 'cents', 'centime', 'centimes', 'crown', 'crowns', 'halfcrown', 'half-crown','penny', 'pennies', 'pence', 'farthing', 'farthings', 'franc', 'francs', 'guilder', 'guilders', 'florin', 'florins', 'guinea', 'guineas', "ha'penny", 'tuppence', 'twopence', 'sixpence', '|arabicprice|', '|price|', '$', '£', '¢', 'quid'}
+moneywords = {'dollar', 'dollars', 'dime', 'dimes', 'nickel', 'nickels', 'pound', 'pounds', 'shilling', 'shillings', 'sovereign', 'sovereigns','cent', 'cents', 'centime', 'centimes', 'crown', 'crowns', 'halfcrown', 'half-crown','penny', 'pennies', 'pence', 'farthing', 'farthings', 'franc', 'francs', 'guilder', 'guilders', 'florin', 'florins', 'guinea', 'guineas', "ha'penny", 'tuppence', 'twopence', 'sixpence', '|arabicprice|', '|price|', 'quid'}
 
 # Words I explicitly decided not to include: 'quarter', 'quarters', 'mark', 'marks.' Monetary uses
 # seemed rare enough relative to others that they'd be more likely to introduce noise than to help.
@@ -166,7 +166,7 @@ wealthwords = {'fortune', 'fortunes', 'wealth', 'rich', 'riches', 'money', 'mone
 # associated with money, topic modeling would be an appropriate lever.
 # We can perhaps enumerate currency terms intuitively, but not these.
 
-alltargetwords = moneywords.union(wealthwords)
+alltargetwords = moneywords
 
 sourcedir = "/Volumes/TARDIS/work/moneytexts/"
 filelist = os.listdir(sourcedir)
@@ -203,7 +203,7 @@ for filename in filelist:
     approvedcontexts = []
 
     for snippet, snippettomodel in newcontexts:
-        assert len(snippet) == len(snippettomodel)
+
         keyword = snippettomodel[WINDOWRADIUS]
         keyword = keyword.lower()
         prefix, keyword, suffix = strip_punctuation(keyword)
@@ -229,7 +229,7 @@ for filename in filelist:
     print(ctr)
     ctr += 1
 
-    outfile = "/Volumes/TARDIS/work/moneycontext/moneysnippets.tsv"
+    outfile = "/Volumes/TARDIS/work/moneycontext/twentyfivesnippets.tsv"
     with open(outfile, mode='a', encoding='utf-8') as f:
         for context in approvedcontexts:
             htid, date, alist, keyword, category = context
@@ -284,7 +284,7 @@ for filename in filelist:
     approvedcontexts = []
 
     for snippet, snippettomodel in newcontexts:
-        assert len(snippet) == len(snippettomodel)
+
         keyword = snippettomodel[WINDOWRADIUS]
         keyword = keyword.lower()
         prefix, keyword, suffix = strip_punctuation(keyword)
@@ -307,7 +307,7 @@ for filename in filelist:
         if category == 'money':
             approvedcontexts.append((htid, date, snippet, keyword, category))
 
-    outfile = "/Volumes/TARDIS/work/moneycontext/moneysnippets.tsv"
+    outfile = "/Volumes/TARDIS/work/moneycontext/twentyfivesnippets.tsv"
     with open(outfile, mode='a', encoding='utf-8') as f:
         for context in approvedcontexts:
             htid, date, alist, keyword, category = context
