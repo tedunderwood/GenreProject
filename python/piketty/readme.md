@@ -7,6 +7,12 @@ bagofwords.py: Utility class representing documents as vectors for modeling
 
 SonicScrewdriver.py: A bunch of utility functions I use for different stuff. The most important for this folder is probably infer_date, which I use to infer dates from the multiple forms of date information present in Hathi metadata.
 
+manualcoding.py: A script that allows hand-coding of randomly selected snippets to facilitate content analysis of the print run.
+
+coded.tsv: results of coding
+
+PlotMoney.R: R script to visualize one aspect of the results, nominal value of money references relative to average yearly wage.
+
 model_contexts.py: A script that produces training data by asking the user to manually tag snippets, and then trains a regularized logistic regression on those snippets. Here I used it to distinguish occurrences of crowns, pounds, etc. that refer to money and those that don't. Got roughly 87% accuracy on training data, 5-fold cross-validated.
 
 modelcounter.py: Script based on wordcounter.py, and ultimately on Volume.py, present in other folders of this repo. Here I mainly used the last function, extract_contexts(), which pulls snippets of text associated with a given set of target words.
