@@ -9,7 +9,9 @@ def all_nonalphanumeric(astring):
             break
     return nonalphanum
 
-def count_alphanum_tokens(filepath):
+def count_words(filepath):
+    global lexicon
+    tokencount = 0
     wordcount = 0
     with open(filepath, encoding = 'utf-8') as f:
         for line in f:
@@ -18,14 +20,24 @@ def count_alphanum_tokens(filepath):
             words = line.split()
             for word in words:
                 if not all_nonalphanumeric(word):
+                    tokencount += 1
+                if word in lexicon:
                     wordcount += 1
-    countstring = str(wordcount)
-    return countstring
+    tokenstring = str(tokencount)
+    wordstring = str(wordcount)
+    return tokenstring, wordstring
 
 outtable = list()
 
+with open('/Users/tunder/Dropbox/PythonScripts/workflow/rules/MainDictionary.txt', encoding = 'utf-8') as f:
+    filelines = f.readlines()
+
+lexicon = set([x.split('\t')[0] for x in filelines])
+
 sourcedir = "/Volumes/TARDIS/work/US_NOVELS_1923-1950/"
 metafile = os.path.join(sourcedir, "US_NOVELS_1923-1950_META.txt")
+
+counter = 0
 
 with open(metafile, newline='', encoding = 'utf-8') as f:
     reader = csv.reader(f)
@@ -37,12 +49,14 @@ with open(metafile, newline='', encoding = 'utf-8') as f:
         filename = idcode + '.txt'
         filepath = os.path.join(sourcedir, filename)
         if os.path.isfile(filepath):
-            wordcount = count_alphanum_tokens(filepath)
+            tokencount, wordcount = count_words(filepath)
         else:
             print("Missing file: " + filepath)
             sys.exit(0)
-        newrow = [idcode, date, wordcount, author, title]
+        newrow = [idcode, date, tokencount, wordcount, author, title]
         outtable.append(newrow)
+        print(counter)
+        counter += 1
 
 rows, columns, table = utils.readtsv('/Users/tunder/Dropbox/GenreProject/metadata/topicmodelingsample.tsv')
 
@@ -52,7 +66,7 @@ for row in rows:
     filename = utils.pairtreefile(row) + ".fic.txt"
     filepath = os.path.join(sourcedir, filename)
     if os.path.isfile(filepath):
-        wordcount = count_alphanum_tokens(filepath)
+        tokencount, wordcount = count_words(filepath)
     else:
         print("Missing file: " + filepath)
         sys.exit(0)
@@ -61,10 +75,12 @@ for row in rows:
     date = str(utils.simple_date(row, table))
     author = table["author"][row]
     title = table["title"][row]
-    newrow = [idcode, date, wordcount, author, title]
+    newrow = [idcode, date, tokencount, wordcount, author, title]
     outtable.append(newrow)
+    print(counter)
+    counter += 1
 
-outfile = '/Users/tunder/Dropbox/GenreProject/metadata/unifiedficsample.csv'
+outfile = '/Users/tunder/Dropbox/GenreProject/metadata/improvedficsample.csv'
 with open(outfile, mode='w', encoding = 'utf-8') as f:
     writer = csv.writer(f)
     for row in outtable:
