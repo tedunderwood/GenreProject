@@ -9,6 +9,28 @@ def all_nonalphanumeric(astring):
             break
     return nonalphanum
 
+punctuple = ('.', ',', '?', '!', ';', '"', '“', '”', ':', '--', '—', ')', '(', "'", "`", "[", "]", "{", "}")
+
+def strip_punctuation(astring):
+    global punctuple
+    keepclipping = True
+    suffix = ""
+    while keepclipping == True and len(astring) > 1:
+        keepclipping = False
+        if astring.endswith(punctuple):
+            suffix = astring[-1:] + suffix
+            astring = astring[:-1]
+            keepclipping = True
+    keepclipping = True
+    prefix = ""
+    while keepclipping == True and len(astring) > 1:
+        keepclipping = False
+        if astring.startswith(punctuple):
+            prefix = prefix + astring[:1]
+            astring = astring[1:]
+            keepclipping = True
+    return(prefix, astring, suffix)
+
 def count_words(filepath):
     global lexicon
     tokencount = 0
@@ -19,6 +41,8 @@ def count_words(filepath):
             line = line.replace('—', ' ')
             words = line.split()
             for word in words:
+                word = word.replace("'s", "")
+                prefix, word, suffix = strip_punctuation(word.lower())
                 if not all_nonalphanumeric(word):
                     tokencount += 1
                 if word in lexicon:
@@ -82,6 +106,7 @@ for row in rows:
 
 outfile = '/Users/tunder/Dropbox/GenreProject/metadata/improvedficsample.csv'
 with open(outfile, mode='w', encoding = 'utf-8') as f:
+    f.write('idcode,date,tokens,words,author,title\n')
     writer = csv.writer(f)
     for row in outtable:
         writer.writerow(row)
