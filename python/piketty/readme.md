@@ -5,6 +5,8 @@ A lot of Python scripts for metadata munging are collecting here. Some of them a
 
 bagofwords.py: Utility class representing documents as vectors for modeling
 
+better_metadata_maker.py Merges metadata from my samplefiction corpus and the Long/So post-23 corpus, while counting alphanumeric tokens and dictionary words in all files to create a denominator for frequencies.
+
 SonicScrewdriver.py: A bunch of utility functions I use for different stuff. The most important for this folder is probably infer_date, which I use to infer dates from the multiple forms of date information present in Hathi metadata.
 
 manualcoding.py: A script that allows hand-coding of randomly selected snippets to facilitate content analysis of the print run.
@@ -15,9 +17,11 @@ PlotMoney.R: R script to visualize one aspect of the results, nominal value of m
 
 model_contexts.py: A script that produces training data by asking the user to manually tag snippets, and then trains a regularized logistic regression on those snippets. Here I used it to distinguish occurrences of crowns, pounds, etc. that refer to money and those that don't. Got roughly 87% accuracy on training data, 5-fold cross-validated.
 
-modelcounter.py: Script based on wordcounter.py, and ultimately on Volume.py, present in other folders of this repo. Here I mainly used the last function, extract_contexts(), which pulls snippets of text associated with a given set of target words.
+modelingcounter.py: Script based on wordcounter.py, and ultimately on Volume.py, present in other folders of this repo. Here I mainly used the last function, extract_contexts(), which pulls snippets of text associated with a given set of target words.
 
 fifteenwordsnippets.py: This is the module that actually produced snippets, using the model previously produced by model_contexts to filter them.
+
+normalizedcurrency.py Generates normalized frequencies of currency words.
 
 As part of this project, I also did some general metadata munging that got reused elsewhere, and it's documented here (as well as in GenreProject/metadata).
 
