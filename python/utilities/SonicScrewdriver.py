@@ -10,6 +10,13 @@ def addtodict(word, count, lexicon):
 	else:
 		lexicon[word] = count
 
+def appendtodict(key, value, dictoflists):
+
+    if key in dictoflists:
+        dictoflists[key].append(value)
+    else:
+        dictoflists[key] = [value]
+
 def sortkeysbyvalue(lexicon, whethertoreverse = False):
 	'''Accepts a dictionary where keys point to a (presumably numeric) value, and
 	returns a list of keys sorted by value.'''
