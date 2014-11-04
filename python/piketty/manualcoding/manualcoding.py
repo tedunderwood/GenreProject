@@ -7,25 +7,21 @@
     # 0) date,
     # 1) volumeid
     # 2) reference type: a (q)uantity of money "five dollars",
-        # the (u)nit of currency itself ("pound wise, penny foolish")
-        # (p)lural units: "a handful of nickels," "where had the dollars gone?"
-        # (e)rror -- something like "crown of his head", shouldn't be here.
-        # (m)etaphorical -- the moon looked like a silver dime.
+        # or an (e)rror -- not money or not quantifiable
 
-        # ==> None of this actually matters very much, as we're using this. The only
-        # thing that really matters is that q, u, and p cause the script to proceed;
-        # e and m don't.
+    # 3) unit of currency in which money is denominated
 
-    # 3) poundvalue -- nominal value of money in £. Only for
-        # reference types q, u, and p. For reference type (p) we
-        # arbitrarily say that unspecified plural == 10x.
-    # 4) socialcontext — gift, bribe, inheritance, rent, interest,
+    # 4) value -- nominal value of money.
+
+    # 5) socialcontext — gift, bribe, inheritance, rent, interest,
         # capital, wages, price, etc. This list can be expanded at will
         # by coders; this script allows you to add to it.
-    # 5) snippet.
+
+    # 6) snippet.
 
 import os, sys
 import random
+import csv
 import glob
 
 def add_snippet_to_tree(date, volid, snippet, rootdict):
@@ -61,7 +57,6 @@ def select_from_vols(rootdict, numtoselect, datelist, volsalreadyhad):
     assert numtoselect <= len(datelist)
 
     yearstoget = random.sample(datelist, numtoselect)
-    print(len(yearstoget))
 
     sniptuples = list()
     for year in yearstoget:
@@ -112,14 +107,26 @@ def main():
     # the local directory. If you prefer you can just hard-code the paths
     # to snippetsource and codedfile.
 
-    snippetsource = glob.glob('twentyfivesnippets.tsv')[0]
-    candidatefiles = glob.glob('codedsnippets.tsv')
+    snippetpath = glob.glob('twentyfivesnippets.tsv')[0]
+    possiblecodedpaths = glob.glob('codedsnippets.tsv')
+    metadatapath = glob.glob('unifiedficmetadata.csv')[0]
 
-    if len(candidatefiles) < 1:
+    if len(possiblecodedpaths) < 1:
         codedfile = "codedsnippets.tsv"
     else:
-        codedfile = candidatefiles[0]
+        codedfile = possiblecodedpaths[0]
 
+    # get the metadata
+    authors = dict()
+    titles = dict()
+    with open(metadatapath, encoding = 'utf-8') as f:
+        reader = csv.reader(f)
+        next(reader, None)
+        # That skips the header
+        for row in reader:
+            volid = row[0]
+            authors[volid] = row[3]
+            titles[volid] = row[4]
 
     snippetsbydate = dict()
     dateset = set()
@@ -128,7 +135,7 @@ def main():
     # branches by year, and the subdictionaries branch by vol. Each
     # leaf is a list of snippets.
 
-    with open(snippetsource, encoding = 'utf-8') as f:
+    with open(snippetpath, encoding = 'utf-8') as f:
         for line in f:
             line = line.rstrip()
             fields = line.split('\t')
@@ -142,8 +149,6 @@ def main():
     datelist = list(dateset)
     datelist.sort()
 
-    print(len(snippetsbydate))
-
     snippetswealreadyhave = set()
     bookswealreadyhave = set()
     allowablecodes = {'gift', 'inheritance', 'bribe', 'rent', 'interest', 'capital', 'wages', 'price',  'nonmonetary', 'other'}
@@ -154,7 +159,7 @@ def main():
             for line in f:
                 line = line.rstrip()
                 fields = line.split('\t')
-                socialcontext = fields[4]
+                socialcontext = fields[5]
                 if socialcontext not in allowablecodes:
                     allowablecodes.add(socialcontext)
                     # That humane-sounding provision just means that we
@@ -162,10 +167,16 @@ def main():
                     # of previous coders.
 
                 volid = fields[1]
-                snippet = fields[5]
+                snippet = fields[6]
 
                 snippetswealreadyhave.add(snippet)
-                bookswealreadyhave.add(volid)
+
+                # We only add this volume to 'books we already have' if we've successfully
+                # coded some snippet from the book as a monetary value.
+
+                if socialcontext != "nonmonetary":
+                    bookswealreadyhave.add(volid)
+
 
     print('You can code up to ' + str(len(datelist)) + ' snippets in one session.')
     numbertocode = input('How many snippets do you want to code? ')
@@ -187,35 +198,64 @@ def main():
             tocode = select_from_snippets(snippetsbydate, numbertocode, datelist, snippetswealreadyhave)
             answered = True
 
-    tocode = list()
-
-    allowabletypes = {'q', 'u', 'p', 'e', 'm'}
+    allowabletypes = {'q', 'e'}
 
     print("Allowable social contexts:")
     print(allowablecodes)
 
+    # HERE IS WHERE WE ACTUALLY ITERATE THROUGH SNIPPETS AND ASK THE USER
+    # TO CODE THEM.
+
     for sniptuple in tocode:
 
-        volid, date, snippet = sniptuple
-        print(date)
+        date, volid, snippet = sniptuple
+
+        if volid in authors:
+            author = authors[volid]
+        else:
+            author = ''
+
+        if volid in titles:
+            title = titles[volid]
+        else:
+            title = ''
+
+        print(str(date) + " | " + author + " | " + title)
+        print()
         print(snippet)
+        print()
         reftype = "primal chaos"
         while not reftype in allowabletypes:
-            reftype = input("Reference type (quantity, unit, plural, error, metaphor): ")
+            reftype = input("Is this a Quantifiable snippet or an Error (q or e): ")
 
-        if reftype == 'e' or reftype == 'm':
+        if reftype == 'e':
             # We don't need to ask further questions for these types.
             poundvalue = 0.0
             socialcontext = "nonmonetary"
+            unit = 'none'
 
         else:
-            # The user has specified a type that requires further questioning.
-            quantifiable = False
-            while not quantifiable:
-                numericstring = input("£ value of money? (count plurals as x10): ")
+            # A quantifiable snippet requires further questioning.
+            unit = 'pounds'
+            print('I assume the value is denominated in pounds unless you say otherwise.')
+            user = input("Pounds (hit return). Or 'dollars' or 'francs', etc: ")
+            if user == 'dollars':
+                unit = 'dollars'
+            elif user == 'francs':
+                unit == 'francs'
+            elif user == 'pounds':
+                unit = 'pounds'
+            else:
+                print("You entered " + user + ", which is an anomalous unit.")
+                user = input("Re-enter that please to confirm: ")
+                unit = user
+
+            quantified = False
+            while not quantified:
+                numericstring = input("Face value of money? (count unquantified plurals as x10): ")
                 try:
                     poundvalue = float(numericstring)
-                    quantifiable = True
+                    quantified = True
                 except:
                     print("I couldn't interpret that as a float. Try again.")
 
@@ -231,11 +271,14 @@ def main():
                         allowablecodes.add(socialcontext)
                         valid = True
 
-        outline = '\t'.join([date, volid, reftype, str(poundvalue), socialcontext, snippet])
+        outline = '\t'.join([str(date), volid, reftype, unit, str(poundvalue), socialcontext, snippet])
         with open(codedfile, mode = 'a', encoding = 'utf-8') as f:
             f.write(outline + '\n')
 
+        print()
+
     print('Exhausted snippet list. Done.')
+
 
 if __name__ == "__main__":
     main()
