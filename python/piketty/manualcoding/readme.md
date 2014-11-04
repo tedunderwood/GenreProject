@@ -6,7 +6,9 @@ Subdirectory for manual coding of snippets.
 The main file here is manualcoding.py. It should be placed in the same directory with
 
 twentyfivesnippets.tsv -- The source file of snippets.
+
 unifiedficmetadata.csv -- The metadata for this collection.
+
 codedsnippets.tsv -- The snippets already coded. The script will create a new file if no appropriate file is found. But you don't want it to do this, because there probably already is one somewhere.
 
 The script asks you
