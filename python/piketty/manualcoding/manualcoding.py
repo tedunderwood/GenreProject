@@ -236,14 +236,14 @@ def main():
 
         else:
             # A quantifiable snippet requires further questioning.
-            unit = 'pounds'
+
             print('I assume the value is denominated in pounds unless you say otherwise.')
             user = input("Pounds (hit return). Or 'dollars' or 'francs', etc: ")
             if user == 'dollars':
                 unit = 'dollars'
             elif user == 'francs':
                 unit == 'francs'
-            elif user == 'pounds':
+            elif user == 'pounds' or len(user) < 2:
                 unit = 'pounds'
             else:
                 print("You entered " + user + ", which is an anomalous unit.")
