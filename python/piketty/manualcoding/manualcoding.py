@@ -238,7 +238,7 @@ def main():
             # A quantifiable snippet requires further questioning.
 
             print('I assume the value is denominated in pounds unless you say otherwise.')
-            user = input("Pounds (hit return). Or 'dollars' or 'francs', etc: ")
+            user = input("Currency: pounds (hit return). Or 'dollars' or 'francs', etc: ")
             if user == 'dollars':
                 unit = 'dollars'
             elif user == 'francs':
