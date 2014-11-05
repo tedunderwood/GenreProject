@@ -1,12 +1,15 @@
+# This script originally written by Andrew Goldstone.
+# Forked from bitbucket into github Nov 2014.
+
 import sys
 
 from collections import defaultdict
 
 # Take a simplified-mallet-state file (made by simplify_state.py) and
-# produce a csv of the doc-topic counts matrix. Output to stdout. Specify the 
+# produce a csv of the doc-topic counts matrix. Output to stdout. Specify the
 # number of topics as the second argument to the command.
 #
-# USAGE: python doc_topics.py state_simple.csv 100 > document_topics.csv
+# USAGE: python doc_topics.py state_simple.csv 100 id_file > document_topics.csv
 #
 # The results should be consistent with the matrix saved by
 # doc_topics_frame() in R. N.B. that the results of this script have no

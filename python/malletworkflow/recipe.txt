@@ -1,0 +1,13 @@
+You start with one of the MakeMalletSource scripts. 
+
+Then this:
+
+bin/mallet import-file --input /Volumes/TARDIS/fiction/alldata.txt --output /Volumes/TARDIS/fiction/fiction.mallet --keep-sequence
+
+bin/mallet train-topics --input /Volumes/TARDIS/fiction/fiction.mallet --num-topics 250 --optimize-interval 25 --optimize-burn-in 100 --num-threads 12 --num-iterations 600 --output-state /Volumes/TARDIS/fiction/fiction.state.gz --output-doc-topics /Volumes/TARDIS/fiction/fiction.doctopics --output-topic-keys /Volumes/TARDIS/fiction/fiction.keys --word-topic-counts-file /Volumes/TARDIS/fiction/fiction.wordtopics --num-top-words 40 --show-topics-interval 20
+
+Then run simplify_state.
+
+Then make_doc_topics and make_word_year.
+
+
