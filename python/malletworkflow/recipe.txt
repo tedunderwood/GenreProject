@@ -6,7 +6,11 @@ bin/mallet import-file --input /Volumes/TARDIS/fiction/alldata.txt --output /Vol
 
 bin/mallet train-topics --input /Volumes/TARDIS/fiction/fiction.mallet --num-topics 250 --optimize-interval 25 --optimize-burn-in 100 --num-threads 12 --num-iterations 600 --output-state /Volumes/TARDIS/fiction/fiction.state.gz --output-doc-topics /Volumes/TARDIS/fiction/fiction.doctopics --output-topic-keys /Volumes/TARDIS/fiction/fiction.keys --word-topic-counts-file /Volumes/TARDIS/fiction/fiction.wordtopics --num-top-words 40 --show-topics-interval 20
 
+Although, really, it's unnecessart to output the doctopics file; we don't use it, but recreate it from the state file.
+
 Then run simplify_state.
+
+Then, currently, you need to run get_doc_ids in order to create a list of doc ids. In the future this should be done by MakeMalletSource.
 
 Then make_doc_topics and make_word_year.
 
