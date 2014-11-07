@@ -68,24 +68,24 @@ def get_wage_sequence(filepath):
     return wage
 
 def normalize(nominal_pairs, wages):
-    normalized_pairs = list()
+    normalized_triplets = list()
 
     for date, nominalval in nominal_pairs:
 
         normalized_value = nominalval / wages[date]
-        normalized_pairs.append((date, normalized_value))
+        normalized_triplets.append((date, nominalval, normalized_value))
 
-    return normalized_pairs
+    return normalized_triplets
 
 def main():
-    nominal_pairs = read_coded_snippets('source/richsnippets.tsv')
+    nominal_pairs = read_coded_snippets('HoytTedVolumes.tsv')
     wages = get_wage_sequence('labours.csv')
-    normalized_pairs = normalize(nominal_pairs, wages)
-    with open('normalbysnip.csv', mode = 'w', encoding = 'utf-8') as f:
+    normalized_triplets = normalize(nominal_pairs, wages)
+    with open('allvolumes.csv', mode = 'w', encoding = 'utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(['date', 'normval', 'logval'])
-        for date, normalized_value in normalized_pairs:
-            row = [date, normalized_value, math.log10(normalized_value)]
+        writer.writerow(['date', 'nominalval', 'normval', 'logval'])
+        for date, nominal_val, normalized_value in normalized_triplets:
+            row = [date, nominal_val, normalized_value, math.log10(normalized_value)]
             writer.writerow(row)
 
 if __name__ == '__main__':
