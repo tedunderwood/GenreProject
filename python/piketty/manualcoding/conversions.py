@@ -12,7 +12,17 @@
 import csv
 import math
 
+with open('/Users/tunder/Dropbox/GenreProject/python/piketty/badvolids.txt', encoding = 'utf-8') as f:
+    badids = [x.rstrip() for x in f.readlines()]
+
 def read_coded_snippets(filepath):
+    ''' Reads the snippets and first, applies exchange rates to convert them to pounds.
+    Exchange rates are relatively constant in this period.
+    It then returns a list of pairs, where each pair consists of a date combined with
+    the nominal value of the snippet, in pounds.
+    '''
+    global badids
+
     with open(filepath, encoding = 'utf-8') as f:
         filelines = f.readlines()
 
@@ -22,6 +32,10 @@ def read_coded_snippets(filepath):
         line = line.rstrip()
         fields = line.split('\t')
         date = int(fields[0])
+        volid = fields[1]
+        if volid in badids:
+            print('badid')
+            continue
         currency = fields[3]
         facevalue = float(fields[4])
 
@@ -41,6 +55,11 @@ def read_coded_snippets(filepath):
     return date_nominal_pairs
 
 def get_wage_sequence(filepath):
+    ''' Creates a dictionary that pairs dates with an estimated average
+    annual wage, in pounds, for British workers in that year. We're using
+    British wages for purposes of inflation adjustment; although the curve
+    is different in the US, it's not different enough to make a huge difference.
+    '''
     with open(filepath, encoding = 'utf-8') as f:
         filelines = f.readlines()
 
@@ -68,6 +87,10 @@ def get_wage_sequence(filepath):
     return wage
 
 def normalize(nominal_pairs, wages):
+    ''' Uses annual wages to normalize references to money: i.e., it translates the
+    reference from a nominal value, in pounds, to a fraction of a worker's annual
+    wage in the year of publication.
+    '''
     normalized_triplets = list()
 
     for date, nominalval in nominal_pairs:
@@ -78,10 +101,10 @@ def normalize(nominal_pairs, wages):
     return normalized_triplets
 
 def main():
-    nominal_pairs = read_coded_snippets('HoytTedVolumes.tsv')
+    nominal_pairs = read_coded_snippets('TedRichSnippets.tsv')
     wages = get_wage_sequence('labours.csv')
     normalized_triplets = normalize(nominal_pairs, wages)
-    with open('allvolumes.csv', mode = 'w', encoding = 'utf-8') as f:
+    with open('allsnippets.csv', mode = 'w', encoding = 'utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['date', 'nominalval', 'normval', 'logval'])
         for date, nominal_val, normalized_value in normalized_triplets:
