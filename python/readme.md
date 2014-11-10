@@ -19,4 +19,10 @@ utilities
 ---------
 Some random python utilities.
 
+piketty
+-------
+Code for a collaborative project with Hoyt Long and Richard So.
 
+reception
+---------
+Code for modeling reception and audience.
