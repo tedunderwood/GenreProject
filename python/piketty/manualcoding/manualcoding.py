@@ -110,6 +110,8 @@ def main():
     snippetpath = glob.glob('twentyfivesnippets.tsv')[0]
     possiblecodedpaths = glob.glob('codedsnippets.tsv')
     metadatapath = glob.glob('unifiedficmetadata.csv')[0]
+    badidpath = glob.glob('badvolids.txt')[0]
+
 
     if len(possiblecodedpaths) < 1:
         codedfile = "codedsnippets.tsv"
@@ -128,6 +130,10 @@ def main():
             authors[volid] = row[3]
             titles[volid] = row[4]
 
+    # get a list of bad ids
+    with open(badidpath, encoding = 'utf-8') as f:
+        badids = set([x.rstrip() for x in f.readlines()])
+
     snippetsbydate = dict()
     dateset = set()
 
@@ -142,6 +148,9 @@ def main():
             volid = fields[0]
             date = int(fields[1])
             snippet = fields[4]
+
+            if volid in badids or ('000' + volid) in badids:
+                continue
 
             add_snippet_to_tree(date, volid, snippet, snippetsbydate)
             dateset.add(date)
@@ -239,11 +248,11 @@ def main():
 
             print('I assume the value is denominated in pounds unless you say otherwise.')
             user = input("Currency: pounds (hit return). Or 'dollars' or 'francs', etc: ")
-            if user == 'dollars':
+            if user == 'dollars' or user == 'd':
                 unit = 'dollars'
-            elif user == 'francs':
+            elif user == 'francs' or user == 'f':
                 unit == 'francs'
-            elif user == 'pounds' or len(user) < 2:
+            elif user == 'pounds' or len(user) < 1:
                 unit = 'pounds'
             else:
                 print("You entered " + user + ", which is an anomalous unit.")
