@@ -27,6 +27,7 @@ import random
 import csv
 import glob
 from io import open
+import codecs
 
 def add_snippet_to_tree(date, volid, snippet, rootdict):
     u''' Adds a snippet to a tree of dictionaries, where the top branching level
@@ -104,6 +105,10 @@ def select_from_snippets(rootdict, numtoselect, datelist, snippetsalreadyhad):
 
     return sniptuples
 
+def utf_8_encoder(unicode_csv_data):
+    for line in unicode_csv_data:
+        yield line.encode('utf-8')
+
 # HERE IS WHERE THE MAIN FUNCTION BEGINS.
 def main():
 
@@ -114,6 +119,8 @@ def main():
     snippetpath = glob.glob(u'twentyfivesnippets.tsv')[0]
     possiblecodedpaths = glob.glob(u'codedsnippets.tsv')
     metadatapath = glob.glob(u'unifiedficmetadata.csv')[0]
+    badidpath = glob.glob(u'badvolids.txt')[0]
+
 
     if len(possiblecodedpaths) < 1:
         codedfile = u"codedsnippets.tsv"
@@ -123,17 +130,22 @@ def main():
     # get the metadata
     authors = dict()
     titles = dict()
-    with open(metadatapath, 'rb') as f:
-        reader = csv.reader(f)
+    with open(metadatapath, encoding = 'utf-8') as f:
+        reader = csv.reader(utf_8_encoder(f))
         skipit = True
 
-        for arow in reader:
+        for row in reader:
             if skipit == True:
                 skipit = False
                 continue
-            volid = arow[0]
-            authors[volid] = arow[3]
-            titles[volid] = arow[4]
+                # That skips the header
+            volid = row[0]
+            authors[volid] = row[3]
+            titles[volid] = row[4]
+
+    # get a list of bad ids
+    with open(badidpath, encoding = u'utf-8') as f:
+        badids = set([x.rstrip() for x in f.readlines()])
 
     snippetsbydate = dict()
     dateset = set()
@@ -149,6 +161,9 @@ def main():
             volid = fields[0]
             date = int(fields[1])
             snippet = fields[4]
+
+            if volid in badids or (u'000' + volid) in badids:
+                continue
 
             add_snippet_to_tree(date, volid, snippet, snippetsbydate)
             dateset.add(date)
@@ -246,11 +261,11 @@ def main():
 
             print u'I assume the value is denominated in pounds unless you say otherwise.'
             user = raw_input(u"Currency: pounds (hit return). Or 'dollars' or 'francs', etc: ")
-            if user == u'dollars':
+            if user == u'dollars' or user == u'd':
                 unit = u'dollars'
-            elif user == u'francs':
+            elif user == u'francs' or user == u'f':
                 unit == u'francs'
-            elif user == u'pounds' or len(user) < 2:
+            elif user == u'pounds' or len(user) < 1:
                 unit = u'pounds'
             else:
                 print u"You entered " + user + u", which is an anomalous unit."
