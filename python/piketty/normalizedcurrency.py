@@ -11,6 +11,16 @@ id2wordcount = dict()
 with open('/Users/tunder/Dropbox/GenreProject/python/piketty/badvolids.txt', encoding = 'utf-8') as f:
     badids = [x.rstrip() for x in f.readlines()]
 
+with open('/Users/tunder/Dropbox/GenreProject/python/piketty/manualcoding/falsepositives.tsv', encoding = 'utf-8') as f:
+    filelines = f.readlines()
+
+penalizedvols = dict()
+
+for line in filelines:
+    line = line.rstrip()
+    fields = line.split('\t')
+    penalizedvols[fields[0]] = float(fields[1])
+
 with open(metafile, encoding = 'utf-8') as f:
     reader = csv.reader(f)
     for row in reader:
@@ -40,6 +50,26 @@ def pricesymbol(keyword):
     else:
         return False
 
+def priceinsnippet(snippet):
+    if ' $ ' in snippet:
+        return True
+    elif ' £ ' in snippet:
+        return True
+    elif ' ¢ ' in snippet:
+        return True
+    elif ' Â£ ' in snippet:
+        return True
+    elif '22nd' in snippet or '22d' in snippet:
+        return True
+    elif '23rd' in snippet or '23d' in snippet:
+        return True
+    elif '2d' in snippet:
+        return True
+    elif '3d' in snippet:
+        return True
+    else:
+        return False
+
 date2moneycount = dict()
 idnword2moneycount = dict()
 
@@ -51,26 +81,33 @@ with open(datafile, encoding = 'utf-8') as f:
         code = fields[0]
         if code in badids:
             continue
+        volid = fields[0]
+        if volid in penalizedvols:
+            increment = 1 - penalizedvols[volid]
+        else:
+            increment = 1
+
         date = int(fields[1])
         if date not in dateset:
             print("Missing " + str(date))
         keyword = fields[2]
         category = fields[3]
-        if category == "money" and not pricesymbol(keyword):
+        snippet = fields[4]
+        if category == "money" and not pricesymbol(keyword) and not priceinsnippet(snippet):
             utils.addtodict(date, 1, date2moneycount)
             if code in idnword2moneycount:
                 if keyword in idnword2moneycount[code]:
-                    idnword2moneycount[code][keyword] += 1
+                    idnword2moneycount[code][keyword] += increment
                 else:
-                    idnword2moneycount[code][keyword] = 1
+                    idnword2moneycount[code][keyword] = increment
             else:
                 idnword2moneycount[code] = dict()
-                idnword2moneycount[code][keyword] = 1
+                idnword2moneycount[code][keyword] = increment
 
 datelist = list(dateset)
 datelist.sort()
 
-outfile = '/Users/tunder/Dropbox/GenreProject/python/piketty/model_filtered_money_v2.csv'
+outfile = '/Users/tunder/Dropbox/GenreProject/python/piketty/model_filtered_money_v3.csv'
 
 with open(outfile, mode='w', encoding = 'utf-8') as f:
     writer = csv.writer(f)
