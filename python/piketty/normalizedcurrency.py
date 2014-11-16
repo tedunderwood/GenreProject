@@ -83,7 +83,9 @@ with open(datafile, encoding = 'utf-8') as f:
             continue
         volid = fields[0]
         if volid in penalizedvols:
-            increment = 1 - penalizedvols[volid]
+            # increment = 1 - penalizedvols[volid]
+            # deactivating the penality
+            increment = 1
         else:
             increment = 1
 

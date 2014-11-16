@@ -1,14 +1,22 @@
 # Corrected plot
-#
+# Corrects the ratio of money references / fiction words for
+# predicted false negatives and false positives.
 
 library(ggplot2)
 library(dplyr)
 
 rollingmean <- function(avector, window) {
+  # Calculates a new vector created by taking a rolling average
+  # of avector at every point using a window that is ± window
+  # in size, assuming that enough points are available.
+  
   veclen = length(avector)
   
   newvec = numeric()
   map = seq(veclen)
+  # We use map to generate a Boolean vector without the requirement
+  # to test for overruns of the endpoints with if statements.
+  
   for (idx in 1:veclen) {
     floor = idx - window
     ceiling = idx + window

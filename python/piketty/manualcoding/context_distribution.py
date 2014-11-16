@@ -28,10 +28,23 @@ def pricesymbol(snippet):
         return True
     elif ' Â£ ' in snippet:
         return True
-    elif '22nd' in snippet:
+    elif '22nd' in snippet or '22d' in snippet:
         return True
-    elif '23rd' in snippet:
+    elif '23rd' in snippet or '23d' in snippet:
         return True
+    elif '2d' in snippet:
+        return True
+    elif '3d' in snippet:
+        return True
+    # elif '$' in snippet or '£' in snippet:
+    #     words = snippet.split()
+
+    #     for word in words:
+    #         if '$' in word and len(word) < 3:
+    #             return True
+    #         elif '£' in word and len(word) < 3:
+    #             return True
+    #    return False
     else:
         return False
 
@@ -49,13 +62,23 @@ def increment_dict(key, dictionary):
     else:
         dictionary[key] = 1
 
+def decrement_dict(key, dictionary):
+    if key in dictionary:
+        dictionary[key] -= 1
+    else:
+        dictionary[key] = 0
+
 testcondition = input("Context to check? ")
 
-filepath = "HoytTedRichAll.tsv"
+filepath = "codedsnippets.tsv"
 with open(filepath, encoding = 'utf-8') as f:
     filelines = f.readlines()
 
+idswerrors = dict()
+
+toggle = True
 for line in filelines:
+
     line = line.rstrip()
     fields = line.split('\t')
     date = int(fields[0])
@@ -68,11 +91,17 @@ for line in filelines:
     decade = int(date/10) * 10
 
     increment_dict(decade, alldistribution)
+    if volid in idswerrors:
+        decrement_dict(volid, idswerrors)
 
     context = fields[5]
 
     if context == testcondition and special_check(context, fields[6]):
         increment_dict(decade, targetdistribution)
+        increment_dict(volid, idswerrors)
+
+    if context != 'nonmonetary' and  pricesymbol(fields[6]):
+        print('false negative')
 
 outpath = testcondition + '_dist.csv'
 
@@ -98,3 +127,10 @@ with open(outpath, mode = 'w', encoding = 'utf-8') as f:
 
 plt.scatter(x, y)
 plt.show()
+
+with open('falsepositives.tsv', mode='w', encoding = 'utf-8') as f:
+    for key, value in idswerrors.items():
+        percent = (value + 1) / 4
+        outline = key + '\t' + str(percent)+ '\n'
+        f.write(outline)
+
