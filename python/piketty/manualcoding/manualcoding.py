@@ -110,7 +110,7 @@ def main():
     snippetpath = glob.glob('twentyfivesnippets.tsv')[0]
     possiblecodedpaths = glob.glob('codedsnippets.tsv')
     metadatapath = glob.glob('unifiedficmetadata.csv')[0]
-    badidpath = glob.glob('badvolids.txt')[0]
+    badidpath = glob.glob('../badvolids.txt')[0]
 
 
     if len(possiblecodedpaths) < 1:
@@ -251,7 +251,7 @@ def main():
             if user == 'dollars' or user == 'd':
                 unit = 'dollars'
             elif user == 'francs' or user == 'f':
-                unit == 'francs'
+                unit = 'francs'
             elif user == 'pounds' or len(user) < 1:
                 unit = 'pounds'
             else:

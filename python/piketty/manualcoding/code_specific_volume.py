@@ -186,7 +186,7 @@ def main():
             if user == 'dollars' or user == 'd':
                 unit = 'dollars'
             elif user == 'francs' or user == 'f':
-                unit == 'francs'
+                unit = 'francs'
             elif user == 'pounds' or len(user) < 1:
                 unit = 'pounds'
             else:
