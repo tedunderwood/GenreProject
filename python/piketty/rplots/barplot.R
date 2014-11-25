@@ -15,5 +15,6 @@ library(ggplot2)
 library(scales)
 db <- data.frame(x = as.factor(c('1750-1799', '1800-1849', '1850-1899', '1900-1949')), y = themeans)
 q <- ggplot(db, aes(x=x, y = y)) + geom_bar(stat = 'identity', fill = 'cornflowerblue') + xlab(' ') + scale_y_continuous("",labels = percent) + 
-  theme(text = element_text(size = 20)) + ggtitle("Median amounts of money mentioned in fiction,\n as a percentage of the average annual wage\n")
+  theme(text = element_text(size = 20)) + ggtitle("Median amounts of money mentioned in fiction,\n as a percentage of the average annual wage\n") +
+  theme(plot.title = element_text(size = 20, lineheight = 1.2))
 plot(q)
