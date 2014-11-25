@@ -3,6 +3,10 @@ piketty
 
 A lot of Python scripts for metadata munging are collecting here. Some of them are related to a specific project undertaken w/ Hoyt Long and Richard So, exploring a claim from Thomas Piketty.
 
+**rplots** Short R scripts that generate figures.
+
+**statsproblem** Scripts for dealing with false negatives.
+
 bagofwords.py: Utility class representing documents as vectors for modeling
 
 better_metadata_maker.py Merges metadata from my samplefiction corpus and the Long/So post-23 corpus, while counting alphanumeric tokens and dictionary words in all files to create a denominator for frequencies.
@@ -12,8 +16,6 @@ SonicScrewdriver.py: A bunch of utility functions I use for different stuff. The
 manualcoding.py: A script that allows hand-coding of randomly selected snippets to facilitate content analysis of the print run.
 
 coded.tsv: results of coding
-
-PlotMoney.R: R script to visualize one aspect of the results, nominal value of money references relative to average yearly wage.
 
 model_contexts.py: A script that produces training data by asking the user to manually tag snippets, and then trains a regularized logistic regression on those snippets. Here I used it to distinguish occurrences of crowns, pounds, etc. that refer to money and those that don't. Got roughly 87% accuracy on training data, 5-fold cross-validated.
 
