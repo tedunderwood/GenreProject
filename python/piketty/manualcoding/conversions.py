@@ -12,16 +12,29 @@
 import csv
 import math
 
-with open('/Users/tunder/Dropbox/GenreProject/python/piketty/badvolids.txt', encoding = 'utf-8') as f:
-    badids = [x.rstrip() for x in f.readlines()]
+def get_special_cases():
+    with open('/Users/tunder/Dropbox/GenreProject/python/piketty/badvolids.txt', encoding = 'utf-8') as f:
+        badids = [x.rstrip() for x in f.readlines()]
 
-def read_coded_snippets(filepath):
+    correcteddates = dict()
+    with open('correctedmetadata.csv', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if len(row) > 5 and len(row[5]) > 0:
+                newdate = int(row[5])
+                if newdate < 1750:
+                    badids.append(row[0])
+                elif newdate < 1950:
+                    correcteddates[row[0]] = newdate
+
+    return badids, correcteddates
+
+def read_coded_snippets(filepath, badids, correcteddates):
     ''' Reads the snippets and first, applies exchange rates to convert them to pounds.
     Exchange rates are relatively constant in this period.
     It then returns a list of pairs, where each pair consists of a date combined with
     the nominal value of the snippet, in pounds.
     '''
-    global badids
 
     with open(filepath, encoding = 'utf-8') as f:
         filelines = f.readlines()
@@ -36,6 +49,9 @@ def read_coded_snippets(filepath):
         if volid in badids:
             print('badid')
             continue
+        if volid in correcteddates:
+            date = correcteddates[volid]
+            print(volid + ' corrected.')
         currency = fields[3]
         facevalue = float(fields[4])
 
@@ -101,10 +117,11 @@ def normalize(nominal_pairs, wages):
     return normalized_triplets
 
 def main():
-    nominal_pairs = read_coded_snippets('TedRichSnippets.tsv')
+    badids, correcteddates = get_special_cases()
+    nominal_pairs = read_coded_snippets('codedsnippets.tsv', badids, correcteddates)
     wages = get_wage_sequence('labours.csv')
     normalized_triplets = normalize(nominal_pairs, wages)
-    with open('allsnippets.csv', mode = 'w', encoding = 'utf-8') as f:
+    with open('codedsnippets.csv', mode = 'w', encoding = 'utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['date', 'nominalval', 'normval', 'logval'])
         for date, nominal_val, normalized_value in normalized_triplets:
