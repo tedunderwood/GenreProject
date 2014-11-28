@@ -69,6 +69,34 @@ def dirty_pairtree(htid):
     dirtyname = prefix + "." + postfix
     return dirtyname
 
+def pairtreepath(htid,rootpath):
+    ''' Given a HathiTrust volume id, returns a relative path to that
+    volume. While the postfix is part of the path, it's also useful to
+    return it separately since it can be a folder/filename in its own
+    right.'''
+
+    period = htid.find('.')
+    prefix = htid[0:period]
+    postfix = htid[(period+1): ]
+    if ':' in postfix:
+        postfix = postfix.replace(':','+')
+        postfix = postfix.replace('/','=')
+    if '.' in postfix:
+        postfix = postfix.replace('.',',')
+    path = rootpath + prefix + '/pairtree_root/'
+
+    if len(postfix) % 2 != 0:
+        for i in range(0, len(postfix) - 2, 2):
+            next_two = postfix[i: (i+2)]
+            path = path + next_two + '/'
+        path = path + postfix[-1] + '/'
+    else:
+        for i in range(0, len(postfix), 2):
+            next_two = postfix[i: (i+2)]
+            path = path + next_two + '/'
+
+    return path, postfix
+
 ## REVISED utility
 ## that reads my standard tab-separated metadata table,
 ## and returns three data objects: 1) a list of row indexes
