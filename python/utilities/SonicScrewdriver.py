@@ -316,3 +316,12 @@ def simple_date(row, table):
     textdate = table["textdate"][row]
     intdate = infer_date(datetype, firstdate, secondate, textdate)
     return intdate
+
+def date_row(row):
+    datetype = row["datetype"]
+    firstdate = row["startdate"]
+    secondate = row["enddate"]
+    textdate = row["imprintdate"]
+    intdate = infer_date(datetype, firstdate, secondate, textdate)
+    return intdate
+
