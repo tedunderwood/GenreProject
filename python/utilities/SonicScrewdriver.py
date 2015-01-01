@@ -1,5 +1,5 @@
 # SonicScrewdriver.py
-# Version July 4, 2014
+# Version January 1, 2015
 
 def addtodict(word, count, lexicon):
 	'''Adds an integer (count) to dictionary (lexicon) under
