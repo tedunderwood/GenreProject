@@ -4,6 +4,9 @@
 # volumes in the "reviewed" class, and then uses a larger generic
 # metadata corpus to select a matching chronological distribution of
 # random volumes.
+#
+# It differs from the original version of the script in using
+# a newer metadata set.
 
 import csv
 import SonicScrewdriver as utils
@@ -12,7 +15,7 @@ import random
 selecteddates = dict()
 selected = set()
 
-reviews = '/Users/tunder/Dropbox/ted/reception/reviewed/lists/ReviewedTitles1880-1899_200.csv'
+reviews = '/Users/tunder/Dropbox/ted/reception/reviewed/lists/ReviewedTitles1860-1879_200.csv'
 with open(reviews) as f:
     reader = csv.reader(f)
     for fields in reader:
@@ -29,17 +32,25 @@ with open(reviews) as f:
 rows, columns, table = utils.readtsv('/Users/tunder/Dropbox/GenreProject/metadata/filteredpoetry.tsv')
 
 bydate = dict()
+authors = dict()
+titles = dict()
+datesbyhtid = dict()
 
-for row in rows:
-    if row in selected:
-        continue
+with open('/Users/tunder/work/genre/metadata/poemeta.csv', encoding = 'utf-8') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        htid = row['htid']
+        authors[htid] = row['author']
+        titles[htid] = row['title']
 
-    date = utils.simple_date(row, table)
-
-    if date in bydate:
-        bydate[date].append(row)
-    else:
-        bydate[date] = [row]
+        date = utils.date_row(row)
+        datesbyhtid[htid] = date
+        if htid in selected:
+            continue
+        if date in bydate:
+            bydate[date].append(htid)
+        else:
+            bydate[date] = [htid]
 
 controlset = set()
 
@@ -48,8 +59,8 @@ for theid, date in selecteddates.items():
     while not found:
         candidates = bydate[date]
         choice = random.sample(candidates, 1)[0]
-        print(table["author"][choice])
-        print(table["title"][choice])
+        print(authors[choice])
+        print(titles[choice])
         acceptable = input("ACCEPT? (y/n): ")
         if acceptable == "y":
             controlset.add(choice)
@@ -57,43 +68,30 @@ for theid, date in selecteddates.items():
 
 ficmetadata = list()
 for line in selected:
-    htid = line.rstrip()
-    if htid not in rows:
+    htid = utils.clean_pairtree(line.rstrip())
+    if htid not in datesbyhtid:
         print(htid)
         continue
-    date = str(utils.simple_date(htid, table))
-    author = table["author"][htid]
-    title = table["title"][htid]
+    date = str(datesbyhtid[htid])
+    author = authors[htid]
+    title = titles[htid]
     outline = htid + '\t' + 'elite' + '\t' + date + '\t' + author + '\t' + title + '\n'
     ficmetadata.append(outline)
 for line in controlset:
-    htid = line.rstrip()
-    if htid not in rows:
+    htid = utils.clean_pairtree(line.rstrip())
+    if htid not in datesbyhtid:
         print(htid)
         continue
-    date = str(utils.simple_date(htid, table))
-    author = table["author"][htid]
-    title = table["title"][htid]
+    date = str(datesbyhtid[htid])
+    author = authors[htid]
+    title = titles[htid]
     outline = htid + '\t' + 'vulgar' + '\t' + date + '\t' + author + '\t' + title + '\n'
     ficmetadata.append(outline)
 
-metapath = '/Users/tunder/Dropbox/GenreProject/metadata/richpoemeta1899.tsv'
-with open(metapath, mode = 'w', encoding = 'utf-8') as f:
+metapath = '/Users/tunder/Dropbox/GenreProject/metadata/richpoemeta1879.tsv'
+with open(metapath, mode = 'a', encoding = 'utf-8') as f:
     for line in ficmetadata:
         f.write(line)
-
-metapath = '/Users/tunder/Dropbox/GenreProject/metadata/poemeta1899.tsv'
-with open(metapath, mode = 'w', encoding = 'utf-8') as f:
-    for line in ficmetadata:
-        fields = line.split('\t')
-        if fields[1] == 'elite':
-            code = "1"
-        elif fields[1] == 'vulgar':
-            code = "0"
-        else:
-            print('error')
-        outline = fields[0] + '\t' + code + '\n'
-        f.write(outline)
 
 
 

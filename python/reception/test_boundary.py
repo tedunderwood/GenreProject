@@ -2,11 +2,21 @@ import os, sys
 import numpy as np
 import pandas as pd
 from bagofwords import BagOfWords, StandardizingVector
-import epistolarymetadata
 import pickle
 from sklearn.linear_model import LogisticRegression
 from sklearn import cross_validation
 import SonicScrewdriver as utils
+import random
+
+def dirty_pairtree(htid):
+	period = htid.find('.')
+	prefix = htid[0:period]
+	postfix = htid[(period+1): ]
+	if '=' in postfix:
+		postfix = postfix.replace('+',':')
+		postfix = postfix.replace('=','/')
+	dirtyname = prefix + "." + postfix
+	return dirtyname
 
 def select_common_features(trainingset, n):
 	''' Very simply, selects the top n features in the training set.
@@ -47,6 +57,7 @@ def get_classvector(classpath, volumeIDs):
 
 	classvector = np.zeros(len(volumeIDs))
 	for idx, anid in enumerate(volumeIDs):
+		anid = dirty_pairtree(anid)
 		if anid in classdict:
 			classvector[idx] = classdict[anid]
 		else:
@@ -67,6 +78,7 @@ def train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, out
 
 	# Get a list of files.
 	allthefiles = os.listdir(sourcefolder)
+	random.shuffle(allthefiles)
 
 	# Now we have a list of file names. But we want volumeIDs, paired with complete
 	# paths to the file. We're going to achieve the pairing by zipping two lists,
@@ -141,7 +153,7 @@ def train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, out
 	# as rows. Would have been easier to make this directly, but I don't know a neat
 	# way to do it in pandas.
 
-	logisticmodel = LogisticRegression(C = 1)
+	logisticmodel = LogisticRegression(C = 0.1)
 	classvector = classvector.astype('int')
 	logisticmodel.fit(data, classvector)
 
@@ -162,28 +174,26 @@ def train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, out
 	with open(standardizerfile, mode = 'wb') as f:
 		pickle.dump(standardizer, f)
 
-	accuracy_tries = cross_validation.cross_val_score(logisticmodel, data, classvector, cv=5)
+	accuracy_tries = cross_validation.cross_val_score(logisticmodel, data, classvector, cv=10)
 	print(accuracy_tries)
+	print(np.sum(accuracy_tries) / len(accuracy_tries))
 
-	# Note that with the full epistolary dataset a straightforward cross-validation is actually
-	# a pretty bad measure of accuracy, because we have many multivolume novels and novels
-	# by the same author in our training set. The classifier may be learning those
-	# incidental associations as much as it's learning the epistolary / non-epistolary boundary.
-
-	# I've reduced this problem a bit by using a subset of the corpus that includes only one
-	# volume for each title. But for a really rigorous measure of accuracy we'd want a
-	# better cross-validation strategy.
+	random.shuffle(classvector)
+	print('\nASSVECTOR!\n')
+	accuracy_tries = cross_validation.cross_val_score(logisticmodel, data, classvector, cv=10)
+	print(accuracy_tries)
+	print(np.sum(accuracy_tries) / len(accuracy_tries))
 
 	# Yay, we're done.
 
 if __name__ == "__main__":
 
-	sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/1919/'
-	extension = '.fic.tsv'
+	sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poe1899/'
+	extension = '.poe.tsv'
 	include_punctuation = False
-	maxfeatures = 1000
-	sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/model1919/'
-	metapath = '/Users/tunder/Dropbox/GenreProject/python/reception/meta1919.tsv'
+	maxfeatures = 1600
+	outputfolder = '/Users/tunder/Dropbox/GenreProject/python/reception/model1899/'
+	metapath = '/Users/tunder/Dropbox/GenreProject/metadata/poemeta1899.tsv'
 
 	train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, outputfolder, metapath)
 

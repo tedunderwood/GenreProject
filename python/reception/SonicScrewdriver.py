@@ -1,5 +1,5 @@
 # SonicScrewdriver.py
-# Version July 4, 2014
+# Version January 1, 2015
 
 def addtodict(word, count, lexicon):
 	'''Adds an integer (count) to dictionary (lexicon) under
@@ -9,6 +9,13 @@ def addtodict(word, count, lexicon):
 		lexicon[word] += count
 	else:
 		lexicon[word] = count
+
+def appendtodict(key, value, dictoflists):
+
+    if key in dictoflists:
+        dictoflists[key].append(value)
+    else:
+        dictoflists[key] = [value]
 
 def sortkeysbyvalue(lexicon, whethertoreverse = False):
 	'''Accepts a dictionary where keys point to a (presumably numeric) value, and
@@ -61,6 +68,34 @@ def dirty_pairtree(htid):
         postfix = postfix.replace('=','/')
     dirtyname = prefix + "." + postfix
     return dirtyname
+
+def pairtreepath(htid,rootpath):
+    ''' Given a HathiTrust volume id, returns a relative path to that
+    volume. While the postfix is part of the path, it's also useful to
+    return it separately since it can be a folder/filename in its own
+    right.'''
+
+    period = htid.find('.')
+    prefix = htid[0:period]
+    postfix = htid[(period+1): ]
+    if ':' in postfix:
+        postfix = postfix.replace(':','+')
+        postfix = postfix.replace('/','=')
+    if '.' in postfix:
+        postfix = postfix.replace('.',',')
+    path = rootpath + prefix + '/pairtree_root/'
+
+    if len(postfix) % 2 != 0:
+        for i in range(0, len(postfix) - 2, 2):
+            next_two = postfix[i: (i+2)]
+            path = path + next_two + '/'
+        path = path + postfix[-1] + '/'
+    else:
+        for i in range(0, len(postfix), 2):
+            next_two = postfix[i: (i+2)]
+            path = path + next_two + '/'
+
+    return path, postfix
 
 ## REVISED utility
 ## that reads my standard tab-separated metadata table,
@@ -281,3 +316,12 @@ def simple_date(row, table):
     textdate = table["textdate"][row]
     intdate = infer_date(datetype, firstdate, secondate, textdate)
     return intdate
+
+def date_row(row):
+    datetype = row["datetype"]
+    firstdate = row["startdate"]
+    secondate = row["enddate"]
+    textdate = row["imprintdate"]
+    intdate = infer_date(datetype, firstdate, secondate, textdate)
+    return intdate
+

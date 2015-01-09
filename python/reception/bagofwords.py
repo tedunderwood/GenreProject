@@ -146,6 +146,10 @@ class StandardizingVector:
 
 		self.means = Series(means, index = featurelist)
 		self.stdevs = Series(stdevs, index = featurelist)
+		self.features = featurelist
+
+		# Because we're going to need the list of features to apply this model
+		# to other volumes.
 
 		# Done.
 
