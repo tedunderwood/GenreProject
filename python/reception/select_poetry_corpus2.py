@@ -15,21 +15,28 @@ import random
 selecteddates = dict()
 selected = set()
 
-reviews = '/Users/tunder/Dropbox/ted/reception/reviewed/lists/ReviewedTitles1860-1879_200.csv'
+reviews = '/Users/tunder/Dropbox/ted/reception/reviewed/lists/ReviewedTitles1840-1859_200.csv'
 with open(reviews) as f:
-    reader = csv.reader(f)
+    reader = csv.DictReader(f)
+
     for fields in reader:
-        htid = fields[0]
-        if htid == "HTid":
-            continue
+
+        htid = row['HTid']
+        pubdate = int(row['date'])
+        firstpub = int(row['firstpub'])
+        yrrev = int(row['yrrev'])
+
+        if pubdate > yrrev + 5:
+            date = yrrev
+            print(str(pubdate) + " => " + str(yrrev))
+        else:
+            date = pubdate
+
         jgenre = fields[13]
-        date = int(fields[1])
 
         if jgenre == 'poe':
             selecteddates[htid] = date
             selected.add(htid)
-
-rows, columns, table = utils.readtsv('/Users/tunder/Dropbox/GenreProject/metadata/filteredpoetry.tsv')
 
 bydate = dict()
 authors = dict()
@@ -54,7 +61,10 @@ with open('/Users/tunder/work/genre/metadata/poemeta.csv', encoding = 'utf-8') a
 
 controlset = set()
 
-for theid, date in selecteddates.items():
+for theid in selected:
+    date = datesbyhtid[theid]
+    print(theid)
+    print(date)
     found = False
     while not found:
         candidates = bydate[date]
@@ -65,6 +75,10 @@ for theid, date in selecteddates.items():
         if acceptable == "y":
             controlset.add(choice)
             found = True
+        if acceptable == 'quit':
+            break
+    if acceptable == 'quit':
+        break
 
 ficmetadata = list()
 for line in selected:
