@@ -40,7 +40,7 @@ def select_common_features(trainingset, n):
 	# List comprehension that gets the second element of each tuple, up to
 	# a total of n tuples.
 
-	topfeatures = [x[1] for x in descendingbyfreq[0 : n]]
+	topfeatures = [x[1] for x in descendingbyfreq[0 : n] if (len(x[1]) > 1 and not x[1].startswith('|'))]
 
 	return topfeatures
 
@@ -51,19 +51,27 @@ def get_classvector(classpath, volumeIDs):
 	for line in filelines:
 		line = line.rstrip()
 		fields = line.split('\t')
-		volid = fields[0]
+		volid = utils.clean_pairtree(fields[0])
 		theclass = fields[1]
-		classdict[volid] = int(theclass)
+		if theclass == 'elite':
+			intclass = 1
+		elif theclass == 'vulgar':
+			intclass = 0
+		else:
+			intclass = int(theclass)
+		classdict[volid] = intclass
+
+	if len(volumeIDs) < 1:
+		volumeIDs = [x for x in classdict.keys()]
 
 	classvector = np.zeros(len(volumeIDs))
 	for idx, anid in enumerate(volumeIDs):
-		anid = dirty_pairtree(anid)
 		if anid in classdict:
 			classvector[idx] = classdict[anid]
 		else:
 			print('Missing from class metadata: ' + anid)
 
-	return classvector
+	return classvector, volumeIDs
 
 def train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, outputfolder, classpath):
 
@@ -76,13 +84,19 @@ def train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, out
 		outputfolder = outputfolder + '/'
 	# This just makes things easier.
 
-	# Get a list of files.
+	# Get a list of files available. Ultimately we're only going to use volumes
+	# that are both in our files and in the metadata. The ordering will be
+	# driven by the filenames, which we shuffle.
 	allthefiles = os.listdir(sourcefolder)
 	random.shuffle(allthefiles)
 
-	# Now we have a list of file names. But we want volumeIDs, paired with complete
-	# paths to the file. We're going to achieve the pairing by zipping two lists,
-	# rather than with a dict, because ordering also matters here.
+	# Now let's create a set of all the ids available in metadata.
+	# Giving this function an empty list tells it that we want
+	# all available ids.
+
+	classvector, idsinmetadata = get_classvector(classpath, [])
+	print(len(idsinmetadata))
+	idsinmetadata = set(idsinmetadata)
 
 	volumeIDs = list()
 	volumepaths = list()
@@ -95,13 +109,21 @@ def train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, out
 			# Extensions are likely to be long enough that there is little
 			# danger of accidental occurrence inside a filename. E.g.
 			# '.fic.tsv'
-			path = sourcefolder + filename
-			volumeIDs.append(volID)
-			volumepaths.append(path)
+			if volID in idsinmetadata:
+				path = sourcefolder + filename
+				volumeIDs.append(volID)
+				volumepaths.append(path)
 
-	# Get the class vector, indexed by volume ID
 
-	classvector = get_classvector(classpath, volumeIDs)
+	# We have volumeIDs in a list whose sequence matches complete
+	# paths to each file. We're going to achieve the pairing by zipping two lists,
+	# rather than with a dict, because ordering also matters here.
+
+	# Now get the class vector, indexed by volume ID
+
+	classvector, shouldbethesameIDs = get_classvector(classpath, volumeIDs)
+	print(len(classvector))
+	print(len(volumeIDs))
 	assert len(classvector) == len(volumeIDs)
 
 	# Now we actually read volumes and create a training corpus, which will
@@ -188,12 +210,12 @@ def train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, out
 
 if __name__ == "__main__":
 
-	sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poe1899/'
+	sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/granger/elite/'
 	extension = '.poe.tsv'
 	include_punctuation = False
 	maxfeatures = 1600
-	outputfolder = '/Users/tunder/Dropbox/GenreProject/python/reception/model1899/'
-	metapath = '/Users/tunder/Dropbox/GenreProject/metadata/poemeta1899.tsv'
+	outputfolder = '/Users/tunder/Dropbox/GenreProject/python/reception/model1879/'
+	metapath = '/Users/tunder/Dropbox/GenreProject/metadata/richpoemeta1879.tsv'
 
 	train_a_model(sourcefolder, extension, include_punctuation, maxfeatures, outputfolder, metapath)
 
