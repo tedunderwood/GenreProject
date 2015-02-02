@@ -11,11 +11,12 @@
 import csv
 import SonicScrewdriver as utils
 import random
+import os.path
 
 selecteddates = dict()
 selected = list()
 
-reviews = '/Users/tunder/Dropbox/ted/reception/reviewed/lists/ReviewedTitles1840-1859_200.csv'
+reviews = '/Users/tunder/Dropbox/ted/reception/reviewed/lists/ReviewedTitles1880-1899_200.csv'
 with open(reviews, encoding = 'utf-8') as f:
     reader = csv.DictReader(f)
 
@@ -34,7 +35,7 @@ with open(reviews, encoding = 'utf-8') as f:
 
         jgenre = row['Jgenre']
 
-        if jgenre == 'poe':
+        if jgenre == 'fic':
             selecteddates[htid] = date
             selected.append(htid)
 
@@ -43,7 +44,7 @@ authors = dict()
 titles = dict()
 datesbyhtid = dict()
 
-with open('/Users/tunder/work/genre/metadata/poemeta.csv', encoding = 'utf-8') as f:
+with open('/Users/tunder/work/genre/metadata/ficmeta.csv', encoding = 'utf-8') as f:
     reader = csv.DictReader(f)
     for row in reader:
         htid = row['htid']
@@ -60,12 +61,25 @@ with open('/Users/tunder/work/genre/metadata/poemeta.csv', encoding = 'utf-8') a
             bydate[date] = [htid]
 
 controlset = set()
+birthdates = dict()
+matched = list()
 
 skip = int(input('Skip how many? '))
 for theid in selected[skip:]:
     date = selecteddates[theid]
     print(theid)
     print(date)
+    if theid not in authors:
+        print("missing")
+        continue
+    author = authors[theid]
+    title = titles[theid]
+    print(author)
+    print(title)
+    birthday = input('birthdate? ')
+    birthdates[theid] = birthday
+    matched.append(theid)
+
     found = False
     while not found:
         candidates = bydate[date]
@@ -75,6 +89,8 @@ for theid in selected[skip:]:
         acceptable = input("ACCEPT? (y/n): ")
         if acceptable == "y":
             controlset.add(choice)
+            birthday = input("Date of birth (0 for unknown): ")
+            birthdates[choice] = birthday
             found = True
         if acceptable == 'quit':
             break
@@ -84,7 +100,7 @@ for theid in selected[skip:]:
 ficmetadata = list()
 user = input("Write metadata for reviewed set ?")
 if user == 'y':
-    for line in selected:
+    for line in matched:
         htid = utils.clean_pairtree(line.rstrip())
         if htid not in datesbyhtid:
             print(htid)
@@ -92,7 +108,14 @@ if user == 'y':
         date = str(datesbyhtid[htid])
         author = authors[htid]
         title = titles[htid]
-        outline = htid + '\t' + 'elite' + '\t' + date + '\t' + author + '\t' + title + '\n'
+        print(author)
+        print(title)
+        print(date)
+        if htid in birthdates:
+            birthday = birthdates[htid]
+        else:
+            birthday = input('birthdate? ')
+        outline = [htid, 'elite', date, birthday, author, title]
         ficmetadata.append(outline)
 for line in controlset:
     htid = utils.clean_pairtree(line.rstrip())
@@ -102,13 +125,22 @@ for line in controlset:
     date = str(datesbyhtid[htid])
     author = authors[htid]
     title = titles[htid]
-    outline = htid + '\t' + 'vulgar' + '\t' + date + '\t' + author + '\t' + title + '\n'
+    birthday = birthdates[htid]
+    outline = [htid, 'vulgar', date, birthday, author, title]
     ficmetadata.append(outline)
 
-metapath = '/Users/tunder/Dropbox/GenreProject/metadata/richpoemeta1859.tsv'
+metapath = '/Users/tunder/Dropbox/GenreProject/metadata/richficmeta1899.csv'
+if os.path.exists(metapath):
+    headeralready = True
+else:
+    headeralready = False
+
 with open(metapath, mode = 'a', encoding = 'utf-8') as f:
-    for line in ficmetadata:
-        f.write(line)
+    writer = csv.writer(f)
+    if not headeralready:
+        writer.writerow(['htid', 'class', 'pubdate', 'birthdate', 'author', 'title'])
+    for row in ficmetadata:
+        writer.writerow(row)
 
 
 
