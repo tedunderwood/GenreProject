@@ -23,6 +23,10 @@ piketty
 -------
 Code for a collaborative project with Hoyt Long and Richard So.
 
+piketty2
+--------
+Continuation of the piketty project.
+
 reception
 ---------
 Code for modeling reception and audience.
