@@ -88,7 +88,7 @@ rows, columns, table = utils.readtsv('/Volumes/TARDIS/work/metadata/MergedMonogr
 
 ambiguouswords = {'crown', 'crowns', 'guinea', 'guineas', 'nickel', 'sovereign', 'sovereigns', 'pound', 'pounds', 'quid'}
 
-moneywords = {'dollar', 'dollars', 'dime', 'dimes', 'nickel', 'nickels', 'pound', 'pounds', 'shilling', 'shillings', 'sovereign', 'sovereigns','cent', 'cents', 'centime', 'centimes', 'crown', 'crowns', 'halfcrown', 'half-crown','penny', 'pennies', 'pence', 'farthing', 'farthings', 'franc', 'francs', 'guilder', 'guilders', 'florin', 'florins', 'guinea', 'guineas', "ha'penny", 'tuppence', 'twopence', 'sixpence', '|arabicprice|', '|price|', 'quid'}
+moneywords = {'dollar', 'dollars', 'dime', 'dimes', 'nickel', 'nickels', 'pound', 'pounds', 'shilling', 'shillings', 'sovereign', 'sovereigns','cent', 'cents', 'centime', 'centimes', 'crown', 'crowns', 'halfcrown', 'half-crown','penny', 'pennies', 'pence', 'farthing', 'farthings', 'franc', 'francs', 'guilder', 'guilders', 'florin', 'florins', 'guinea', 'guineas', "ha'penny", 'tuppence', 'twopence', 'sixpence', '|arabicprice|', '|price|', 'quid', 'buck', 'bucks', 'ruble', 'rubles'}
 
 # Words I explicitly decided not to include: 'quarter', 'quarters', 'mark', 'marks.' Monetary uses
 # seemed rare enough relative to others that they'd be more likely to introduce noise than to help.
@@ -98,7 +98,7 @@ moneywords = {'dollar', 'dollars', 'dime', 'dimes', 'nickel', 'nickels', 'pound'
 
 alltargetwords = moneywords
 
-sourcedir = "/Volumes/TARDIS/work/moneytexts/"
+sourcedir = "/Users/tunder/Dropbox/GenreProject/python/piketty2/anova/"
 filelist = os.listdir(sourcedir)
 filelist = [x for x in filelist if x.endswith(".txt")]
 contexts = []
@@ -109,10 +109,10 @@ ctr = 0
 
 for filename in filelist:
 
-    htid = utils.pairtreelabel(filename.replace('.fic.txt', ''))
+    htid = utils.pairtreelabel(filename.replace('.norm.txt', ''))
 
     if htid not in rows:
-        print(htid)
+        print(htid + ' MISSING')
         continue
     else:
         date = utils.simple_date(htid, table)
