@@ -32,7 +32,7 @@ alleraser = str.maketrans('', '', delchars)
 Punctuation = '.,():-—;"!?•$%@“”#<>+=/[]*^\'{}_■~\\|«»©&~`£·'
 mosteraser = str.maketrans('', '', Punctuation)
 
-punctuple = ('.', ',', '?', '!', ';', '"', '“', '”', ':', '--', '—', ')', '(', "'", "`", "[", "]", "{", "}")
+punctuple = ('.', ',', '?', '!', ';', '"', '“', '”', ':', '--', '—', ')', '(', "'", "`", "[", "]", "{", "}", "’", "‘")
 punctnohyphen = ['.', ',', '?', '!', ';', '"', '“', '”', ':', ')', '(', "'", "`", "[", "]", "{", "}"]
 specialfeatures = {"arabicprice", "arabic1digit", "arabic2digit", "arabic3digit", "arabic4digit", "arabic5+digit", "romannumeral", "personalname"}
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -135,10 +135,13 @@ def makestream(pagelist):
 
     tokens = list()
     for line in linelist:
+
         if len(line) < 1:
             continue
         if line == "\n":
             continue
+
+        line = line.replace('—', ' — ')
 
         line = line.rstrip()
         if line == "<pb>":

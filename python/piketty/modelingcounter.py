@@ -516,6 +516,9 @@ def extract_snippets(tokens, WINDOW, targetwords = {}):
 
                 snippettomodel.append(thisword)
 
+            if idx > 15 and idx + 15 < streamlen:
+                snippet = tokens[idx - 12: idx + 13]
+
             sniptuples.append((snippet, snippettomodel))
 
     return sniptuples

@@ -10,6 +10,8 @@ import pickle
 from sklearn.linear_model import LogisticRegression
 from sklearn import cross_validation
 
+genretranslations = {'subsc' : 'front', 'argum': 'non', 'pref': 'non', 'aut': 'bio', 'bio': 'bio', 'toc': 'front', 'title': 'front', 'bookp': 'front', 'bibli': 'ads', 'gloss': 'back', 'epi': 'fic', 'errat': 'non', 'notes': 'non', 'ora': 'non', 'let': 'bio', 'trv': 'non', 'lyr': 'poe', 'nar': 'poe', 'vdr': 'dra', 'pdr': 'dra', 'clo': 'dra', 'impri': 'front', 'libra': 'back', 'index': 'back'}
+
 def strip_punctuation(astring):
     global punctuple
     keepclipping = True
@@ -283,8 +285,8 @@ logisticmodel.fit(data, classvector)
 
 coefficients = list(zip(logisticmodel.coef_[0], featurelist))
 coefficients.sort()
-# for coefficient, word in coefficients:
-#     print(word + " :  " + str(coefficient))
+for coefficient, word in coefficients:
+    print(word + " :  " + str(coefficient))
 
 # Pickle and write the model & standardizer. This will allow us to apply the model to
 # new documents of unknown genre.
