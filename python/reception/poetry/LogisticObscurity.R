@@ -1,0 +1,12 @@
+l <- read.csv('~/Dropbox/GenreProject/python/reception/poetry/linearpredictions.csv')
+l$birthdate[l$birthdate == 0] <- NA
+model = glm(data = l, formula = as.integer(obscure == 'known') ~ logistic + pubdate, family = 'binomial')
+intercept = coef(model)[1] / (-coef(model)[2])
+slope = coef(model)[3] / (-coef(model)[2])
+line = intercept + (slope * l$pubdate)
+true = sum(l$logistic > line & l$obscure == 'known') + sum(l$logistic <= line & l$obscure != 'known')
+false = sum(l$logistic < line & l$obscure == 'known') + sum(l$logistic >= line & l$obscure != 'known')
+print(true / (true + false))
+levels(l$reviewed) = c('random', 'reviewed')
+p <- ggplot(l, aes(x = pubdate, y = logistic, color = obscure, shape = obscure)) + geom_point() + geom_abline(intercept = intercept, slope = slope) + scale_color_manual(values = c('indianred2', 'dodgerblue4')) + theme(text = element_text(size = 16)) + scale_y_continuous('Probability of being obscure\n', labels = percent) + ggtitle('Obscure and well-known works. 74.3% accurate.\n') + scale_x_continuous("")
+plot(p)
