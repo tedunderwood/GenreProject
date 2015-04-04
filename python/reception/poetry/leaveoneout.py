@@ -82,6 +82,8 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
     with open(classpath, encoding = 'utf-8') as f:
         reader = csv.DictReader(f, delimiter = '\t')
 
+        anonctr = 0
+
         for row in reader:
             volid = dirty_pairtree(row['docid'])
             theclass = row['recept'].strip()
@@ -101,6 +103,7 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
             for key, value in excludebelow.items():
                 if forceint(row[key]) < value:
                     bail = True
+                    print(row[key])
             for key, value in excludeabove.items():
                 if forceint(row[key]) > value:
                     bail = True
@@ -126,6 +129,10 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
 
             notes = row['notes'].lower()
             author = row['author']
+            if len(author) < 1:
+                author = "anonymous" + str(anonctr)
+                anonctr += 1
+
             title = row['title']
             canon = row['canon']
 
@@ -139,9 +146,14 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
             if theclass == 'vulgar':
                 obscure = 'obscure'
                 reviewed = 'not'
-            else:
+            elif theclass == 'elite':
                 obscure = 'known'
                 reviewed = 'rev'
+            elif theclass == 'addcanon':
+                obscure = 'known'
+                reviewed = 'addedbecausecanon'
+            else:
+                print(theclass)
 
             if notes == 'well-known':
                 obscure = 'known'
@@ -149,7 +161,10 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
                 obscure = 'obscure'
 
             if canon == 'y':
-                actually = 'canon'
+                if theclass == 'addcanon':
+                    actually = 'Norton, added'
+                else:
+                    actually = 'Norton, in-set'
             elif reviewed == 'rev':
                 actually = 'reviewed'
             else:
@@ -218,15 +233,15 @@ excludebelow = dict()
 
 excludebelow['date'] = 1700
 
-# sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/granger/elite/'
-# extension = '.poe.tsv'
-# classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/amplifiedmeta.tsv'
-# outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/linearpredictions.csv'
+sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/texts/'
+extension = '.poe.tsv'
+classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/amplifiedmeta.tsv'
+outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/linearpredictions.csv'
 
-sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/texts/'
-extension = '.fic.tsv'
-classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/amplifiedficmeta.tsv'
-outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/logisticpredictions.csv'
+# sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/texts/'
+# extension = '.fic.tsv'
+# classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/amplifiedficmeta.tsv'
+# outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/logisticpredictions.csv'
 
 if not sourcefolder.endswith('/'):
     sourcefolder = sourcefolder + '/'
@@ -235,7 +250,7 @@ if not sourcefolder.endswith('/'):
 
 # Get a list of files.
 allthefiles = os.listdir(sourcefolder)
-random.shuffle(allthefiles)
+# random.shuffle(allthefiles)
 
 volumeIDs = list()
 volumepaths = list()
@@ -274,19 +289,40 @@ for volid, volpath in zip(volumeIDs, volumepaths):
     with open(volpath, encoding = 'utf-8') as f:
         for line in f:
             fields = line.strip().split('\t')
+            if len(fields) > 2 or len(fields) < 2:
+                print(line)
+                continue
             word = fields[0]
             if len(word) > 1 and word[0].isalpha():
                 count = int(fields[1])
                 wordcounts[word] += 1
 
-authormatches = [list() for x in range(len(orderedIDs))]
+donttrainon = list()
+
+# Here we create a list of volumed IDs not to be used for training.
+# For instance, we have supplemented the dataset with volumes that
+# are in the Norton but that did not actually occur in random
+# sampling. We want to make predictions for these, but never use
+# them for training.
+
+for idx1, anid in enumerate(orderedIDs):
+    reviewed = metadict[anid][0]
+    if reviewed == 'addedbecausecanon':
+        donttrainon.append(idx1)
+
+
+authormatches = [list(donttrainon) for x in range(len(orderedIDs))]
 # For every index in authormatches, identify a set of indexes that have
 # the same author. Obvs, there will always be at least one.
+
+# Since we are going to use these indexes to exclude rows, we also add
+# all the ids in donttrainon to every volume
+
 for idx1, anid in enumerate(orderedIDs):
     thisauthor = metadict[anid][6]
     for idx2, anotherid in enumerate(orderedIDs):
         otherauthor = metadict[anotherid][6]
-        if thisauthor == otherauthor:
+        if thisauthor == otherauthor and not idx2 in authormatches[idx1]:
             authormatches[idx1].append(idx2)
 
 for alist in authormatches:

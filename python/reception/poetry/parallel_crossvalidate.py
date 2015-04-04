@@ -13,8 +13,15 @@ from collections import Counter
 from multiprocessing import Pool
 from sklearn.linear_model import LogisticRegression
 import modelingprocess
+from scipy.stats import norm
 
 usedate = False
+
+def appendif(key, value, dictionary):
+    if key in dictionary:
+        dictionary[key].append(value)
+    else:
+        dictionary[key] = [value]
 
 def dirty_pairtree(htid):
     period = htid.find('.')
@@ -224,6 +231,47 @@ def normalizearray(featurearray, usedate):
 
     return featurearray, means, stdevs
 
+def binormal_select(vocablist, positivecounts, negativecounts, totalpos, totalneg, k):
+    all_scores = np.zeros(len(vocablist))
+
+    for idx, word in enumerate(vocablist):
+        # For each word we create a vector the length of vols in each class
+        # that contains real counts, plus zeroes for all those vols not
+        # represented.
+
+        positives = np.zeros(totalpos, dtype = 'int64')
+        if word in positivecounts:
+            positives[0: len(positivecounts[word])] = positivecounts[word]
+
+        negatives = np.zeros(totalneg, dtype = 'int64')
+        if word in negativecounts:
+            negatives[0: len(negativecounts[word])] = negativecounts[word]
+
+        featuremean = np.mean(np.append(positives, negatives))
+
+        tp = sum(positives > featuremean)
+        fp = sum(positives <= featuremean)
+        tn = sum(negatives > featuremean)
+        fn = sum(negatives <= featuremean)
+        tpr = tp/(tp+fn) # true positive ratio
+        fpr = fp/(fp+tn) # false positive ratio
+
+        bns_score = abs(norm.ppf(tpr) - norm.ppf(fpr))
+        # See Forman
+
+        if np.isinf(bns_score) or np.isnan(bns_score):
+            bns_score = 0
+
+        all_scores[idx] = bns_score
+
+    zipped = [x for x in zip(all_scores, vocablist)]
+    zipped.sort(reverse = True)
+    with open('bnsscores.tsv', mode='w', encoding = 'utf-8') as f:
+        for score, word in zipped:
+            f.write(word + '\t' + str(score) + '\n')
+
+    return [x[1] for x in zipped[0:k]]
+
 ## MAIN code starts here.
 
 excludeif = dict()
@@ -232,7 +280,6 @@ excludeabove = dict()
 excludebelow = dict()
 
 excludebelow['date'] = 1700
-excludeabove['date'] = 1870
 
 sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/texts/'
 extension = '.poe.tsv'
@@ -280,12 +327,22 @@ wordcounts = Counter()
 volspresent = list()
 orderedIDs = list()
 
+positivecounts = dict()
+negativecounts = dict()
+totalposvols = 0
+totalnegvols = 0
+
 for volid, volpath in zip(volumeIDs, volumepaths):
     if volid not in IDspresent:
         continue
     else:
         volspresent.append((volid, volpath))
         orderedIDs.append(volid)
+    reviewed = metadict[volid][0]
+    if reviewed == 'rev':
+        totalposvols += 1
+    else:
+        totalnegvols += 1
 
     with open(volpath, encoding = 'utf-8') as f:
         for line in f:
@@ -294,9 +351,23 @@ for volid, volpath in zip(volumeIDs, volumepaths):
                 print(line)
                 continue
             word = fields[0]
-            if len(word) > 1 and word[0].isalpha():
+            if len(word) > 0 and word[0].isalpha():
                 count = int(fields[1])
                 wordcounts[word] += 1
+                # for initial feature selection we just use document freq,
+                # so it's just +=1. But we do use the count to also
+                # calculate bi-normal separation.
+
+
+                if reviewed == 'rev':
+                    appendif(word, count, positivecounts)
+                else:
+                    appendif(word,count, negativecounts)
+
+vocablist = [x[0] for x in wordcounts.most_common(3100)]
+
+#vocablist = binormal_select(vocablist, positivecounts, negativecounts, totalposvols, totalnegvols, 3000)
+VOCABSIZE = len(vocablist)
 
 donttrainon = list()
 
@@ -331,9 +402,6 @@ for alist in authormatches:
 
 # I am reversing the order of indexes so that I can delete them from
 # back to front, without changing indexes yet to be deleted.
-
-vocablist = [x[0] for x in wordcounts.most_common(3200)]
-VOCABSIZE = len(vocablist)
 
 volsizes = dict()
 voldata = list()
