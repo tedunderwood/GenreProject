@@ -13,6 +13,7 @@ from collections import Counter
 from multiprocessing import Pool
 from sklearn.linear_model import LogisticRegression
 import modelingprocess
+import metafilter
 from scipy.stats import norm
 
 usedate = False
@@ -274,17 +275,10 @@ def binormal_select(vocablist, positivecounts, negativecounts, totalpos, totalne
 
 ## MAIN code starts here.
 
-excludeif = dict()
-excludeifnot = dict()
-excludeabove = dict()
-excludebelow = dict()
-
-excludebelow['date'] = 1700
-
-sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/texts/'
-extension = '.poe.tsv'
-classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/amplifiedmeta.tsv'
-outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/linearpredictions.csv'
+sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/texts/'
+extension = '.fic.tsv'
+classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/masterficmeta.csv'
+outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/predictions.csv'
 
 # sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/texts/'
 # extension = '.fic.tsv'
@@ -316,10 +310,35 @@ for filename in allthefiles:
         volumepaths.append(path)
 
 # Get the class and date vectors, indexed by volume ID
+#
+# This is also a place where we can simply exclude
+# volumes from consideration on the basis on any
+# metadata category we want, using the dictionaries
+# defined below.
 
-metadict = get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, excludeabove)
+excludeif = dict()
+excludeifnot = dict()
+excludeabove = dict()
+excludebelow = dict()
 
-IDspresent = set([x for x in metadict.keys()])
+excludebelow['inferreddate'] = 1700
+
+metadict = metafilter.get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, excludeabove)
+
+# Now that we have a list of volumes with metadata, we can select the groups of IDs
+# that we actually intend to contrast. If we want to us more or less everything,
+# this may not be necessary. But in some cases we want to use randomly sampled subsets.
+
+# IDsToUse = set([x for x in metadict.keys()])
+
+# The default condition here is
+
+category2sorton = 'gender'
+positive_class = 'f'
+sizecap = 100
+# A sizecap less than one means, no sizecap.
+
+IDsToUse, classdictionary = metafilter.label_classes(metadict, category2sorton, positive_class, sizecap)
 
 # make a vocabulary list and a volsize dict
 wordcounts = Counter()
@@ -333,13 +352,14 @@ totalposvols = 0
 totalnegvols = 0
 
 for volid, volpath in zip(volumeIDs, volumepaths):
-    if volid not in IDspresent:
+    if volid not in IDsToUse:
         continue
     else:
         volspresent.append((volid, volpath))
         orderedIDs.append(volid)
-    reviewed = metadict[volid][0]
-    if reviewed == 'rev':
+
+    classflag = classdictionary[volid]
+    if classflag == 1:
         totalposvols += 1
     else:
         totalnegvols += 1
@@ -359,12 +379,12 @@ for volid, volpath in zip(volumeIDs, volumepaths):
                 # calculate bi-normal separation.
 
 
-                if reviewed == 'rev':
+                if classflag == 1:
                     appendif(word, count, positivecounts)
                 else:
                     appendif(word,count, negativecounts)
 
-vocablist = [x[0] for x in wordcounts.most_common(3100)]
+vocablist = [x[0] for x in wordcounts.most_common(3200)]
 
 #vocablist = binormal_select(vocablist, positivecounts, negativecounts, totalposvols, totalnegvols, 3000)
 VOCABSIZE = len(vocablist)
@@ -378,8 +398,8 @@ donttrainon = list()
 # them for training.
 
 for idx1, anid in enumerate(orderedIDs):
-    reviewed = metadict[anid][0]
-    if reviewed == 'addedbecausecanon':
+    reviewedstatus = metadict[anid]['reviewed']
+    if reviewedstatus == 'addedbecausecanon':
         donttrainon.append(idx1)
 
 
@@ -391,9 +411,9 @@ authormatches = [list(donttrainon) for x in range(len(orderedIDs))]
 # all the ids in donttrainon to every volume
 
 for idx1, anid in enumerate(orderedIDs):
-    thisauthor = metadict[anid][6]
+    thisauthor = metadict[anid]['author']
     for idx2, anotherid in enumerate(orderedIDs):
-        otherauthor = metadict[anotherid][6]
+        otherauthor = metadict[anotherid]['author']
         if thisauthor == otherauthor and not idx2 in authormatches[idx1]:
             authormatches[idx1].append(idx2)
 
@@ -423,7 +443,7 @@ for volid, volpath in volspresent:
             voldict[word] = count
             totalcount += count
 
-    date = metadict[volid][2]
+    date = metadict[volid]['pubdate']
     date = date - 1700
     if date < 0:
         date = 0
@@ -438,11 +458,8 @@ for volid, volpath in volspresent:
 
 
     volsizes[volid] = totalcount
-    reviewed = metadict[volid][0]
-    if reviewed == 'rev':
-        classvector.append(1)
-    else:
-        classvector.append(0)
+    classflag = classdictionary[volid]
+    classvector.append(classflag)
 
 data = pd.DataFrame(voldata)
 
@@ -473,25 +490,39 @@ pool.join()
 
 print('Multiprocessing concluded.')
 
+truepositives = 0
+truenegatives = 0
+falsepositives = 0
+falsenegatives = 0
+
 with open(outputpath, mode = 'w', encoding = 'utf-8') as f:
     writer = csv.writer(f)
     header = ['volid', 'reviewed', 'obscure', 'pubdate', 'birthdate', 'gender', 'nation', 'allwords', 'logistic', 'author', 'title', 'actually']
     writer.writerow(header)
-    for volid in IDspresent:
+    for volid in IDsToUse:
         metadata = metadict[volid]
-        reviewed = metadata[0]
-        obscure = metadata[1]
-        pubdate = metadata[2]
-        birthdate = metadata[3]
-        gender = metadata[4]
-        nation = metadata[5]
-        author = metadata[6]
-        title = metadata[7]
-        actually = metadata[8]
+        reviewed = metadata['reviewed']
+        obscure = metadata['obscure']
+        pubdate = metadata['pubdate']
+        birthdate = metadata['birthdate']
+        gender = metadata['gender']
+        nation = metadata['nation']
+        author = metadata['author']
+        title = metadata['title']
+        actually = metadata['canonicity']
         allwords = volsizes[volid]
         logistic = logisticpredictions[volid]
         outrow = [volid, reviewed, obscure, pubdate, birthdate, gender, nation, allwords, logistic, author, title, actually]
         writer.writerow(outrow)
+
+        if logistic > 0.5 and classdictionary[volid] > 0.5:
+            truepositives += 1
+        elif logistic <= 0.5 and classdictionary[volid] < 0.5:
+            truenegatives += 1
+        elif logistic <= 0.5 and classdictionary[volid] > 0.5:
+            falsenegatives += 1
+        elif logistic > 0.5 and classdictionary[volid] < 0.5:
+            falsepositives += 1
 
 trainingset, yvals, testset = sliceframe(data, classvector, [], 0)
 newmodel = LogisticRegression(C = .00007)
@@ -504,6 +535,10 @@ coefficientuples = list(zip(coefficients, (coefficients * np.array(stdevs)), voc
 coefficientuples.sort()
 for coefficient, normalizedcoef, word in coefficientuples:
     print(word + " :  " + str(coefficient))
+
+print()
+accuracy = (truepositives + truenegatives) / len(IDsToUse)
+print('Accuracy is: ', str(accuracy))
 
 with open('coefficients.csv', mode = 'w', encoding = 'utf-8') as f:
     writer = csv.writer(f)
