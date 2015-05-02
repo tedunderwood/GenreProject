@@ -22,17 +22,22 @@ def forceint(astring):
 
     return intval
 
-def get_metadata(classpath, volumeIDs):
+def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, excludeabove):
     '''
     As the name would imply, this gets metadata matching a given set of volume
     IDs. It returns a dictionary containing only those volumes that were present
     both in metadata and in the data folder.
+
+    It also accepts four dictionaries containing criteria that will exclude volumes
+    from the modeling process.
     '''
 
     metadict = dict()
 
     with open(classpath, encoding = 'utf-8') as f:
-        reader = csv.DictReader(f, delimiter = '\t')
+        reader = csv.DictReader(f)
+
+        anonctr = 0
 
         for row in reader:
             volid = dirty_pairtree(row['docid'])
@@ -43,25 +48,49 @@ def get_metadata(classpath, volumeIDs):
             if theclass == 'remove':
                 continue
 
-            birthdate = forceint(row['birth'])
+            bail = False
+            for key, value in excludeif.items():
+                if row[key] == value:
+                    bail = True
+            for key, value in excludeifnot.items():
+                if row[key] != value:
+                    bail = True
+            for key, value in excludebelow.items():
+                if forceint(row[key]) < value:
+                    bail = True
+                    print(row[key])
+            for key, value in excludeabove.items():
+                if forceint(row[key]) > value:
+                    bail = True
 
-            # for the moment, we're not looking at volumes without biographical info
-            if birthdate < 1700:
+            if bail:
                 continue
 
-            pubdate = forceint(row['date'])
+            birthdate = forceint(row['birth'])
+
+            pubdate = forceint(row['inferreddate'])
+
             gender = row['gender'].rstrip()
             nation = row['nationality'].rstrip()
 
+            #if pubdate >= 1880:
+                #continue
+
             if nation == 'ca':
                 nation = 'us'
-            if nation != 'us':
+            elif nation == 'ir':
                 nation = 'uk'
             # I hope none of my Canadian or Irish friends notice this.
 
             notes = row['notes'].lower()
             author = row['author']
+            if len(author) < 1 or author == '<blank>':
+                author = "anonymous" + str(anonctr)
+                anonctr += 1
+                print(author)
+
             title = row['title']
+            canon = row['canon']
 
             # I'm creating two distinct columns to indicate kinds of
             # literary distinction. The reviewed column is based purely
@@ -73,16 +102,42 @@ def get_metadata(classpath, volumeIDs):
             if theclass == 'vulgar':
                 obscure = 'obscure'
                 reviewed = 'not'
-            else:
+            elif theclass == 'elite':
                 obscure = 'known'
                 reviewed = 'rev'
+            elif theclass == 'addcanon':
+                obscure = 'known'
+                reviewed = 'addedbecausecanon'
+            else:
+                print(theclass)
 
             if notes == 'well-known':
                 obscure = 'known'
             if notes == 'obscure':
                 obscure = 'obscure'
 
-            metadict[volid] = (reviewed, obscure, pubdate, birthdate, gender, nation, author, title)
+            if canon == 'y':
+                if theclass == 'addcanon':
+                    actually = 'Norton, added'
+                else:
+                    actually = 'Norton, in-set'
+            elif reviewed == 'rev':
+                actually = 'reviewed'
+            else:
+                actually = 'random'
+
+            metadict[volid] = dict()
+            metadict[volid]['reviewed'] = reviewed
+            metadict[volid]['obscure'] = obscure
+            metadict[volid]['pubdate'] = pubdate
+            metadict[volid]['birthdate'] = birthdate
+            metadict[volid]['gender'] = gender
+            metadict[volid]['nation'] = nation
+            metadict[volid]['author'] = author
+            metadict[volid]['title'] = title
+            metadict[volid]['canonicity'] = actually
+            metadict[volid]['pubname'] = row['pubname']
+            metadict[volid]['firstpub'] = forceint(row['firstpub'])
 
     # These come in as dirty pairtree; we need to make them clean.
 
@@ -101,12 +156,91 @@ def get_metadata(classpath, volumeIDs):
 
     return cleanmetadict
 
+# def get_metadata(classpath, volumeIDs):
+#     '''
+#     As the name would imply, this gets metadata matching a given set of volume
+#     IDs. It returns a dictionary containing only those volumes that were present
+#     both in metadata and in the data folder.
+#     '''
+
+#     metadict = dict()
+
+#     with open(classpath, encoding = 'utf-8') as f:
+#         reader = csv.DictReader(f, delimiter = '\t')
+
+#         for row in reader:
+#             volid = dirty_pairtree(row['docid'])
+#             theclass = row['recept'].strip()
+
+#             # I've put 'remove' in the reception column for certain
+#             # things that are anomalous.
+#             if theclass == 'remove':
+#                 continue
+
+#             birthdate = forceint(row['birth'])
+
+#             # for the moment, we're not looking at volumes without biographical info
+#             if birthdate < 1700:
+#                 continue
+
+#             pubdate = forceint(row['date'])
+#             gender = row['gender'].rstrip()
+#             nation = row['nationality'].rstrip()
+
+#             if nation == 'ca':
+#                 nation = 'us'
+#             if nation != 'us':
+#                 nation = 'uk'
+#             # I hope none of my Canadian or Irish friends notice this.
+
+#             notes = row['notes'].lower()
+#             author = row['author']
+#             title = row['title']
+
+#             # I'm creating two distinct columns to indicate kinds of
+#             # literary distinction. The reviewed column is based purely
+#             # on the question of whether this work was in fact in our
+#             # sample of contemporaneous reviews. The obscure column incorporates
+#             # information from post-hoc biographies, which trumps
+#             # the question of reviewing when they conflict.
+
+#             if theclass == 'vulgar':
+#                 obscure = 'obscure'
+#                 reviewed = 'not'
+#             else:
+#                 obscure = 'known'
+#                 reviewed = 'rev'
+
+#             if notes == 'well-known':
+#                 obscure = 'known'
+#             if notes == 'obscure':
+#                 obscure = 'obscure'
+
+#             metadict[volid] = (reviewed, obscure, pubdate, birthdate, gender, nation, author, title)
+
+#     # These come in as dirty pairtree; we need to make them clean.
+
+#     cleanmetadict = dict()
+#     allidsinmeta = set([x for x in metadict.keys()])
+#     allidsindir = set([dirty_pairtree(x) for x in volumeIDs])
+#     missinginmeta = len(allidsindir - allidsinmeta)
+#     missingindir = len(allidsinmeta - allidsindir)
+#     print("We have " + str(missinginmeta) + " volumes in missing in metadata, and")
+#     print(str(missingindir) + " volumes missing in the directory.")
+
+#     for anid in volumeIDs:
+#         dirtyid = dirty_pairtree(anid)
+#         if dirtyid in metadict:
+#             cleanmetadict[anid] = metadict[dirtyid]
+
+#     return cleanmetadict
+
 ## MAIN code starts here.
 
-sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/granger/elite/'
+sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/texts/'
 extension = '.poe.tsv'
 VOCABSIZE = 11000
-classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/amplifiedmeta.tsv'
+classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/masterpoemeta.csv'
 
 if not sourcefolder.endswith('/'):
     sourcefolder = sourcefolder + '/'
@@ -134,7 +268,20 @@ for filename in allthefiles:
 
 # Get the class and date vectors, indexed by volume ID
 
-metadict = get_metadata(classpath, volumeIDs)
+excludeif = dict()
+# excludeif['impaud'] = 'pop'
+excludeif['pubname'] = 'TEM'
+excludeif['recept'] = 'addcanon'
+#excludeif['gender'] = 'm'
+excludeifnot = dict()
+#excludeifnot['gender'] = 'm'
+excludeabove = dict()
+excludebelow = dict()
+
+excludebelow['inferreddate'] = 1700
+excludeabove['inferreddate'] = 1950
+
+metadict = get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, excludeabove)
 
 IDspresent = set([x for x in metadict.keys()])
 
@@ -219,14 +366,14 @@ with open('/Users/tunder/Dropbox/GenreProject/python/reception/poetry/poedata.cs
     writer.writerow(header)
     for volid in IDspresent:
         metadata = metadict[volid]
-        reviewed = metadata[0]
-        obscure = metadata[1]
-        pubdate = metadata[2]
-        birthdate = metadata[3]
-        gender = metadata[4]
-        nation = metadata[5]
-        author = metadata[6]
-        title = metadata[7]
+        reviewed = metadata['reviewed']
+        obscure = metadata['obscure']
+        pubdate = metadata['pubdate']
+        birthdate = metadata['birthdate']
+        gender = metadata['gender']
+        nation = metadata['nation']
+        author = metadata['author']
+        title = metadata['title']
         allwords = volsizes[volid]
         pre = prewords[volid]
         post = postwords[volid]

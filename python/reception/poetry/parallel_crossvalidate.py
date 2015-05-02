@@ -8,7 +8,7 @@
 
 import numpy as np
 import pandas as pd
-import csv, os, random
+import csv, os, random, sys
 from collections import Counter
 from multiprocessing import Pool
 from sklearn.linear_model import LogisticRegression
@@ -275,15 +275,15 @@ def binormal_select(vocablist, positivecounts, negativecounts, totalpos, totalne
 
 ## MAIN code starts here.
 
-sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/texts/'
-extension = '.fic.tsv'
-classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/masterficmeta.csv'
-outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/predictions.csv'
-
 # sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/texts/'
 # extension = '.fic.tsv'
-# classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/amplifiedficmeta.tsv'
-# outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/logisticpredictions.csv'
+# classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/masterficmeta.csv'
+# outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/fiction/predictions.csv'
+
+sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/texts/'
+extension = '.poe.tsv'
+classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/masterpoemeta.csv'
+outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/logisticpredictions.csv'
 
 if not sourcefolder.endswith('/'):
     sourcefolder = sourcefolder + '/'
@@ -317,11 +317,18 @@ for filename in allthefiles:
 # defined below.
 
 excludeif = dict()
+# excludeif['impaud'] = 'pop'
+excludeif['pubname'] = 'TEM'
+excludeif['recept'] = 'addcanon'
+#excludeif['gender'] = 'm'
 excludeifnot = dict()
+#excludeifnot['gender'] = 'm'
 excludeabove = dict()
 excludebelow = dict()
 
 excludebelow['inferreddate'] = 1700
+excludeabove['inferreddate'] = 1950
+futurethreshold = 1950
 
 metadict = metafilter.get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, excludeabove)
 
@@ -333,9 +340,9 @@ metadict = metafilter.get_metadata(classpath, volumeIDs, excludeif, excludeifnot
 
 # The default condition here is
 
-category2sorton = 'gender'
-positive_class = 'f'
-sizecap = 100
+category2sorton = 'reviewed'
+positive_class = 'rev'
+sizecap = 350
 # A sizecap less than one means, no sizecap.
 
 IDsToUse, classdictionary = metafilter.label_classes(metadict, category2sorton, positive_class, sizecap)
@@ -399,7 +406,8 @@ donttrainon = list()
 
 for idx1, anid in enumerate(orderedIDs):
     reviewedstatus = metadict[anid]['reviewed']
-    if reviewedstatus == 'addedbecausecanon':
+    pubdate = metadict[anid]['pubdate']
+    if reviewedstatus == 'addedbecausecanon' or pubdate > futurethreshold:
         donttrainon.append(idx1)
 
 
@@ -497,7 +505,7 @@ falsenegatives = 0
 
 with open(outputpath, mode = 'w', encoding = 'utf-8') as f:
     writer = csv.writer(f)
-    header = ['volid', 'reviewed', 'obscure', 'pubdate', 'birthdate', 'gender', 'nation', 'allwords', 'logistic', 'author', 'title', 'actually']
+    header = ['volid', 'reviewed', 'obscure', 'pubdate', 'birthdate', 'gender', 'nation', 'allwords', 'logistic', 'author', 'title', 'pubname', 'actually', 'realclass']
     writer.writerow(header)
     for volid in IDsToUse:
         metadata = metadict[volid]
@@ -509,10 +517,12 @@ with open(outputpath, mode = 'w', encoding = 'utf-8') as f:
         nation = metadata['nation']
         author = metadata['author']
         title = metadata['title']
-        actually = metadata['canonicity']
+        canonicity = metadata['canonicity']
+        pubname = metadata['pubname']
         allwords = volsizes[volid]
         logistic = logisticpredictions[volid]
-        outrow = [volid, reviewed, obscure, pubdate, birthdate, gender, nation, allwords, logistic, author, title, actually]
+        realclass = classdictionary[volid]
+        outrow = [volid, reviewed, obscure, pubdate, birthdate, gender, nation, allwords, logistic, author, title, pubname, canonicity, realclass]
         writer.writerow(outrow)
 
         if logistic > 0.5 and classdictionary[volid] > 0.5:
@@ -531,7 +541,7 @@ newmodel.fit(trainingset, yvals)
 
 coefficients = newmodel.coef_[0] * 1000000
 
-coefficientuples = list(zip(coefficients, (coefficients * np.array(stdevs)), vocablist + ['pub.date']))
+coefficientuples = list(zip(coefficients, (coefficients / np.array(stdevs)), vocablist + ['pub.date']))
 coefficientuples.sort()
 for coefficient, normalizedcoef, word in coefficientuples:
     print(word + " :  " + str(coefficient))
@@ -546,9 +556,113 @@ with open('coefficients.csv', mode = 'w', encoding = 'utf-8') as f:
         coef, normalizedcoef, word = triple
         writer.writerow([word, coef, normalizedcoef])
 
+# user = input('Continue with listing of author clusters?')
+# if user == 'n':
+#     sys.exit(0)
 
+# matchlens = list()
+# for idx1, anid in enumerate(orderedIDs):
+#     matches = authormatches[idx1]
+#     matchlens.append(len(matches))
 
+# decorated = list(zip(matchlens, orderedIDs, authormatches))
+# decorated.sort(reverse = True)
+# for i in range(30):
+#     thisid = decorated[i][1]
+#     print(metadict[thisid]['author'])
+#     print('doesnt train on')
+#     for idx in decorated[i][2]:
+#         subid = orderedIDs[idx]
+#         print('  ' + metadict[subid]['author'])
+#     print()
+futurethreshold = 1950
 
+futureids = list()
+for i, volid in enumerate(orderedIDs):
+    pubdate = metadict[volid]['pubdate']
+    if pubdate > futurethreshold:
+        futureids.append(i)
+
+if len(futureids) < 2:
+    sys.exit(0)
+
+pastthreshold = futurethreshold - 59
+pastids = list()
+for i, volid in enumerate(orderedIDs):
+    pubdate = metadict[volid]['pubdate']
+    if pubdate < pastthreshold:
+        pastids.append(i)
+
+futureids.sort(reverse=True)
+excludeids = list()
+excludeids.extend(pastids)
+excludeids.extend(futureids)
+excludeids.sort(reverse=True)
+
+trainingset, yvals, testset = sliceframe(data, classvector, excludeids, futureids)
+trainingset, means, stdevs = normalizearray(trainingset, usedate)
+newmodel.fit(trainingset, yvals)
+testset = (testset - means) / stdevs
+predictions = [x[1] for x in newmodel.predict_proba(testset)]
+
+truepositives = 0
+truenegatives = 0
+falsepositives = 0
+falsenegatives = 0
+
+logisticpredictions = dict()
+
+for i, idx in enumerate(futureids):
+    volid = orderedIDs[idx]
+    logistic = predictions[i]
+    logisticpredictions[volid] = logistic
+
+    if logistic > 0.5 and classdictionary[volid] > 0.5:
+        truepositives += 1
+    elif logistic <= 0.5 and classdictionary[volid] < 0.5:
+        truenegatives += 1
+    elif logistic <= 0.5 and classdictionary[volid] > 0.5:
+        falsenegatives += 1
+    elif logistic > 0.5 and classdictionary[volid] < 0.5:
+        falsepositives += 1
+
+print()
+accuracy = (truepositives + truenegatives) / len(futureids)
+print('Accuracy is: ', str(accuracy))
+
+selfpredictions = [x[1] for x in newmodel.predict_proba(trainingset)]
+i = 0
+for volid in orderedIDs:
+    pubdate = metadict[volid]['pubdate']
+    if pubdate <= futurethreshold and pubdate >= pastthreshold:
+        logisticpredictions[volid] = selfpredictions[i]
+        i += 1
+
+futurepath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/futurepredictions.csv'
+
+with open(futurepath, mode = 'w', encoding = 'utf-8') as f:
+    writer = csv.writer(f)
+    header = ['volid', 'reviewed', 'obscure', 'pubdate', 'birthdate', 'gender', 'nation', 'allwords', 'logistic', 'author', 'title', 'pubname', 'actually', 'realclass']
+    writer.writerow(header)
+    for volid in IDsToUse:
+        if volid not in logisticpredictions:
+            continue
+        metadata = metadict[volid]
+        reviewed = metadata['reviewed']
+        obscure = metadata['obscure']
+        pubdate = metadata['pubdate']
+        birthdate = metadata['birthdate']
+        gender = metadata['gender']
+        nation = metadata['nation']
+        author = metadata['author']
+        title = metadata['title']
+        canonicity = metadata['canonicity']
+        pubname = metadata['pubname']
+        allwords = volsizes[volid]
+        logistic = logisticpredictions[volid]
+        realclass = classdictionary[volid]
+        outrow = [volid, reviewed, obscure, pubdate, birthdate, gender, nation, allwords, logistic, author, title, pubname, canonicity, realclass]
+        writer.writerow(outrow)
 
 
 

@@ -84,7 +84,7 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
 
             notes = row['notes'].lower()
             author = row['author']
-            if len(author) < 1:
+            if len(author) < 1 or author == '<blank>':
                 author = "anonymous" + str(anonctr)
                 anonctr += 1
                 print(author)
@@ -136,7 +136,7 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
             metadict[volid]['author'] = author
             metadict[volid]['title'] = title
             metadict[volid]['canonicity'] = actually
-            metadict[volid]['journal'] = row['pubname']
+            metadict[volid]['pubname'] = row['pubname']
             metadict[volid]['firstpub'] = forceint(row['firstpub'])
 
     # These come in as dirty pairtree; we need to make them clean.
@@ -188,6 +188,10 @@ def label_classes(metadict, category2sorton, positive_class, sizecap):
             all_positives.add(key)
 
     all_negatives = all_instances - all_positives
+    iterator = list(all_negatives)
+    for item in iterator:
+        if metadict[item]['reviewed'] == 'addedbecausecanon':
+            all_negatives.remove(item)
 
     if sizecap > 0 and len(all_positives) > sizecap:
         positives = random.sample(all_positives, sizecap)
@@ -197,7 +201,9 @@ def label_classes(metadict, category2sorton, positive_class, sizecap):
     # If there's a sizecap we also want to ensure classes have
     # matching sizes and roughly equal distributions over time.
 
-    if sizecap > 0 and len(all_negatives) > sizecap:
+    numpositives = len(all_positives)
+
+    if sizecap > 0 and len(all_negatives) > numpositives:
         if not 'date' in category2sorton:
             available_negatives = list(all_negatives)
             negatives = list()
@@ -234,6 +240,12 @@ def label_classes(metadict, category2sorton, positive_class, sizecap):
     for anid in negatives:
         IDsToUse.add(anid)
         classdictionary[anid] = 0
+
+    for key, value in metadict.items():
+        if value['reviewed'] == 'addedbecausecanon':
+            IDsToUse.add(key)
+            classdictionary[key] = 0
+    # We add the canon supplement, but don't train on it.
 
     return IDsToUse, classdictionary
 
