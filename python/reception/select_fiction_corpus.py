@@ -92,8 +92,10 @@ for theid in selected[skip:]:
             birthday = input("Date of birth (0 for unknown): ")
             birthdates[choice] = birthday
             found = True
-        if acceptable == 'quit':
+        elif acceptable == 'quit':
             break
+        elif acceptable == 'skip':
+            found = True
     if acceptable == 'quit':
         break
 
