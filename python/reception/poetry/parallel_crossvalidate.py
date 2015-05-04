@@ -17,6 +17,28 @@ import metafilter
 from scipy.stats import norm
 
 usedate = False
+# Leave this flag false unless you plan major
+# surgery to reactive the currently-deprecated
+# option to use "date" as a predictive feature.
+
+datetype = 'firstpub'
+
+# There are three different date types we can use.
+# Choose which here.
+
+# FUNCTIONS GET DEFINED BELOW.
+
+def infer_date(metadictentry, dateype):
+    if datetype == 'pubdate':
+        return metadictentry[datetype]
+    elif datetype == 'firstpub':
+        firstpub = metadictentry['firstpub']
+        if firstpub > 1700 and firstpub < 1950:
+            return firstpub
+        else:
+            return metadictentry['pubdate']
+    else:
+        sys.exit(0)
 
 def appendif(key, value, dictionary):
     if key in dictionary:
@@ -24,7 +46,13 @@ def appendif(key, value, dictionary):
     else:
         dictionary[key] = [value]
 
+# Clean this up and make it unnecessary.
+
 def dirty_pairtree(htid):
+    ''' Changes a 'clean' HathiTrust ID (with only chars that are
+    legal in filenames) into a 'clean' version of the same name
+    (which may contain illegal chars.)
+    '''
     period = htid.find('.')
     prefix = htid[0:period]
     postfix = htid[(period+1): ]
@@ -42,128 +70,6 @@ def forceint(astring):
 
     return intval
 
-def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, excludeabove):
-    '''
-    As the name would imply, this gets metadata matching a given set of volume
-    IDs. It returns a dictionary containing only those volumes that were present
-    both in metadata and in the data folder.
-
-    It also accepts four dictionaries containing criteria that will exclude volumes
-    from the modeling process.
-    '''
-
-    metadict = dict()
-
-    with open(classpath, encoding = 'utf-8') as f:
-        reader = csv.DictReader(f, delimiter = '\t')
-
-        anonctr = 0
-
-        for row in reader:
-            volid = dirty_pairtree(row['docid'])
-            theclass = row['recept'].strip()
-
-            # I've put 'remove' in the reception column for certain
-            # things that are anomalous.
-            if theclass == 'remove':
-                continue
-
-            bail = False
-            for key, value in excludeif.items():
-                if row[key] == value:
-                    bail = True
-            for key, value in excludeifnot.items():
-                if row[key] != value:
-                    bail = True
-            for key, value in excludebelow.items():
-                if forceint(row[key]) < value:
-                    bail = True
-                    print(row[key])
-            for key, value in excludeabove.items():
-                if forceint(row[key]) > value:
-                    bail = True
-
-            if bail:
-                continue
-
-            birthdate = forceint(row['birth'])
-
-            pubdate = forceint(row['date'])
-
-            gender = row['gender'].rstrip()
-            nation = row['nationality'].rstrip()
-
-            #if pubdate >= 1880:
-                #continue
-
-            if nation == 'ca':
-                nation = 'us'
-            elif nation == 'ir':
-                nation = 'uk'
-            # I hope none of my Canadian or Irish friends notice this.
-
-            notes = row['notes'].lower()
-            author = row['author']
-            if len(author) < 1:
-                author = "anonymous" + str(anonctr)
-                anonctr += 1
-
-            title = row['title']
-            canon = row['canon']
-
-            # I'm creating two distinct columns to indicate kinds of
-            # literary distinction. The reviewed column is based purely
-            # on the question of whether this work was in fact in our
-            # sample of contemporaneous reviews. The obscure column incorporates
-            # information from post-hoc biographies, which trumps
-            # the question of reviewing when they conflict.
-
-            if theclass == 'vulgar':
-                obscure = 'obscure'
-                reviewed = 'not'
-            elif theclass == 'elite':
-                obscure = 'known'
-                reviewed = 'rev'
-            elif theclass == 'addcanon':
-                obscure = 'known'
-                reviewed = 'addedbecausecanon'
-            else:
-                print(theclass)
-
-            if notes == 'well-known':
-                obscure = 'known'
-            if notes == 'obscure':
-                obscure = 'obscure'
-
-            if canon == 'y':
-                if theclass == 'addcanon':
-                    actually = 'Norton, added'
-                else:
-                    actually = 'Norton, in-set'
-            elif reviewed == 'rev':
-                actually = 'reviewed'
-            else:
-                actually = 'random'
-
-            metadict[volid] = (reviewed, obscure, pubdate, birthdate, gender, nation, author, title, actually)
-
-    # These come in as dirty pairtree; we need to make them clean.
-
-    cleanmetadict = dict()
-    allidsinmeta = set([x for x in metadict.keys()])
-    allidsindir = set([dirty_pairtree(x) for x in volumeIDs])
-    missinginmeta = len(allidsindir - allidsinmeta)
-    missingindir = len(allidsinmeta - allidsindir)
-    print("We have " + str(missinginmeta) + " volumes in missing in metadata, and")
-    print(str(missingindir) + " volumes missing in the directory.")
-
-    for anid in volumeIDs:
-        dirtyid = dirty_pairtree(anid)
-        if dirtyid in metadict:
-            cleanmetadict[anid] = metadict[dirtyid]
-
-    return cleanmetadict
-
 def get_features(wordcounts, wordlist):
     numwords = len(wordlist)
     wordvec = np.zeros(numwords)
@@ -172,6 +78,11 @@ def get_features(wordcounts, wordlist):
             wordvec[idx] = wordcounts[word]
 
     return wordvec
+
+# In an earlier version of this script, we sometimes used
+# "publication date" as a feature, to see what would happen.
+# In the current version, we don't. Some of the functions
+# and features remain, but they are deprecated. E.g.:
 
 def get_features_with_date(wordcounts, wordlist, date, totalcount):
     numwords = len(wordlist)
@@ -233,6 +144,8 @@ def normalizearray(featurearray, usedate):
     return featurearray, means, stdevs
 
 def binormal_select(vocablist, positivecounts, negativecounts, totalpos, totalneg, k):
+    ''' A feature-selection option, not currently in use.
+    '''
     all_scores = np.zeros(len(vocablist))
 
     for idx, word in enumerate(vocablist):
@@ -285,6 +198,31 @@ extension = '.poe.tsv'
 classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/masterpoemeta.csv'
 outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/logisticpredictions.csv'
 
+# We can simply exclude
+# volumes from consideration on the basis on any
+# metadata category we want, using the dictionaries
+# defined below.
+
+excludeif = dict()
+# excludeif['impaud'] = 'pop'
+excludeif['pubname'] = 'TEM'
+excludeif['recept'] = 'addcanon'
+#excludeif['gender'] = 'm'
+excludeifnot = dict()
+#excludeifnot['gender'] = 'm'
+excludeabove = dict()
+excludebelow = dict()
+
+excludebelow['inferreddate'] = 1700
+excludeabove['inferreddate'] = 1950
+
+# For more historically-interesting kinds of questions, we can limit the part
+# of the dataset that gets TRAINED on, while permitting the whole dataset to
+# be predicted.
+
+futurethreshold = 1844
+pastthreshold = 1800
+
 if not sourcefolder.endswith('/'):
     sourcefolder = sourcefolder + '/'
 
@@ -308,27 +246,6 @@ for filename in allthefiles:
         path = sourcefolder + filename
         volumeIDs.append(volID)
         volumepaths.append(path)
-
-# Get the class and date vectors, indexed by volume ID
-#
-# This is also a place where we can simply exclude
-# volumes from consideration on the basis on any
-# metadata category we want, using the dictionaries
-# defined below.
-
-excludeif = dict()
-# excludeif['impaud'] = 'pop'
-excludeif['pubname'] = 'TEM'
-excludeif['recept'] = 'addcanon'
-#excludeif['gender'] = 'm'
-excludeifnot = dict()
-#excludeifnot['gender'] = 'm'
-excludeabove = dict()
-excludebelow = dict()
-
-excludebelow['inferreddate'] = 1700
-excludeabove['inferreddate'] = 1950
-futurethreshold = 1950
 
 metadict = metafilter.get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, excludeabove)
 
@@ -406,10 +323,11 @@ donttrainon = list()
 
 for idx1, anid in enumerate(orderedIDs):
     reviewedstatus = metadict[anid]['reviewed']
-    pubdate = metadict[anid]['pubdate']
-    if reviewedstatus == 'addedbecausecanon' or pubdate > futurethreshold:
+    date = infer_date(metadict[anid], datetype)
+    if reviewedstatus == 'addedbecausecanon':
         donttrainon.append(idx1)
-
+    elif date < pastthreshold or date > futurethreshold:
+        donttrainon.append(idx1)
 
 authormatches = [list(donttrainon) for x in range(len(orderedIDs))]
 # For every index in authormatches, identify a set of indexes that have
@@ -451,11 +369,10 @@ for volid, volpath in volspresent:
             voldict[word] = count
             totalcount += count
 
-    date = metadict[volid]['pubdate']
+    date = infer_date(metadict[volid], datetype)
     date = date - 1700
     if date < 0:
         date = 0
-
 
     if usedate:
         features = get_features_with_date(voldict, vocablist, date, totalcount)
@@ -511,7 +428,7 @@ with open(outputpath, mode = 'w', encoding = 'utf-8') as f:
         metadata = metadict[volid]
         reviewed = metadata['reviewed']
         obscure = metadata['obscure']
-        pubdate = metadata['pubdate']
+        pubdate = infer_date(metadata, datetype)
         birthdate = metadata['birthdate']
         gender = metadata['gender']
         nation = metadata['nation']
@@ -575,94 +492,98 @@ with open('coefficients.csv', mode = 'w', encoding = 'utf-8') as f:
 #         subid = orderedIDs[idx]
 #         print('  ' + metadict[subid]['author'])
 #     print()
-futurethreshold = 1950
 
-futureids = list()
-for i, volid in enumerate(orderedIDs):
-    pubdate = metadict[volid]['pubdate']
-    if pubdate > futurethreshold:
-        futureids.append(i)
 
-if len(futureids) < 2:
-    sys.exit(0)
+# THE CODE THAT FOLLOWS IS DEPRECATED.
 
-pastthreshold = futurethreshold - 59
-pastids = list()
-for i, volid in enumerate(orderedIDs):
-    pubdate = metadict[volid]['pubdate']
-    if pubdate < pastthreshold:
-        pastids.append(i)
+# futurethreshold = 1950
 
-futureids.sort(reverse=True)
-excludeids = list()
-excludeids.extend(pastids)
-excludeids.extend(futureids)
-excludeids.sort(reverse=True)
+# futureids = list()
+# for i, volid in enumerate(orderedIDs):
+#     pubdate = metadict[volid]['pubdate']
+#     if pubdate > futurethreshold:
+#         futureids.append(i)
 
-trainingset, yvals, testset = sliceframe(data, classvector, excludeids, futureids)
-trainingset, means, stdevs = normalizearray(trainingset, usedate)
-newmodel.fit(trainingset, yvals)
-testset = (testset - means) / stdevs
-predictions = [x[1] for x in newmodel.predict_proba(testset)]
+# if len(futureids) < 2:
+#     sys.exit(0)
 
-truepositives = 0
-truenegatives = 0
-falsepositives = 0
-falsenegatives = 0
+# pastthreshold = futurethreshold - 59
+# pastids = list()
+# for i, volid in enumerate(orderedIDs):
+#     pubdate = metadict[volid]['pubdate']
+#     if pubdate < pastthreshold:
+#         pastids.append(i)
 
-logisticpredictions = dict()
+# futureids.sort(reverse=True)
+# excludeids = list()
+# excludeids.extend(pastids)
+# excludeids.extend(futureids)
+# excludeids.sort(reverse=True)
 
-for i, idx in enumerate(futureids):
-    volid = orderedIDs[idx]
-    logistic = predictions[i]
-    logisticpredictions[volid] = logistic
+# trainingset, yvals, testset = sliceframe(data, classvector, excludeids, futureids)
+# trainingset, means, stdevs = normalizearray(trainingset, usedate)
+# newmodel.fit(trainingset, yvals)
+# testset = (testset - means) / stdevs
+# predictions = [x[1] for x in newmodel.predict_proba(testset)]
 
-    if logistic > 0.5 and classdictionary[volid] > 0.5:
-        truepositives += 1
-    elif logistic <= 0.5 and classdictionary[volid] < 0.5:
-        truenegatives += 1
-    elif logistic <= 0.5 and classdictionary[volid] > 0.5:
-        falsenegatives += 1
-    elif logistic > 0.5 and classdictionary[volid] < 0.5:
-        falsepositives += 1
+# truepositives = 0
+# truenegatives = 0
+# falsepositives = 0
+# falsenegatives = 0
 
-print()
-accuracy = (truepositives + truenegatives) / len(futureids)
-print('Accuracy is: ', str(accuracy))
+# logisticpredictions = dict()
 
-selfpredictions = [x[1] for x in newmodel.predict_proba(trainingset)]
-i = 0
-for volid in orderedIDs:
-    pubdate = metadict[volid]['pubdate']
-    if pubdate <= futurethreshold and pubdate >= pastthreshold:
-        logisticpredictions[volid] = selfpredictions[i]
-        i += 1
+# for i, idx in enumerate(futureids):
+#     volid = orderedIDs[idx]
+#     logistic = predictions[i]
+#     logisticpredictions[volid] = logistic
 
-futurepath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/futurepredictions.csv'
+#     if logistic > 0.5 and classdictionary[volid] > 0.5:
+#         truepositives += 1
+#     elif logistic <= 0.5 and classdictionary[volid] < 0.5:
+#         truenegatives += 1
+#     elif logistic <= 0.5 and classdictionary[volid] > 0.5:
+#         falsenegatives += 1
+#     elif logistic > 0.5 and classdictionary[volid] < 0.5:
+#         falsepositives += 1
 
-with open(futurepath, mode = 'w', encoding = 'utf-8') as f:
-    writer = csv.writer(f)
-    header = ['volid', 'reviewed', 'obscure', 'pubdate', 'birthdate', 'gender', 'nation', 'allwords', 'logistic', 'author', 'title', 'pubname', 'actually', 'realclass']
-    writer.writerow(header)
-    for volid in IDsToUse:
-        if volid not in logisticpredictions:
-            continue
-        metadata = metadict[volid]
-        reviewed = metadata['reviewed']
-        obscure = metadata['obscure']
-        pubdate = metadata['pubdate']
-        birthdate = metadata['birthdate']
-        gender = metadata['gender']
-        nation = metadata['nation']
-        author = metadata['author']
-        title = metadata['title']
-        canonicity = metadata['canonicity']
-        pubname = metadata['pubname']
-        allwords = volsizes[volid]
-        logistic = logisticpredictions[volid]
-        realclass = classdictionary[volid]
-        outrow = [volid, reviewed, obscure, pubdate, birthdate, gender, nation, allwords, logistic, author, title, pubname, canonicity, realclass]
-        writer.writerow(outrow)
+# print()
+# accuracy = (truepositives + truenegatives) / len(futureids)
+# print('Accuracy is: ', str(accuracy))
+
+# selfpredictions = [x[1] for x in newmodel.predict_proba(trainingset)]
+# i = 0
+# for volid in orderedIDs:
+#     pubdate = metadict[volid]['pubdate']
+#     if pubdate <= futurethreshold and pubdate >= pastthreshold:
+#         logisticpredictions[volid] = selfpredictions[i]
+#         i += 1
+
+# futurepath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/futurepredictions.csv'
+
+# with open(futurepath, mode = 'w', encoding = 'utf-8') as f:
+#     writer = csv.writer(f)
+#     header = ['volid', 'reviewed', 'obscure', 'pubdate', 'birthdate', 'gender', 'nation', 'allwords', 'logistic', 'author', 'title', 'pubname', 'actually', 'realclass']
+#     writer.writerow(header)
+#     for volid in IDsToUse:
+#         if volid not in logisticpredictions:
+#             continue
+#         metadata = metadict[volid]
+#         reviewed = metadata['reviewed']
+#         obscure = metadata['obscure']
+#         pubdate = metadata['pubdate']
+#         birthdate = metadata['birthdate']
+#         gender = metadata['gender']
+#         nation = metadata['nation']
+#         author = metadata['author']
+#         title = metadata['title']
+#         canonicity = metadata['canonicity']
+#         pubname = metadata['pubname']
+#         allwords = volsizes[volid]
+#         logistic = logisticpredictions[volid]
+#         realclass = classdictionary[volid]
+#         outrow = [volid, reviewed, obscure, pubdate, birthdate, gender, nation, allwords, logistic, author, title, pubname, canonicity, realclass]
+#         writer.writerow(outrow)
 
 
 
