@@ -4,17 +4,40 @@
 # aligns near-misses
 
 from difflib import SequenceMatcher
-
+import SonicScrewdriver as utils
 import csv
 
 authornames = set()
 allrows = list()
 
-with open('amplifiedficmeta.tsv', encoding = 'utf-8') as f:
-    reader = csv.DictReader(f, delimiter = '\t')
+def forceint(astring):
+    try:
+        intval = int(astring)
+    except:
+        intval = 0
+
+    return intval
+
+existing = set()
+
+with open('masterpoemeta.csv', encoding = 'utf-8') as f:
+    reader = csv.DictReader(f)
     fieldnames = reader.fieldnames
 
     for row in reader:
+        inferred = forceint(row['inferreddate'])
+        firstpub = forceint(row['firstpub'])
+        if inferred < firstpub:
+            print(row['author'])
+            print(row['docid'])
+            print('inferred: ' + str(inferred))
+            print('firstpub: ' + str(firstpub))
+            date = int(input('Date of first publication: '))
+            row['firstpub'] = str(date)
+        if row['docid'] in existing:
+            print('existing ' + row['docid'])
+        existing.add(row['docid'])
+        row['docid'] = utils.clean_pairtree(row['docid'])
         allrows.append(row)
         authornames.add(row['author'])
 
@@ -43,17 +66,17 @@ for name in authornames:
 
             user = input('Are these synonymous? ')
 
-            if user != 'y':
+            if not user.startswith('y'):
                 continue
 
-            user = "Prefer 1) first or 2) second: "
+            user = input("Prefer 1) first or 2) second: ")
             if user == "1":
                 synonyms[anothername] = name
             elif user == '2':
                 synonyms[name] = anothername
 
-with open('namefusedficmeta.tsv', mode = 'w', encoding = 'utf-8') as f:
-    writer = csv.DictWriter(f, fieldnames = fieldnames, delimiter = '\t')
+with open('finalpoemeta.csv', mode = 'w', encoding = 'utf-8') as f:
+    writer = csv.DictWriter(f, fieldnames = fieldnames)
     writer.writeheader()
     for row in allrows:
         author = row['author']

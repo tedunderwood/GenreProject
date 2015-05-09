@@ -195,7 +195,7 @@ def binormal_select(vocablist, positivecounts, negativecounts, totalpos, totalne
 
 sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/texts/'
 extension = '.poe.tsv'
-classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/masterpoemeta.csv'
+classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/finalpoemeta.csv'
 outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/logisticpredictions.csv'
 
 # We can simply exclude
@@ -220,8 +220,8 @@ excludeabove['inferreddate'] = 1950
 # of the dataset that gets TRAINED on, while permitting the whole dataset to
 # be predicted.
 
-futurethreshold = 1844
-pastthreshold = 1800
+futurethreshold = 1950
+pastthreshold = 1700
 
 if not sourcefolder.endswith('/'):
     sourcefolder = sourcefolder + '/'
@@ -272,8 +272,6 @@ orderedIDs = list()
 
 positivecounts = dict()
 negativecounts = dict()
-totalposvols = 0
-totalnegvols = 0
 
 for volid, volpath in zip(volumeIDs, volumepaths):
     if volid not in IDsToUse:
@@ -282,31 +280,23 @@ for volid, volpath in zip(volumeIDs, volumepaths):
         volspresent.append((volid, volpath))
         orderedIDs.append(volid)
 
-    classflag = classdictionary[volid]
-    if classflag == 1:
-        totalposvols += 1
+    date = infer_date(metadict[volid], datetype)
+    if date < pastthreshold or date > futurethreshold:
+        continue
     else:
-        totalnegvols += 1
-
-    with open(volpath, encoding = 'utf-8') as f:
-        for line in f:
-            fields = line.strip().split('\t')
-            if len(fields) > 2 or len(fields) < 2:
-                print(line)
-                continue
-            word = fields[0]
-            if len(word) > 0 and word[0].isalpha():
-                count = int(fields[1])
-                wordcounts[word] += 1
-                # for initial feature selection we just use document freq,
-                # so it's just +=1. But we do use the count to also
-                # calculate bi-normal separation.
-
-
-                if classflag == 1:
-                    appendif(word, count, positivecounts)
-                else:
-                    appendif(word,count, negativecounts)
+        with open(volpath, encoding = 'utf-8') as f:
+            for line in f:
+                fields = line.strip().split('\t')
+                if len(fields) > 2 or len(fields) < 2:
+                    print(line)
+                    continue
+                word = fields[0]
+                if len(word) > 0 and word[0].isalpha():
+                    count = int(fields[1])
+                    wordcounts[word] += 1
+                    # for initial feature selection we use the number of
+                    # *documents* that contain a given word,
+                    # so it's just +=1.
 
 vocablist = [x[0] for x in wordcounts.most_common(3200)]
 
