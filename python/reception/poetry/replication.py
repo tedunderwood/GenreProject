@@ -5,7 +5,7 @@
 import parallel_crossvalidate as pc
 import sys
 
-allowable = set("full", "quarters")
+allowable = {"full", "quarters"}
 
 def instructions():
     print("Your options are: ")
@@ -54,6 +54,7 @@ if command == 'full':
 
     excludebelow['firstpub'] = 1700
     excludeabove['firstpub'] = 1950
+    sizecap = 350
 
     # For more historically-interesting kinds of questions, we can limit the part
     # of the dataset that gets TRAINED on, while permitting the whole dataset to
@@ -67,11 +68,72 @@ if command == 'full':
     futurethreshold = 1925
     pastthreshold = 1800
 
-    paths = (sourcefolder, extension, classpath, outputpath)
-    exclusions = (excludeif, excludeifnot, excludebelow, excludeabove)
-    thresholds = (pastthreshold, futurethreshold)
+    # CLASSIFY CONDITIONS
 
-    create_model(paths, exclusions, thresholds)
+    positive_class = 'rev'
+    category2sorton = 'reviewed'
+    datetype = 'firstpub'
+
+    paths = (sourcefolder, extension, classpath, outputpath)
+    exclusions = (excludeif, excludeifnot, excludebelow, excludeabove, sizecap)
+    thresholds = (pastthreshold, futurethreshold)
+    classifyconditions = (category2sorton, positive_class, datetype)
+
+    accuracy, allvolumes, coefficientuples = pc.create_model(paths, exclusions, thresholds, classifyconditions)
+
+elif command == 'quarters':
+    ## PATHS.
+
+    sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/texts/'
+    extension = '.poe.tsv'
+    classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/finalpoemeta.csv'
+
+    ## EXCLUSIONS.
+
+    excludeif = dict()
+    excludeif['pubname'] = 'TEM'
+    # We're not using reviews from Tait's.
+
+    excludeif['recept'] = 'addcanon'
+    # We don't ordinarily include canonical volumes that were not in either sample.
+    # These are included only if we're testing the canon specifically.
+
+    excludeifnot = dict()
+    excludeabove = dict()
+    excludebelow = dict()
+
+    excludebelow['firstpub'] = 1700
+    excludeabove['firstpub'] = 1950
+
+    sizecap = 350
+
+    # CLASSIFY CONDITIONS
+
+    positive_class = 'rev'
+    category2sorton = 'reviewed'
+    datetype = 'firstpub'
+
+    quarteroptions = [('/Users/tunder/Dropbox/GenreProject/python/reception/poetry/1820bpredictions.csv', 1800, 1844), ('/Users/tunder/Dropbox/GenreProject/python/reception/poetry/1845bpredictions.csv', 1845, 1869), ('/Users/tunder/Dropbox/GenreProject/python/reception/poetry/1870bpredictions.csv', 1870, 1894), ('/Users/tunder/Dropbox/GenreProject/python/reception/poetry/1895bpredictions.csv', 1895, 1825)]
+
+    for outputpath, pastthreshold, futurethreshold in quarteroptions:
+
+        print(pastthreshold)
+        paths = (sourcefolder, extension, classpath, outputpath)
+        exclusions = (excludeif, excludeifnot, excludebelow, excludeabove, sizecap)
+        thresholds = (pastthreshold, futurethreshold)
+        classifyconditions = (category2sorton, positive_class, datetype)
+
+        rawaccuracy, allvolumes, coefficientuples = pc.create_model(paths, exclusions, thresholds, classifyconditions)
+
+        print('If we divide the dataset with a horizontal line at 0.5, accuracy is: ', str(rawaccuracy))
+        tiltaccuracy = pc.diachronic_tilt(allvolumes, 'linear', [])
+
+        print("Divided with a line fit to the data trend, it's ", str(tiltaccuracy))
+
+
+
+
+
 
 
 

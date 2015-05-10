@@ -27,7 +27,7 @@ usedate = False
 
 # FUNCTIONS GET DEFINED BELOW.
 
-def infer_date(metadictentry, dateype):
+def infer_date(metadictentry, datetype):
     if datetype == 'pubdate':
         return metadictentry[datetype]
     elif datetype == 'firstpub':
@@ -196,6 +196,8 @@ def create_model(paths, exclusions, thresholds, classifyconditions):
     pastthreshold, futurethreshold = thresholds
     category2sorton, positive_class, datetype = classifyconditions
 
+    verbose = False
+
     if not sourcefolder.endswith('/'):
         sourcefolder = sourcefolder + '/'
 
@@ -259,7 +261,7 @@ def create_model(paths, exclusions, thresholds, classifyconditions):
                 for line in f:
                     fields = line.strip().split('\t')
                     if len(fields) > 2 or len(fields) < 2:
-                        print(line)
+                        # print(line)
                         continue
                     word = fields[0]
                     if len(word) > 0 and word[0].isalpha():
@@ -327,7 +329,6 @@ def create_model(paths, exclusions, thresholds, classifyconditions):
             for line in f:
                 fields = line.strip().split('\t')
                 if len(fields) > 2 or len(fields) < 2:
-                    print(line)
                     continue
 
                 word = fields[0]
@@ -429,8 +430,9 @@ def create_model(paths, exclusions, thresholds, classifyconditions):
 
     coefficientuples = list(zip(coefficients, (coefficients / np.array(stdevs)), vocablist + ['pub.date']))
     coefficientuples.sort()
-    for coefficient, normalizedcoef, word in coefficientuples:
-        print(word + " :  " + str(coefficient))
+    if verbose:
+        for coefficient, normalizedcoef, word in coefficientuples:
+            print(word + " :  " + str(coefficient))
 
     print()
     accuracy = (truepositives + truenegatives) / len(IDsToUse)
@@ -445,10 +447,12 @@ def create_model(paths, exclusions, thresholds, classifyconditions):
 
 def diachronic_tilt(allvolumes, modeltype, datelimits):
     ''' Takes a set of predictions produced by a model that knows nothing about date,
-    and divides it along a line with a diachronic tilt. We try to do this in a way
-    that doesn't meaningfully violate crossvalidation. I.e., we try not to "know" anything
-    that the model shouldn't know. But really this only makes a diff. if there are datelimits.
-    Otherwise there's not a big difference between the logistic and linear results.
+    and divides it along a line with a diachronic tilt. We need to do this in a way
+    that doesn't violate crossvalidation. I.e., we shouldn't "know" anything
+    that the model shouldn't know. The simplest way to do that is just to use
+    the linear option -- which fits a line to the center of the scatterplot,
+    entirely ignoring information about the 'reviewed' or 'random' status of
+    individual volumes.
     '''
 
     listofrows = list()
@@ -499,7 +503,7 @@ def diachronic_tilt(allvolumes, modeltype, datelimits):
             data = pd.DataFrame(listofrows)
             responsevariable = classvector
 
-        newmodel = LogisticRegression(C = 10)
+        newmodel = LogisticRegression(C = 10000)
         newmodel.fit(data, responsevariable)
         coefficients = newmodel.coef_[0]
 
@@ -543,7 +547,7 @@ if __name__ == '__main__':
     sourcefolder = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/texts/'
     extension = '.poe.tsv'
     classpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/finalpoemeta.csv'
-    outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/1870apredictions.csv'
+    outputpath = '/Users/tunder/Dropbox/GenreProject/python/reception/poetry/1895apredictions.csv'
 
     # We can simply exclude volumes from consideration on the basis on any
     # metadata category we want, using the dictionaries defined below.
@@ -562,8 +566,8 @@ if __name__ == '__main__':
     excludeabove = dict()
     excludebelow = dict()
 
-    excludebelow['firstpub'] = 1700
-    excludeabove['firstpub'] = 1950
+    excludebelow['inferreddate'] = 1700
+    excludeabove['inferreddate'] = 1950
     sizecap = 350
 
     # For more historically-interesting kinds of questions, we can limit the part
@@ -575,8 +579,8 @@ if __name__ == '__main__':
 
     ## THRESHOLDS
 
-    futurethreshold = 1894
-    pastthreshold = 1870
+    futurethreshold = 1925
+    pastthreshold = 1895
 
     # CLASSIFY CONDITIONS
 

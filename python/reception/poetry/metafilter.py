@@ -58,7 +58,7 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
             for key, value in excludebelow.items():
                 if forceint(row[key]) < value:
                     bail = True
-                    print(row[key])
+                    print('Below ' + row[key])
             for key, value in excludeabove.items():
                 if forceint(row[key]) > value:
                     bail = True
@@ -87,7 +87,7 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
             if len(author) < 1 or author == '<blank>':
                 author = "anonymous" + str(anonctr)
                 anonctr += 1
-                print(author)
+                print("Missing author " + author)
 
             title = row['title']
             canon = row['canon']
@@ -109,7 +109,7 @@ def get_metadata(classpath, volumeIDs, excludeif, excludeifnot, excludebelow, ex
                 obscure = 'known'
                 reviewed = 'addedbecausecanon'
             else:
-                print(theclass)
+                print("Missing class" + theclass)
 
             if notes == 'well-known':
                 obscure = 'known'

@@ -61,5 +61,7 @@ def model_one_volume(data5tuple):
 
     testset = (testset - means) / stdevs
     prediction = newmodel.predict_proba(testset)[0][1]
-    print(str(i) + "  -  " + str(len(listtoexclude)))
+    if i % 10 == 0:
+        print(i)
+    # print(str(i) + "  -  " + str(len(listtoexclude)))
     return prediction
