@@ -1,3 +1,6 @@
+GenreProject
+============
+
 This repository stores work related to the project "Understanding Genre in a Collection of a Million Volumes."
 
 The folder /Java contains Java code, mostly related to a browser that we used for page tagging. For actual classification code in Java, see my top-level *pages* repo, which has a lot more of it.
