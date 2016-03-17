@@ -321,7 +321,10 @@ def date_row(row):
     datetype = row["datetype"]
     firstdate = row["startdate"]
     secondate = row["enddate"]
-    textdate = row["imprintdate"]
+    if "imprintdate" in row:
+        textdate = row["imprintdate"]
+    else:
+        textdate = row["textdate"]
     intdate = infer_date(datetype, firstdate, secondate, textdate)
     return intdate
 
